@@ -21,7 +21,7 @@ const ContactForm = ({
   buttonText,
 }: ContactFormProps) => {
   return (
-    <div className="py-16">
+    <div className="py-16 bg-white">
       <div className="container">
         <h1 className="text-3xl font-bold">{title}</h1>
         <p>{subTitle}</p>

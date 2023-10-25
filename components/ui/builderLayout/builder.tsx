@@ -8,6 +8,12 @@ import NavBar from "./navbar";
 import { useQuery } from "react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "../use-toast";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
 
 type BuilderProps = {
   registeredComponents: Component[];
@@ -91,6 +97,42 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
     refetchOnMount: false,
   });
 
+  const onDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (source.droppableId === "content") {
+      const newData = Array.from(pageComponents);
+      const [removed] = newData.splice(source.index, 1);
+      newData.splice(destination.index, 0, removed);
+      setPageComponents(newData);
+      return;
+    }
+
+    if (destination.droppableId === "content") {
+      const componentTitle = draggableId.replace(/_/g, " ");
+      let foundComponent: Component | undefined =
+        registeredComponents.find(
+          (component) => component.title === componentTitle
+        ) || undefined;
+
+      if (foundComponent) {
+        const newData = Array.from(pageComponents);
+        const item = {
+          ...foundComponent,
+          selected: true,
+          inputs: foundComponent?.defaultInputs,
+          id: uuidv4(),
+        };
+        newData.splice(destination.index, 0, item);
+        setPageComponents(newData);
+      }
+    }
+  };
+
   useEffect(() => {
     if (data) {
       let components = data.components.map((component: any) => {
@@ -118,47 +160,71 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
 
   return (
     <>
-      <NavBar handleSaveChanges={handleSaveChanges} />
-      <SideBar
-        registeredComponents={registeredComponents}
-        handleAddComponent={(component) => {
-          handleRemoveSelectedComponent();
-          setPageComponents((pageComponents) => [
-            ...pageComponents,
-            {
-              ...component,
-              selected: true,
-              id: uuidv4(),
-              inputs: component.defaultInputs,
-            },
-          ]);
-        }}
-        selectedComponent={selectedComponent}
-        handleRemoveSelectedComponent={handleRemoveSelectedComponent}
-        handlePropValueChange={handlePropValueChange}
-      />
-      <div className="pl-[310px] pt-[60px] pr-1">
-        {pageComponents.map((component, index) => {
-          const Tag = component.component;
-          const inputs = component.inputs;
-          return (
-            <section
-              key={`${component.title}_${index}`}
-              className={cn(
-                " outline outline-1 outline-transparent hover:outline-blue-500",
-                {
-                  " outline-blue-500": component.selected,
-                }
-              )}
-              onClick={() => {
-                handleSelectComponent(index);
-              }}
+      <NavBar handleSaveChanges={handleSaveChanges} page={pageName} />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <SideBar
+          registeredComponents={registeredComponents}
+          handleAddComponent={(component) => {
+            handleRemoveSelectedComponent();
+            setPageComponents((pageComponents) => [
+              ...pageComponents,
+              {
+                ...component,
+                selected: true,
+                id: uuidv4(),
+                inputs: component.defaultInputs,
+              },
+            ]);
+          }}
+          selectedComponent={selectedComponent}
+          handleRemoveSelectedComponent={handleRemoveSelectedComponent}
+          handlePropValueChange={handlePropValueChange}
+        />
+        <Droppable droppableId={"content"}>
+          {(provided, snapshot) => (
+            <div
+              className={cn("pl-[310px] pt-[60px] pr-1", {
+                "bg-sky-50": snapshot.isDraggingOver,
+              })}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
             >
-              <Tag {...inputs} />
-            </section>
-          );
-        })}
-      </div>
+              {pageComponents.map((component, index) => {
+                const Tag = component.component;
+                const inputs = component.inputs;
+                return (
+                  <Draggable
+                    key={`${component.title}_${index}`}
+                    draggableId={component.id}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <section
+                        key={`${component.title}_${index}`}
+                        className={cn(
+                          " outline outline-1 outline-transparent hover:outline-blue-500",
+                          {
+                            " outline-blue-500": component.selected,
+                          }
+                        )}
+                        onClick={() => {
+                          handleSelectComponent(index);
+                        }}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <Tag {...inputs} />
+                      </section>
+                    )}
+                  </Draggable>
+                );
+              })}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       <Toaster />
     </>
   );
