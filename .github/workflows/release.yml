@@ -7,6 +7,7 @@ on:
 
 jobs:
   create_release:
+    if: "github.actor != 'github-actions[bot]'"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -55,14 +56,15 @@ jobs:
 
       - name: Update package.json version
         run: |
+          echo "Updating package.json version to $new_version"
           sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$new_version\"/" package.json
 
-      - name: Commit package.json
+      - name: Commit and push updated package.json
         run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
+          git config user.email "adolfokrah@gmail.com"
+          git config user.name "adolfokrah"
           git add package.json
-          git commit -m "chore: update version to $new_version"
+          git commit -m "chore: Update package.json version to $new_version"
           git push
 
       - name: Create Release
@@ -73,9 +75,9 @@ jobs:
           version=${{ steps.determine_version.outputs.version }}
           echo "Version: $version" # Debug statement to check the value of version
           body="Add your release notes here"
-          release_name="$version"
+          release_name="v$version"
           echo "Release name: $release_name"
-          tag_name="$version"
+          tag_name="v$version"
           echo "Tag name: $tag_name" # Debug statement to check the value of tag_name
           curl --request POST \
             --url https://api.github.com/repos/${{ github.repository }}/releases \
