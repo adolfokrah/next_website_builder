@@ -62,6 +62,7 @@ jobs:
       - name: Update the version
 	        id: update_version
 	        run: |
+            version=${{ steps.determine_version.outputs.version }}
 	          echo "version=$(npm version $version --no-git-tag-version)" >> $GITHUB_OUTPUT
 
 	    - name: Update Changelog

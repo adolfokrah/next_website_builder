@@ -1,46 +1,79 @@
-# name: Update version and create Release's PR Workflow
+name: Create Release
 
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       version:
-#         description: 'Version name'
-#         required: true
-#         default: 'minor'
-#         type: string
+on:
+  push:
+    branches:
+      - main
 
-# jobs:
-#   version:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v2
-#         with:
-#           node-version: '16'
-#       - name: Install pnpm and dependencies
-#         run: |
-#           npm install -g pnpm
-#           pnpm install
-#       - name: Set up Git
-#         run: |
-#           git config user.name "adolfokrah@gmail.com"
-#           git config user.email "adolfokrah"
-#       - name: Update the version
-#         id: update_version
-#         run: |
-#           echo "version=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-#       - name: Update Changelog
-#         id: update_changelog
-#         run: |
-#           sed -i 's/Unreleased/${{ steps.update_version.outputs.version }}/g' CHANGELOG.md
-#       - name: Create pull request
-#         id: create_pr
-#         uses: peter-evans/create-pull-request@v5
-#         with:
-#           token: ${{ secrets.GITHUB_TOKEN }}
-#           branch: release/${{ steps.update_version.outputs.version }}
-#           title: "Release: ${{ steps.update_version.outputs.version }} Pull Request"
-#           body: "This pull request contains the updated package.json with the new release version"
-#           base: main
+jobs:
+  create_release:
+    if: "github.actor != 'github-actions[bot]'"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16' # Adjust the Node.js version as needed
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Get package version
+        id: get_version
+        run: echo ::set-output name=version::$(node -p "require('./package.json').version")
+
+      - name: Determine version
+        id: determine_version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          commit_message=$(git log --format=%B -n 1 ${{ github.sha }})
+          if [[ $commit_message == feat* ]]; then
+            major=$(echo $version | cut -d. -f1)
+            minor=$(echo $version | cut -d. -f2)
+            patch=$(echo $version | cut -d. -f3)
+            major=$((major + 1))
+            new_version="$major.$minor.$patch"
+          elif [[ $commit_message == fix* ]]; then
+            major=$(echo $version | cut -d. -f1)
+            minor=$(echo $version | cut -d. -f2)
+            patch=$(echo $version | cut -d. -f3)
+            minor=$((minor + 1))
+            new_version="$major.$minor.$patch"
+          else
+            major=$(echo $version | cut -d. -f1)
+            minor=$(echo $version | cut -d. -f2)
+            patch=$(echo $version | cut -d. -f3)
+            patch=$((patch + 1))
+            new_version="$major.$minor.$patch"
+          fi
+          echo "::set-output name=version::$new_version"
+      
+      - name: Create version-bump branch
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+      
+      - name: Update the version
+	        id: update_version
+	        run: |
+	          echo "version=$(npm version $version --no-git-tag-version)" >> $GITHUB_OUTPUT
+
+	    - name: Update Changelog
+		    id: update_changelog
+	        run: |
+	          sed -i 's/Unreleased/${{ steps.update_version.outputs.version }}/g'   CHANGELOG.md
+	    - name: Create pull request
+	        id: create_pr
+	        uses: peter-evans/create-pull-request@v5
+	        with:
+	          token: ${{ secrets.GITHUB_TOKEN }}
+	          branch: release/${{ steps.update_version.outputs.version }}
+	          title: "Release: ${{ steps.update_version.outputs.version }} Pull Request"
+	          body: "This pull request contains the updated package.json with the new   	release version"
+	          base: main
