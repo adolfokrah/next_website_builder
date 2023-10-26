@@ -21,7 +21,7 @@ jobs:
           node-version: '20' 
 
       - name: Print working directory
-        run: ls
+        run: ls -a
 
       - name: Install dependencies
         run: pnpm install
