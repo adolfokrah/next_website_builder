@@ -1,8 +1,8 @@
-"use client";
-import Builder from "@/components/ui/builderLayout/builder";
-import registeredComponents from "@/lib/component_registery";
+'use client';
+import Builder from '@/components/ui/builderLayout/builder';
+import registeredComponents from '@/lib/component_registery';
 
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
 interface PageProps {
@@ -13,10 +13,7 @@ interface PageProps {
 const Page = (props: PageProps) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <Builder
-        registeredComponents={registeredComponents}
-        page={props.params.page}
-      />
+      <Builder registeredComponents={registeredComponents} page={props.params.page} />
     </QueryClientProvider>
   );
 };

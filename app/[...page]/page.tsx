@@ -1,5 +1,5 @@
-import RenderBuilderContent from "@/components/ui/builderLayout/renderBuilderContent";
-import { PrismaClient } from "@prisma/client";
+import RenderBuilderContent from '@/components/ui/builderLayout/renderBuilderContent';
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 interface PageProps {
@@ -11,13 +11,13 @@ interface PageProps {
 export default async function Page(props: PageProps) {
   let data = await prisma.page.findFirst({
     where: {
-      name: `/${props.params.page.join("/")}`,
+      name: `/${props.params.page.join('/')}`,
     },
   });
   prisma.$disconnect();
   return (
     <>
-      <RenderBuilderContent data={data?.components || ""} />
+      <RenderBuilderContent data={data?.components || ''} />
     </>
   );
 }

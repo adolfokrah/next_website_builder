@@ -1,19 +1,14 @@
-"use client";
-import { Component, ComponentProps, pageComponent } from "@/lib/types";
-import SideBar from "./sidebar";
-import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-import { v4 as uuidv4 } from "uuid";
-import NavBar from "./navbar";
-import { useQuery } from "react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { useToast } from "../use-toast";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+'use client';
+import { Component, ComponentProps, pageComponent } from '@/lib/types';
+import SideBar from './sidebar';
+import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { v4 as uuidv4 } from 'uuid';
+import NavBar from './navbar';
+import { useQuery } from 'react-query';
+import { Toaster } from '@/components/ui/toaster';
+import { useToast } from '../use-toast';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
 type BuilderProps = {
   registeredComponents: Component[];
@@ -22,10 +17,8 @@ type BuilderProps = {
 
 const Builder = ({ registeredComponents, page }: BuilderProps) => {
   const [pageComponents, setPageComponents] = useState<pageComponent[]>([]);
-  const pageName = `/${page.join("/")}`;
-  let selectedComponent: pageComponent | undefined = pageComponents.find(
-    (component) => component.selected
-  );
+  const pageName = `/${page.join('/')}`;
+  let selectedComponent: pageComponent | undefined = pageComponents.find((component) => component.selected);
   const { toast } = useToast();
 
   const handleRemoveSelectedComponent = () => {
@@ -47,8 +40,9 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
     let components = [...pageComponents];
     let selectedComponentIndex = components.findIndex((c) => c.selected);
     let selectedComponent = components[selectedComponentIndex];
-    let selectedComponentProp: ComponentProps | undefined =
-      selectedComponent.props ? selectedComponent.props[propsIndex] : undefined;
+    let selectedComponentProp: ComponentProps | undefined = selectedComponent.props
+      ? selectedComponent.props[propsIndex]
+      : undefined;
 
     if (selectedComponentProp) {
       let inputs = {
@@ -71,21 +65,21 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
       })),
     };
 
-    let response = await fetch("/api/page", {
-      method: "PUT",
+    let response = await fetch('/api/page', {
+      method: 'PUT',
       body: JSON.stringify(body),
     });
 
     if (response.status == 200) {
       toast({
-        description: "Changes saved successfully",
+        description: 'Changes saved successfully',
       });
     }
   };
 
   const fetchPageComponents = async () => {
     let response = await fetch(`/api/page?page=${pageName}`, {
-      method: "GET",
+      method: 'GET',
     });
     let data = await response.json();
     return data;
@@ -104,7 +98,7 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
       return;
     }
 
-    if (source.droppableId === "content") {
+    if (source.droppableId === 'content') {
       const newData = Array.from(pageComponents);
       const [removed] = newData.splice(source.index, 1);
       newData.splice(destination.index, 0, removed);
@@ -112,12 +106,10 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
       return;
     }
 
-    if (destination.droppableId === "content") {
-      const componentTitle = draggableId.replace(/_/g, " ");
+    if (destination.droppableId === 'content') {
+      const componentTitle = draggableId.replace(/_/g, ' ');
       let foundComponent: Component | undefined =
-        registeredComponents.find(
-          (component) => component.title === componentTitle
-        ) || undefined;
+        registeredComponents.find((component) => component.title === componentTitle) || undefined;
 
       if (foundComponent) {
         const newData = Array.from(pageComponents);
@@ -136,9 +128,7 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
   useEffect(() => {
     if (data) {
       let components = data.components.map((component: any) => {
-        let foundComponent = registeredComponents.find(
-          (c) => c.title === component.component
-        );
+        let foundComponent = registeredComponents.find((c) => c.title === component.component);
         return {
           ...foundComponent,
           selected: false,
@@ -180,11 +170,11 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
           handleRemoveSelectedComponent={handleRemoveSelectedComponent}
           handlePropValueChange={handlePropValueChange}
         />
-        <Droppable droppableId={"content"}>
+        <Droppable droppableId={'content'}>
           {(provided, snapshot) => (
             <div
-              className={cn("pl-[310px] pt-[60px] pr-1", {
-                "bg-sky-50": snapshot.isDraggingOver,
+              className={cn('pl-[310px] pt-[60px] pr-1', {
+                'bg-sky-50': snapshot.isDraggingOver,
               })}
               {...provided.droppableProps}
               ref={provided.innerRef}
@@ -193,20 +183,13 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
                 const Tag = component.component;
                 const inputs = component.inputs;
                 return (
-                  <Draggable
-                    key={`${component.title}_${index}`}
-                    draggableId={component.id}
-                    index={index}
-                  >
+                  <Draggable key={`${component.title}_${index}`} draggableId={component.id} index={index}>
                     {(provided) => (
                       <section
                         key={`${component.title}_${index}`}
-                        className={cn(
-                          " outline outline-1 outline-transparent hover:outline-blue-500",
-                          {
-                            " outline-blue-500": component.selected,
-                          }
-                        )}
+                        className={cn(' outline outline-1 outline-transparent hover:outline-blue-500', {
+                          ' outline-blue-500': component.selected,
+                        })}
                         onClick={() => {
                           handleSelectComponent(index);
                         }}
