@@ -71,6 +71,7 @@ jobs:
 
       - name: Commit and push updated package.json
         run: |
+          git pull
           git checkout -b version-bump
           git add package.json
           git commit -m "dependency: Update package.json version to $new_version"
