@@ -1,6 +1,10 @@
 name: Update version work flow
 
 on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
   push:
     branches:
       - main
@@ -8,15 +12,15 @@ on:
 jobs:
   update_version:
     runs-on: ubuntu-latest
-    if: "!startsWith(github.event.pull_request.title, 'Release:')"
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && !startsWith(github.event.pull_request.title, 'Release')
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/setup-node@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '16' 
+          node-version: "16.x"
 
       - name: Print pull request title
         run: echo "Pull Request Title - ${{ github.event.pull_request.title }}"
