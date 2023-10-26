@@ -12,6 +12,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Echo GitHub event head commit message
+        run: echo "GitHub event head commit message: ${{ github.event.head_commit.message }}"
+
       - name: Install pnpm
         run: npm install -g pnpm
 
