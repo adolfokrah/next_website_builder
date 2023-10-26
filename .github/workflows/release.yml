@@ -62,8 +62,8 @@ jobs:
       - name: Update the version
 	        id: update_version
 	        run: |
-	          echo "version=$(npm version $version --no-git-				  	tag-version)" >> $GITHUB_OUTPUT
-            
+	          echo "version=$(npm version $version --no-git-tag-version)" >> $GITHUB_OUTPUT
+
 	    - name: Update Changelog
 		    id: update_changelog
 	        run: |
