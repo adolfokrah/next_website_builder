@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/setup-node@v3
+        uses: actions/checkout@v2
 
       - name: Install pnpm
         run: npm install -g pnpm
