@@ -20,8 +20,8 @@ jobs:
         with:
           node-version: '20' 
 
-      - name: Print pull request title
-        run: echo "Pull Request Title - ${{ github.event.pull_request.title }}"
+      - name: Print working directory
+        run: pwd
 
       - name: Install dependencies
         run: pnpm install
