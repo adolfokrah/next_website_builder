@@ -1,79 +1,63 @@
-name: Create Release
+name: Tag and Release Workflow
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - closed
 
 jobs:
-  create_release:
-    if: "github.actor != 'github-actions[bot]'"
+  release:
     runs-on: ubuntu-latest
+    if: startsWith(github.event.pull_request.title, 'Release:')
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '16' # Adjust the Node.js version as needed
+          node-version: "16.x"
 
-      - name: Install pnpm
+       - name: Install pnpm
         run: npm install -g pnpm
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Get package version
-        id: get_version
-        run: echo ::set-output name=version::$(node -p "require('./package.json').version")
-
-      - name: Determine version
-        id: determine_version
+      - name: Set up Git
         run: |
-          version=$(node -p "require('./package.json').version")
-          commit_message=$(git log --format=%B -n 1 ${{ github.sha }})
-          if [[ $commit_message == feat* ]]; then
-            major=$(echo $version | cut -d. -f1)
-            minor=$(echo $version | cut -d. -f2)
-            patch=$(echo $version | cut -d. -f3)
-            major=$((major + 1))
-            new_version="$major.$minor.$patch"
-          elif [[ $commit_message == fix* ]]; then
-            major=$(echo $version | cut -d. -f1)
-            minor=$(echo $version | cut -d. -f2)
-            patch=$(echo $version | cut -d. -f3)
-            minor=$((minor + 1))
-            new_version="$major.$minor.$patch"
-          else
-            major=$(echo $version | cut -d. -f1)
-            minor=$(echo $version | cut -d. -f2)
-            patch=$(echo $version | cut -d. -f3)
-            patch=$((patch + 1))
-            new_version="$major.$minor.$patch"
-          fi
-          echo "::set-output name=version::$new_version"
-      
-      - name: Create version-bump branch
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-      
-      - name: Update the version
-	        id: update_version
-	        run: |
-	          echo "version=$(npm version $version --no-git-tag-version)" >> $GITHUB_OUTPUT
+          git config user.name "Your GitHub User name"
+          git config user.email "Your GitHub User email"
 
-	    - name: Update Changelog
-		    id: update_changelog
-	        run: |
-	          sed -i 's/Unreleased/${{ steps.update_version.outputs.version }}/g'   CHANGELOG.md
-	    - name: Create pull request
-	        id: create_pr
-	        uses: peter-evans/create-pull-request@v5
-	        with:
-	          token: ${{ secrets.GITHUB_TOKEN }}
-	          branch: release/${{ steps.update_version.outputs.version }}
-	          title: "Release: ${{ steps.update_version.outputs.version }} Pull Request"
-	          body: "This pull request contains the updated package.json with the new   	release version"
-	          base: main
+      - name: Get tag
+        id: get_tag
+        run: |
+          git branch --show-current
+          git pull
+          echo "version=v$(npm pkg get version | tr -d '"')" >> $GITHUB_OUTPUT
+
+      - name: Tag the commit
+        run: |
+          next_version=${{ steps.get_tag.outputs.version }}
+          git tag -a "$next_version" -m "Version $next_version"
+          git push --follow-tags
+
+      - name: Create changelog diff
+        id: changelog_diff
+        run: |
+          sed -n "/^## [${{ steps.get_tag.outputs.version }}]/,/^## [$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))]/{/^## [$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))]/!p;}" CHANGELOG.md > release_notes.md
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_tag.outputs.version }}
+          release_name: Release ${{ steps.get_tag.outputs.version }}
+          body_path: ./release_notes.md
+          draft: false
+          prerelease: false
+
+      - name: Delete release_notes file
+        run: rm release_notes.md
