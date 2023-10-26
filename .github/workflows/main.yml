@@ -27,4 +27,5 @@ jobs:
 
     - name: Run linting and Prettier
       run: |
+        pnpm run format
         pnpm run lint
