@@ -69,9 +69,13 @@ jobs:
             git push origin --delete version-bump
           fi
 
+      - name: Pull latest changes
+        run: git pull origin version-bump --rebase
+
       - name: Commit and push updated package.json
         run: |
-          git pull
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
           git checkout -b version-bump
           git add package.json
           git commit -m "dependency: Update package.json version to $new_version"
