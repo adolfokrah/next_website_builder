@@ -1,128 +1,128 @@
-name: Create Release
+# name: Create Release
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  create_release:
-    if: "github.actor != 'github-actions[bot]'"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+# jobs:
+#   create_release:
+#     if: "github.actor != 'github-actions[bot]'"
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16' # Adjust the Node.js version as needed
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16' # Adjust the Node.js version as needed
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+#       - name: Install pnpm
+#         run: npm install -g pnpm
 
-      - name: Install dependencies
-        run: pnpm install
+#       - name: Install dependencies
+#         run: pnpm install
 
-      - name: Get package version
-        id: get_version
-        run: echo ::set-output name=version::$(node -p "require('./package.json').version")
+#       - name: Get package version
+#         id: get_version
+#         run: echo ::set-output name=version::$(node -p "require('./package.json').version")
 
-      - name: Determine version
-        id: determine_version
-        run: |
-          version=$(node -p "require('./package.json').version")
-          commit_message=$(git log --format=%B -n 1 ${{ github.sha }})
-          if [[ $commit_message == feat* ]]; then
-            major=$(echo $version | cut -d. -f1)
-            minor=$(echo $version | cut -d. -f2)
-            patch=$(echo $version | cut -d. -f3)
-            major=$((major + 1))
-            new_version="$major.$minor.$patch"
-          elif [[ $commit_message == fix* ]]; then
-            major=$(echo $version | cut -d. -f1)
-            minor=$(echo $version | cut -d. -f2)
-            patch=$(echo $version | cut -d. -f3)
-            minor=$((minor + 1))
-            new_version="$major.$minor.$patch"
-          else
-            major=$(echo $version | cut -d. -f1)
-            minor=$(echo $version | cut -d. -f2)
-            patch=$(echo $version | cut -d. -f3)
-            patch=$((patch + 1))
-            new_version="$major.$minor.$patch"
-          fi
-          echo "::set-output name=version::$new_version"
+#       - name: Determine version
+#         id: determine_version
+#         run: |
+#           version=$(node -p "require('./package.json').version")
+#           commit_message=$(git log --format=%B -n 1 ${{ github.sha }})
+#           if [[ $commit_message == feat* ]]; then
+#             major=$(echo $version | cut -d. -f1)
+#             minor=$(echo $version | cut -d. -f2)
+#             patch=$(echo $version | cut -d. -f3)
+#             major=$((major + 1))
+#             new_version="$major.$minor.$patch"
+#           elif [[ $commit_message == fix* ]]; then
+#             major=$(echo $version | cut -d. -f1)
+#             minor=$(echo $version | cut -d. -f2)
+#             patch=$(echo $version | cut -d. -f3)
+#             minor=$((minor + 1))
+#             new_version="$major.$minor.$patch"
+#           else
+#             major=$(echo $version | cut -d. -f1)
+#             minor=$(echo $version | cut -d. -f2)
+#             patch=$(echo $version | cut -d. -f3)
+#             patch=$((patch + 1))
+#             new_version="$major.$minor.$patch"
+#           fi
+#           echo "::set-output name=version::$new_version"
           
-      - name: Check if version-bump branch exists
-        run: |
-         if git ls-remote --exit-code --heads origin version-bump; then
-            git push origin --delete version-bump
-            echo "Deleted version-bump branch remotely"
-          else
-            echo "version-bump branch not found."
-          fi
+#       - name: Check if version-bump branch exists
+#         run: |
+#          if git ls-remote --exit-code --heads origin version-bump; then
+#             git push origin --delete version-bump
+#             echo "Deleted version-bump branch remotely"
+#           else
+#             echo "version-bump branch not found."
+#           fi
 
-      - name: Check if there are any stashed changes
-        run: |
-          if git rev-parse --verify refs/stash; then
-            git stash apply
-          else
-            echo "No stash entries found."
-          fi
+#       - name: Check if there are any stashed changes
+#         run: |
+#           if git rev-parse --verify refs/stash; then
+#             git stash apply
+#           else
+#             echo "No stash entries found."
+#           fi
 
-      - name: Create version-bump branch
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-          git checkout -b version-bump
+#       - name: Create version-bump branch
+#         run: |
+#           git config user.email "actions@github.com"
+#           git config user.name "GitHub Actions"
+#           git checkout -b version-bump
           
-      - name: Update package.json version
-        run: |
-          version=${{ steps.determine_version.outputs.version }}
-          echo "Updating package.json version to $version"
-          sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$version\"/" package.json
-          echo $(node -p "require('./package.json').version")
+#       - name: Update package.json version
+#         run: |
+#           version=${{ steps.determine_version.outputs.version }}
+#           echo "Updating package.json version to $version"
+#           sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$version\"/" package.json
+#           echo $(node -p "require('./package.json').version")
 
-      - name: add and commit package.json
-        run: |
-          version=${{ steps.determine_version.outputs.version }}
-          git add package.json
-          git commit -m "dependency: Update package.json version to $version"
-          git push --set-upstream origin version-bump
+#       - name: add and commit package.json
+#         run: |
+#           version=${{ steps.determine_version.outputs.version }}
+#           git add package.json
+#           git commit -m "dependency: Update package.json version to $version"
+#           git push --set-upstream origin version-bump
 
-      - name: Create Release
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          version=${{ steps.determine_version.outputs.version }}
-          echo "Version: $version" # Debug statement to check the value of version
-          body="Add your release notes here"
-          release_name="v$version"
-          echo "Release name: $release_name"
-          tag_name="v$version"
-          echo "Tag name: $tag_name" # Debug statement to check the value of tag_name
-          curl --request POST \
-            --url https://api.github.com/repos/${{ github.repository }}/releases \
-            --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            --header "content-type: application/json" \
-            --data "{
-              \"tag_name\": \"$tag_name\",
-              \"target_commitish\": \"main\",
-              \"name\": \"$release_name\",
-              \"body\": \"$body\",
-              \"draft\": false,
-              \"prerelease\": false
-            }"
+#       - name: Create Release
+#         id: create_release
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         run: |
+#           version=${{ steps.determine_version.outputs.version }}
+#           echo "Version: $version" # Debug statement to check the value of version
+#           body="Add your release notes here"
+#           release_name="v$version"
+#           echo "Release name: $release_name"
+#           tag_name="v$version"
+#           echo "Tag name: $tag_name" # Debug statement to check the value of tag_name
+#           curl --request POST \
+#             --url https://api.github.com/repos/${{ github.repository }}/releases \
+#             --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+#             --header "content-type: application/json" \
+#             --data "{
+#               \"tag_name\": \"$tag_name\",
+#               \"target_commitish\": \"main\",
+#               \"name\": \"$release_name\",
+#               \"body\": \"$body\",
+#               \"draft\": false,
+#               \"prerelease\": false
+#             }"
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: verstion-update
-          base: version-bump
-          commit-message: 'dependency: Update package.json version to $version'
-          title: 'dependency: Update package.json version'
-          body: 'This is an automated pull request to update the package version.'
+#       - name: Create Pull Request
+#         uses: peter-evans/create-pull-request@v3
+#         with:
+#           token: ${{ secrets.GITHUB_TOKEN }}
+#           branch: verstion-update
+#           base: version-bump
+#           commit-message: 'dependency: Update package.json version to $version'
+#           title: 'dependency: Update package.json version'
+#           body: 'This is an automated pull request to update the package version.'
 
