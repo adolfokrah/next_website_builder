@@ -54,8 +54,6 @@ jobs:
           fi
           echo "::set-output name=version::$new_version"
           
-    
-
       - name: Check if version-bump branch exists
         run: |
           if git rev-parse --quiet --verify version-bump; then
@@ -87,7 +85,7 @@ jobs:
           echo "Updating package.json version to $new_version"
           sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$new_version\"/" package.json
 
-      -name: add and commit package.json
+      - name: add and commit package.json
         run: |
           git add package.json
           git commit -m "dependency: Update package.json version to $new_version"
