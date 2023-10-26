@@ -15,19 +15,16 @@ jobs:
       - name: Checkout repository
         uses: actions/setup-node@v3
 
-      - name: Set up Node.js
+     - name: Install pnpm
+      run: npm install -g pnpm
+
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: '20' 
 
       - name: Print pull request title
         run: echo "Pull Request Title - ${{ github.event.pull_request.title }}"
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-      
-      - name: Install pnpm global
-        run: npx pnpm install --global pnpm
 
       - name: Install dependencies
         run: pnpm install
