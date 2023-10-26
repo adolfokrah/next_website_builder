@@ -7,7 +7,7 @@ on:
 
 jobs:
   create_release:
-    if: "startsWith(github.event.pull_request.title, 'Release')"
+    if: startsWith(github.event.pull_request.title, 'Release:')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
