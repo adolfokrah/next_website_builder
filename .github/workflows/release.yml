@@ -54,10 +54,7 @@ jobs:
           fi
           echo "::set-output name=version::$new_version"
           
-      - name: Update package.json version
-        run: |
-          echo "Updating package.json version to $new_version"
-          sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$new_version\"/" package.json
+    
 
       - name: Check if version-bump branch exists
         run: |
@@ -71,7 +68,6 @@ jobs:
             echo "version-bump branch not found."
           fi
 
-
       - name: Check if there are any stashed changes
         run: |
           if git rev-parse --verify refs/stash; then
@@ -80,12 +76,19 @@ jobs:
             echo "No stash entries found."
           fi
 
-      - name: Commit and push updated package.json
+      - name: Create version-bump branch
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git checkout -b version-bump
-          git pull
+          
+      - name: Update package.json version
+        run: |
+          echo "Updating package.json version to $new_version"
+          sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$new_version\"/" package.json
+
+      -name: add and commit package.json
+        run: |
           git add package.json
           git commit -m "dependency: Update package.json version to $new_version"
           git push origin version-bump
