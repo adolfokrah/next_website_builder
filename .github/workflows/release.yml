@@ -59,18 +59,16 @@ jobs:
           echo "Updating package.json version to $new_version"
           sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$new_version\"/" package.json
 
-      - name: Delete existing version-bump branch
+      - name: Check if version-bump branch exists
         run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
           if git rev-parse --verify version-bump; then
             git checkout main
             git branch -D version-bump
             git push origin --delete version-bump
           fi
 
-      - name: Pull latest changes
-        run: git pull origin version-bump --rebase
+      - name: Apply stashed changes
+        run: git stash apply
 
       - name: Commit and push updated package.json
         run: |
