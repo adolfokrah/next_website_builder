@@ -60,9 +60,6 @@ jobs:
           sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$new_version\"/" package.json
 
       - name: Commit and push updated package.json
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.MY_SECRET_NAME }}
         run: |
           git config user.email adolfokrah@gmail.com
           git config user.name adolfokrah
