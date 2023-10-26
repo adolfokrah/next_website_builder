@@ -55,7 +55,15 @@ jobs:
 
       - name: Update package.json version
         run: |
-          npm version ${{ steps.determine_version.outputs.version }}
+          sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$new_version\"/" package.json
+
+      - name: Commit package.json
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add package.json
+          git commit -m "chore: update version to $new_version"
+          git push
 
       - name: Create Release
         id: create_release
@@ -65,9 +73,9 @@ jobs:
           version=${{ steps.determine_version.outputs.version }}
           echo "Version: $version" # Debug statement to check the value of version
           body="Add your release notes here"
-          release_name="v$version"
+          release_name="$version"
           echo "Release name: $release_name"
-          tag_name="v$version"
+          tag_name="$version"
           echo "Tag name: $tag_name" # Debug statement to check the value of tag_name
           curl --request POST \
             --url https://api.github.com/repos/${{ github.repository }}/releases \
