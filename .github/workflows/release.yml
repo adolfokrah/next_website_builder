@@ -61,3 +61,12 @@ jobs:
 
       - name: Delete release_notes file
         run: rm release_notes.md
+      
+      - name: Merge pull request
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          channel: general
+          text: "Automatically merging pull request ${{ github.event.pull_request.number }}"
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge: true
