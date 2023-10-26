@@ -81,7 +81,7 @@ jobs:
         run: |
           version=${{ steps.determine_version.outputs.version }}
           echo "Updating package.json version to $version"
-          sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$version\"/" package.json
+          jq '.version = $version' package.json > tmp.$$.json && mv tmp.$$.json package.json
 
       - name: add and commit package.json
         run: |
