@@ -20,9 +20,6 @@ jobs:
         with:
           node-version: '20' 
 
-      - name: Print working directory
-        run: ls -a
-
       - name: Install dependencies
         run: pnpm install
 
@@ -81,4 +78,12 @@ jobs:
           body: "This pull request contains the updated package.json with the new release version"
           base: main
       
+      - name: Merge pull request
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          channel: general
+          text: "Automatically merging pull request ${{ github.event.pull_request.number }}"
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge: true
       
