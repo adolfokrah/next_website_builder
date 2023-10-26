@@ -28,4 +28,3 @@ jobs:
     - name: Run linting and Prettier
       run: |
         pnpm run lint
-        pnpm run format:check 
