@@ -78,9 +78,11 @@ jobs:
           body: "This pull request contains the updated package.json with the new release version"
           base: main
       
-      - name: Get pull request number
+     - name: Get pull request number
         id: get_pr_number
-        run: echo "::set-output name=number::$(curl -s -X GET -H 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' 'https://api.github.com/repos/${{ github.repository }}/pulls?head=release/${{ steps.update_version.outputs.version }}&base=main' | jq -r '.[0].number')"
+        run: |
+          PR_NUMBER=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?head=release/${{ steps.update_version.outputs.version }}" | jq -r '.[0].number')
+          echo "::set-output name=number::$PR_NUMBER"
 
       - name: Merge pull request
         if: steps.get_pr_number.outputs.number
