@@ -24,8 +24,9 @@ jobs:
 	        uses: actions/setup-node@v3
 	        with:
 	          node-version: "16.x"
-	      - name: Install dependencies
-	        run: npm install
+	      - name: Install pnpm and dependencies
+	        run: npm install -g pnpm
+          run: pnpm install
 		  - name: Set up Git
 		    run: |
 	          git config user.name "Your GitHub User Name"
@@ -33,7 +34,7 @@ jobs:
 	      - name: Update the version
 	        id: update_version
 	        run: |
-	          echo "version=$(npm version ${{ github.event.inputs.version }} --no-git-tag-version)" >> $GITHUB_OUTPUT
+	          echo "version=$(npm version ${{ github.event.inputs.version }} --no-git-				  	tag-version)" >> $GITHUB_OUTPUT
 	      - name: Update Changelog
 		    id: update_changelog
 	        run: |
