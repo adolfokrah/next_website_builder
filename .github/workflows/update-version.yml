@@ -78,6 +78,9 @@ jobs:
           title: "Release: ${{ steps.update_version.outputs.version }} Pull Request"
           body: "This pull request contains the updated package.json with the new release version"
           base: main
+          labels: |
+            automerge
+            automated pr
       
       - name: Get pull request number
         id: get_pr_number
