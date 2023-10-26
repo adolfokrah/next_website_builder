@@ -1,6 +1,6 @@
-import { ComponentType } from "react";
+import { ComponentType } from 'react';
 
-export type ComponentPropsValues = "text" | "number" | "list" | "image";
+export type ComponentPropsValues = 'text' | 'number' | 'list' | 'image';
 
 export type ComponentProps = {
   name: string;

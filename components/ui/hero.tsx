@@ -1,7 +1,7 @@
-"use client";
-import { useState } from "react";
-import { Button } from "./button";
-import Link from "next/link";
+'use client';
+import { useState } from 'react';
+import { Button } from './button';
+import Link from 'next/link';
 
 type HeroProps = {
   title: string;

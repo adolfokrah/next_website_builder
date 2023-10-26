@@ -1,13 +1,13 @@
 {
   "name": "builder-app",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "format": "prettier --write 'app/**/*.ts' 'app/**/*.tsx'",
-    "lint": "next lint && prettier --check 'app/**/*.ts' 'app/**/*.tsx'",
+    "format": "prettier --write '**/*.ts' '**/*.tsx'",
+    "lint": "next lint && prettier --check '**/*.ts' '**/*.tsx'",
     "commit": "cz"
   },
   "husky": {

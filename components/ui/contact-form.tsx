@@ -1,6 +1,6 @@
-import { Button } from "./button";
-import { Input } from "./input";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from './button';
+import { Input } from './input';
+import { Textarea } from '@/components/ui/textarea';
 
 type ContactFormProps = {
   emailLabel: string;
