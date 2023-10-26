@@ -57,7 +57,6 @@ jobs:
       - name: Check if version-bump branch exists
         run: |
          if git ls-remote --exit-code --heads origin version-bump; then
-            git checkout main
             git branch -D version-bump
             echo "Deleted version-bump branch locally"
             git push origin --delete version-bump
