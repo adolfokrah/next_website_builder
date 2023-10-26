@@ -54,7 +54,7 @@ jobs:
           fi
           echo "::set-output name=version::$new_version"
       
-       - name: Create version-bump branch
+      - name: Create version-bump branch
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
@@ -63,11 +63,12 @@ jobs:
 	        id: update_version
 	        run: |
 	          echo "version=$(npm version $version --no-git-				  	tag-version)" >> $GITHUB_OUTPUT
-	      - name: Update Changelog
+            
+	    - name: Update Changelog
 		    id: update_changelog
 	        run: |
 	          sed -i 's/Unreleased/${{ steps.update_version.outputs.version }}/g'   CHANGELOG.md
-	      - name: Create pull request
+	    - name: Create pull request
 	        id: create_pr
 	        uses: peter-evans/create-pull-request@v5
 	        with:
