@@ -4,10 +4,14 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types:
+      - closed
 
 jobs:
   update_version:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.pull_request.title, 'Merge pull request')"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
