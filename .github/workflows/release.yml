@@ -56,7 +56,7 @@ jobs:
           
       - name: Check if version-bump branch exists
         run: |
-          if git rev-parse --quiet --verify version-bump; then
+         if git ls-remote --exit-code --heads origin version-bump; then
             git checkout main
             git branch -D version-bump
             echo "Deleted version-bump branch locally"
@@ -83,7 +83,7 @@ jobs:
       - name: Update package.json version
         run: |
           version=${{ steps.determine_version.outputs.version }}
-          echo "Updating package.json version to $new_version"
+          echo "Updating package.json version to $version"
           sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$version\"/" package.json
 
       - name: add and commit package.json
