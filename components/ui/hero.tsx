@@ -32,7 +32,7 @@ const Hero = ({ title, subTitle, color }: HeroProps) => {
           counter {counter}
         </Button>
         <Link href="/home">
-          <Button>Go to home page</Button>
+          <Button>Go to your home page</Button>
         </Link>
       </div>
     </div>
