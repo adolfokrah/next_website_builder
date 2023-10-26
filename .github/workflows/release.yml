@@ -120,8 +120,8 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          branch: verstion-update-${{version}}
           base: version-bump
-          branch: main
           commit-message: 'dependency: Update package.json version to $version'
           title: 'dependency: Update package.json version'
           body: 'This is an automated pull request to update the package version.'
