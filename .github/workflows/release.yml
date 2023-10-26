@@ -120,7 +120,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: verstion-update-${{version}}
+          branch: verstion-update
           base: version-bump
           commit-message: 'dependency: Update package.json version to $version'
           title: 'dependency: Update package.json version'
