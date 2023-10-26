@@ -67,8 +67,13 @@ jobs:
             git push origin --delete version-bump
           fi
 
-      - name: Apply stashed changes
-        run: git stash apply
+      - name: Check if there are any stashed changes
+        run: |
+          if git rev-parse --verify refs/stash; then
+            git stash apply
+          else
+            echo "No stash entries found."
+          fi
 
       - name: Commit and push updated package.json
         run: |
