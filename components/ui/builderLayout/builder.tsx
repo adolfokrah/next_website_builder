@@ -148,7 +148,7 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
       });
       setPageComponents([...components]);
     }
-  }, [data, registeredComponents]);
+  }, [data]);
 
   if (isFetching) {
     return <div>Fetching.. content</div>;
