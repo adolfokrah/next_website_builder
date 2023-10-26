@@ -18,13 +18,14 @@ jobs:
         with:
           node-version: '16' 
 
+      - name: Print pull request title
+        run: echo "Pull Request Title - ${{ github.event.pull_request.title }}"
+
       - name: Install pnpm
         run: npm install -g pnpm
 
       - name: Install dependencies
-        run: |
-        echo github.event.pull_request.title
-        pnpm install
+        run: pnpm install
 
       - name: Get package version
         id: get_version
