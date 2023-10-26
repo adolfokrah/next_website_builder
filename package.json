@@ -12,8 +12,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pnpm run lint",
-      "prepare-commit-msg": "exec < /dev/tty && npx cz --hook || true"
+      "pre-commit": "pnpm run lint"
     }
   },
   "dependencies": {
