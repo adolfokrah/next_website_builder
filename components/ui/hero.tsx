@@ -29,7 +29,7 @@ const Hero = ({ title, subTitle, color }: HeroProps) => {
             setCounter(counter + 1);
           }}
         >
-          counter {counter}
+          counter is {counter}
         </Button>
         <Link href="/home">
           <Button>Go to home page</Button>
