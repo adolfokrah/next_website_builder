@@ -81,7 +81,8 @@ jobs:
         run: |
           version=${{ steps.determine_version.outputs.version }}
           echo "Updating package.json version to $version"
-          jq '.version = $version' package.json > tmp.$$.json && mv tmp.$$.json package.json
+          sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$version\"/" package.json
+          echo $(node -p "require('./package.json').version")
 
       - name: add and commit package.json
         run: |
@@ -119,7 +120,6 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: main 
           branch: version-bump
           commit-message: 'dependency: Update package.json version to $version'
           title: 'dependency: Update package.json version'
