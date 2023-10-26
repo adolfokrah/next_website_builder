@@ -82,6 +82,7 @@ jobs:
           version=${{ steps.determine_version.outputs.version }}
           echo "Updating package.json version to $version"
           sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$version\"/" package.json
+          echo $(node -p "require('./package.json').version")
 
       - name: add and commit package.json
         run: |
