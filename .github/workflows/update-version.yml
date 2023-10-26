@@ -22,8 +22,9 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install dependencies
-        run: echo github.event.pull_request.title
-        run: pnpm install
+        run: |
+        echo github.event.pull_request.title
+        pnpm install
 
       - name: Get package version
         id: get_version
