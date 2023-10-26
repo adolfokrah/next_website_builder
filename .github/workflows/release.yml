@@ -23,26 +23,56 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Get package version
+        id: get_version
+        run: echo ::set-output name=version::$(node -p "require('./package.json').version")
+
+      - name: Determine version
+        id: determine_version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          commit_message=$(git log --format=%B -n 1 ${{ github.sha }})
+          if [[ $commit_message == feat* ]]; then
+            major=$(echo $version | cut -d. -f1)
+            minor=$(echo $version | cut -d. -f2)
+            patch=$(echo $version | cut -d. -f3)
+            ((major++))
+            new_version="$major.$minor.$patch"
+          elif [[ $commit_message == fix* ]]; then
+            major=$(echo $version | cut -d. -f1)
+            minor=$(echo $version | cut -d. -f2)
+            patch=$(echo $version | cut -d. -f3)
+            ((minor++))
+            new_version="$major.$minor.$patch"
+          else
+            major=$(echo $version | cut -d. -f1)
+            minor=$(echo $version | cut -d. -f2)
+            patch=$(echo $version | cut -d. -f3)
+            ((patch++))
+            new_version="$major.$minor.$patch"
+          fi
+          echo "::set-output name=version::$new_version"
+
       - name: Create Release
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          version=$(git log --format=%B -n 1 ${{ github.sha }} | grep -E '^(feat|fix|dependency):' | cut -d: -f1)
+          version=${{ steps.determine_version.outputs.version }}
           echo "Version: $version" # Debug statement to check the value of version
           body="Add your release notes here"
-          release_name=$(git log --format=%B -n 1 ${{ github.sha }} | grep -E '^(feat|fix|dependency):' | cut -d: -f2-)
+          release_name="$version"
           echo "Release name: $release_name"
-          tag_name="v$version"
+          tag_name="$version"
           echo "Tag name: $tag_name" # Debug statement to check the value of tag_name
           curl --request POST \
             --url https://api.github.com/repos/${{ github.repository }}/releases \
             --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             --header "content-type: application/json" \
             --data "{
-              \"tag_name\": \"$tag_name\",
+              \"tag_name\": \"$version\",
               \"target_commitish\": \"main\",
-              \"name\": \"$release_name\",
+              \"name\": \"$version\",
               \"body\": \"$body\",
               \"draft\": false,
               \"prerelease\": false
