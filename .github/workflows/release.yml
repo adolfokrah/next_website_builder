@@ -82,13 +82,15 @@ jobs:
           
       - name: Update package.json version
         run: |
+          version=${{ steps.determine_version.outputs.version }}
           echo "Updating package.json version to $new_version"
-          sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$new_version\"/" package.json
+          sed -i'' -e "s/\"version\": \".*\"/\"version\": \"$version\"/" package.json
 
       - name: add and commit package.json
         run: |
+          version=${{ steps.determine_version.outputs.version }}
           git add package.json
-          git commit -m "dependency: Update package.json version to $new_version"
+          git commit -m "dependency: Update package.json version to $version"
           git push --set-upstream origin version-bump
 
       - name: Create Release
