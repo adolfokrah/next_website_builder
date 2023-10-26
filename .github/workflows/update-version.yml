@@ -78,7 +78,6 @@ jobs:
           title: "Release: ${{ steps.update_version.outputs.version }} Pull Request"
           body: "This pull request contains the updated package.json with the new release version"
           base: main
-          author: GitHub Actions <actions@github.com>
       
       - name: Get pull request number
         id: get_pr_number
