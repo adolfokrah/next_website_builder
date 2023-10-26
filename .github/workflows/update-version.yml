@@ -11,7 +11,7 @@ on:
 jobs:
   update_version:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.pull_request.title, 'Merge pull request')"
+   if: "!startsWith(github.event.pull_request.title, 'Release:')"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
