@@ -61,11 +61,16 @@ jobs:
 
       - name: Check if version-bump branch exists
         run: |
-          if git rev-parse --verify version-bump; then
+          if git rev-parse --quiet --verify version-bump; then
             git checkout main
             git branch -D version-bump
+            echo "Deleted version-bump branch locally"
             git push origin --delete version-bump
+            echo "Deleted version-bump branch remotely"
+          else
+            echo "version-bump branch not found."
           fi
+
 
       - name: Check if there are any stashed changes
         run: |
