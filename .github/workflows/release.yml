@@ -89,16 +89,7 @@ jobs:
         run: |
           git add package.json
           git commit -m "dependency: Update package.json version to $new_version"
-          git push origin version-bump
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: version-bump
-          commit-message: 'dependency: Update package.json version to $new_version'
-          title: 'dependency: Update package.json version'
-          body: 'This is an automated pull request to update the package version.'
+          git push --set-upstream origin version-bump
 
       - name: Create Release
         id: create_release
