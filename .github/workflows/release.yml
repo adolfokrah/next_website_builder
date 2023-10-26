@@ -58,22 +58,23 @@ jobs:
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-      
-      - name: Update the version
-	        id: update_version
-	        run: |
-	          echo "version=$(npm version ${{ steps.determine_version.outputs.version }} --no-git-tag-version)" >> $GITHUB_OUTPUT
 
-	    - name: Update Changelog
-		    id: update_changelog
-	        run: |
-	          sed -i 's/Unreleased/${{ steps.update_version.outputs.version }}/g'   CHANGELOG.md
-	    - name: Create pull request
-	        id: create_pr
-	        uses: peter-evans/create-pull-request@v5
-	        with:
-	          token: ${{ secrets.GITHUB_TOKEN }}
-	          branch: release/${{ steps.update_version.outputs.version }}
-	          title: "Release: ${{ steps.update_version.outputs.version }} Pull Request"
-	          body: "This pull request contains the updated package.json with the new   	release version"
-	          base: main
+      - name: Update the version
+        id: update_version
+        run: |
+          echo "version=$(npm version ${{ steps.determine_version.outputs.version }} --no-git-tag-version)" >> $GITHUB_OUTPUT
+
+      - name: Update Changelog
+        id: update_changelog
+        run: |
+          sed -i 's/Unreleased/${{ steps.update_version.outputs.version }}/g'   CHANGELOG.md
+
+      - name: Create pull request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release/${{ steps.update_version.outputs.version }}
+          title: "Release: ${{ steps.update_version.outputs.version }} Pull Request"
+          body: "This pull request contains the updated package.json with the new release version"
+          base: main
