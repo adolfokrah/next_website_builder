@@ -1,0 +1,17 @@
+name: PR Title Check
+
+on:
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  check_title_format:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check PR title format
+      run: |
+        title=$(jq --raw-output .pull_request.title $GITHUB_EVENT_PATH)
+        if ! echo "$title" | grep -E '^(feat|dependency|fix): .+'; then
+          echo "Error: Invalid PR title format. Please use the format 'feat: title name', 'dependency: title name', or 'fix: title name'."
+          exit 1
+        fi
