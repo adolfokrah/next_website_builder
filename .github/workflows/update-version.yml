@@ -1,13 +1,16 @@
-name: Update version work flow
+name: Update version workflow
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    types: [closed]
 
 jobs:
   update_version:
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.action != 'closed'
     steps:
       - name: Checkout repository
         uses: actions/setup-node@v3
