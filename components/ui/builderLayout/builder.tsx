@@ -23,9 +23,11 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
   const { toast } = useToast();
 
   const handleRemoveSelectedComponent = () => {
-    let allComponents = [...pageComponents];
-    allComponents = allComponents.map((c) => ({ ...c, selected: false }));
-    setPageComponents(() => [...allComponents]);
+    setPageComponents((prevComponents) => {
+      let allComponents = [...prevComponents];
+      allComponents = allComponents.map((c) => ({ ...c, selected: false }));
+      return [...allComponents];
+    });
   };
 
   const handleSelectComponent = (index: number) => {
@@ -132,18 +134,21 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
     }
   };
 
-  const handleDeleteSection = (index: number) => {
+  const handleDeleteSection = (e: MouseEvent, index: number) => {
+    e.stopPropagation();
     setPageComponents((prevComponents) => {
       const updatedComponents = prevComponents.filter((_, i) => i !== index);
       return updatedComponents;
     });
   };
 
-  const handleDuplicateSection = (index: number) => {
+  const handleDuplicateSection = (e: MouseEvent, index: number) => {
+    e.stopPropagation();
+    handleRemoveSelectedComponent();
     setPageComponents((prevComponents) => {
       const components = [...prevComponents];
       const componentToDuplicate = components[index];
-      components.splice(index + 1, 0, { ...componentToDuplicate, id: uuidv4() });
+      components.splice(index + 1, 0, { ...componentToDuplicate, id: uuidv4(), selected: true });
       return components;
     });
   };
@@ -230,11 +235,11 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
                           <div className="flex bg-blue-500 absolute right-0 p-1 gap-2 top-0">
                             <BiSolidTrashAlt
                               className="text-white cursor-pointer"
-                              onClick={() => handleDeleteSection(index)}
+                              onClick={(e) => handleDeleteSection(e, index)}
                             />
                             <BiSolidCopy
                               className="text-white cursor-pointer"
-                              onClick={() => handleDuplicateSection(index)}
+                              onClick={(e) => handleDuplicateSection(e, index)}
                             />
                           </div>
                         </div>
