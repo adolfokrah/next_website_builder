@@ -32,7 +32,7 @@ const SideBar = ({
   };
 
   return (
-    <div className="h-screen fixed w-[300px] left-0 border-r bg-white border-r-slate-200 p-3">
+    <div className="h-screen z-30 fixed w-[300px] left-0 border-r bg-white border-r-slate-200 p-3">
       {selectedComponent ? (
         <>
           <Button variant={'outline'} onClick={handleRemoveSelectedComponent}>

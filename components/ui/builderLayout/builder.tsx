@@ -9,6 +9,7 @@ import { useQuery } from 'react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '../use-toast';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { BiSolidTrashAlt, BiSolidCopy } from 'react-icons/bi';
 
 type BuilderProps = {
   registeredComponents: Component[];
@@ -28,12 +29,14 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
   };
 
   const handleSelectComponent = (index: number) => {
-    let components = [...pageComponents].map((c) => ({
-      ...c,
-      selected: false,
-    }));
-    components[index].selected = true;
-    setPageComponents(() => [...components]);
+    setPageComponents((pageComponents) => {
+      let components = [...pageComponents].map((c) => ({
+        ...c,
+        selected: false,
+      }));
+      components[index].selected = true;
+      return [...components];
+    });
   };
 
   const handlePropValueChange = (newValue: any, propsIndex: number) => {
@@ -99,10 +102,12 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
     }
 
     if (source.droppableId === 'content') {
-      const newData = Array.from(pageComponents);
-      const [removed] = newData.splice(source.index, 1);
-      newData.splice(destination.index, 0, removed);
-      setPageComponents(newData);
+      setPageComponents((prevComponents) => {
+        const newData = Array.from(prevComponents);
+        const [removed] = newData.splice(source.index, 1);
+        newData.splice(destination.index, 0, removed);
+        return newData;
+      });
       return;
     }
 
@@ -120,9 +125,27 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
           id: uuidv4(),
         };
         newData.splice(destination.index, 0, item);
-        setPageComponents(newData);
+        setPageComponents(() => {
+          return newData;
+        });
       }
     }
+  };
+
+  const handleDeleteSection = (index: number) => {
+    setPageComponents((prevComponents) => {
+      const updatedComponents = prevComponents.filter((_, i) => i !== index);
+      return updatedComponents;
+    });
+  };
+
+  const handleDuplicateSection = (index: number) => {
+    setPageComponents((prevComponents) => {
+      const components = [...prevComponents];
+      const componentToDuplicate = components[index];
+      components.splice(index + 1, 0, { ...componentToDuplicate, id: uuidv4() });
+      return components;
+    });
   };
 
   useEffect(() => {
@@ -183,13 +206,11 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
                 const Tag = component.component;
                 const inputs = component.inputs;
                 return (
-                  <Draggable key={`${component.title}_${index}`} draggableId={component.id} index={index}>
+                  <Draggable key={component.id} draggableId={component.id} index={index}>
                     {(provided) => (
                       <section
-                        key={`${component.title}_${index}`}
-                        className={cn(' outline outline-1 outline-transparent hover:outline-blue-500', {
-                          ' outline-blue-500': component.selected,
-                        })}
+                        key={component.id}
+                        className={'relative group'}
                         onClick={() => {
                           handleSelectComponent(index);
                         }}
@@ -198,6 +219,25 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
                         {...provided.dragHandleProps}
                       >
                         <Tag {...inputs} />
+                        <div
+                          className={cn(
+                            'w-full h-full hidden left-0 top-0  border border-transparent absolute  hover:border-blue-500 group-hover:block',
+                            {
+                              ' border-blue-500 block': component.selected,
+                            },
+                          )}
+                        >
+                          <div className="flex bg-blue-500 absolute right-0 p-1 gap-2 top-0">
+                            <BiSolidTrashAlt
+                              className="text-white cursor-pointer"
+                              onClick={() => handleDeleteSection(index)}
+                            />
+                            <BiSolidCopy
+                              className="text-white cursor-pointer"
+                              onClick={() => handleDuplicateSection(index)}
+                            />
+                          </div>
+                        </div>
                       </section>
                     )}
                   </Draggable>
