@@ -215,7 +215,9 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
                     {(provided) => (
                       <section
                         key={component.id}
-                        className={'relative group'}
+                        className={cn('relative group border border-transparent   hover:border-blue-500 builder', {
+                          ' border-blue-500 block': component.selected,
+                        })}
                         onClick={() => {
                           handleSelectComponent(index);
                         }}
@@ -224,22 +226,15 @@ const Builder = ({ registeredComponents, page }: BuilderProps) => {
                         {...provided.dragHandleProps}
                       >
                         <Tag {...inputs} />
-                        <div
-                          className={cn(
-                            'w-full h-full hidden left-0 top-0  border border-transparent absolute  hover:border-blue-500 group-hover:block',
-                            {
-                              ' border-blue-500 block': component.selected,
-                            },
-                          )}
-                        >
-                          <div className="flex bg-blue-500 absolute right-0 p-1 gap-2 top-0">
+                        <div className=" bg-blue-500 absolute right-0 p-1 hidden group-hover:block  top-0 ">
+                          <div className="flex gap-2">
                             <BiSolidTrashAlt
                               className="text-white cursor-pointer"
-                              onClick={(e) => handleDeleteSection(e, index)}
+                              onClick={(e: MouseEvent) => handleDeleteSection(e, index)}
                             />
                             <BiSolidCopy
                               className="text-white cursor-pointer"
-                              onClick={(e) => handleDuplicateSection(e, index)}
+                              onClick={(e: MouseEvent) => handleDuplicateSection(e, index)}
                             />
                           </div>
                         </div>

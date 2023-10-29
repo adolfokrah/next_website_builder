@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from './button';
 import Link from 'next/link';
 
@@ -7,10 +7,15 @@ type HeroProps = {
   title: string;
   subTitle: string;
   color: string;
+  initialCount: number;
 };
 
-const Hero = ({ title, subTitle, color }: HeroProps) => {
-  const [counter, setCounter] = useState(0);
+const Hero = ({ title, subTitle, color, initialCount }: HeroProps) => {
+  const [counter, setCounter] = useState<number>(0);
+
+  useEffect(() => {
+    setCounter(initialCount);
+  }, [initialCount]);
 
   return (
     <div className="py-10 bg-green-800 w-full">
@@ -26,7 +31,7 @@ const Hero = ({ title, subTitle, color }: HeroProps) => {
         <p className="w-full md:w-1/2 m-auto">{subTitle}</p>
         <Button
           onClick={() => {
-            setCounter(counter + 1);
+            setCounter((prevCounter) => Number(prevCounter) + 1);
           }}
         >
           counter {counter}

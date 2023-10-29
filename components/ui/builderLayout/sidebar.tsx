@@ -1,12 +1,11 @@
 'use client';
 import { ComponentPropsValues, SideBarProps } from '@/lib/types';
 import { Button } from '../button';
-import { ArrowBottomLeftIcon, ArrowLeftIcon } from '@radix-ui/react-icons';
-import { Input } from '../input';
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { cn } from '@/lib/utils';
-import { v4 as uuidv4 } from 'uuid';
-import { useState } from 'react';
+
+import RenderComponentController from './componentControllers/renderComponentController';
 
 const SideBar = ({
   registeredComponents,
@@ -15,22 +14,6 @@ const SideBar = ({
   handleRemoveSelectedComponent,
   handlePropValueChange,
 }: SideBarProps) => {
-  const renderPropValue = (value: ComponentPropsValues, propIndex: number, defaultValue: any) => {
-    switch (value) {
-      case 'text':
-        return (
-          <Input
-            defaultValue={defaultValue}
-            onChange={(e) => {
-              handlePropValueChange(e.target.value, propIndex);
-            }}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <div className="h-screen z-30 fixed w-[300px] left-0 border-r bg-white border-r-slate-200 p-3">
       {selectedComponent ? (
@@ -45,8 +28,12 @@ const SideBar = ({
 
               return (
                 <div key={`${selectedComponent.id}_${prop.name}`} className="mb-2">
-                  <span className=" text-sm mt-2 mb-1 font-semibold">{prop.label}</span>
-                  {renderPropValue(prop.value, index, defaultValue)}
+                  <RenderComponentController
+                    prop={prop}
+                    propIndex={index}
+                    defaultValue={defaultValue}
+                    handlePropValueChange={handlePropValueChange}
+                  />
                 </div>
               );
             })}
