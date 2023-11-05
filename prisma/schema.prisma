@@ -6,15 +6,22 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-model Page {
-  id    Int     @id @default(autoincrement())
-  name String  @unique
-  components String
-}
 
+model Page {
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  name            String     @unique
+  slug            String     @unique
+  blocks          Json[]
+  metaTitle       String? 
+  metaKeyWords    String?
+  metaDescription String?
+  featuredImage   String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
 
 

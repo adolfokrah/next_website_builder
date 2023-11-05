@@ -1,29 +1,30 @@
-import registeredComponents from '@/lib/component_registery';
+import registeredBlocks from '@/lib/blocks_registery';
+import { Page } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 
 interface BuilderPageProps {
-  data: string;
+  data: Page['blocks'];
 }
 
 const RenderBuilderContent = async ({ data }: BuilderPageProps) => {
-  let content: object[] = JSON.parse(data || '[]');
-  if (content.length) {
-    let components = content.map((component: any) => {
-      let foundComponent = registeredComponents.find((c) => c.title === component.component);
+  let content: Page['blocks'] = data;
+  if (content) {
+    let pageBlocks = content.map((block: any) => {
+      let foundComponent = registeredBlocks.find((c) => c.title === block.component);
       return {
         ...foundComponent,
         selected: false,
-        inputs: component.inputs,
+        inputs: block.inputs,
         id: uuidv4(),
       };
     });
 
     return (
       <>
-        {components.map((component) => {
-          const Tag = component.component;
-          const inputs = component.inputs || component.defaultInputs;
-          return <section key={component.id}>{Tag ? <Tag {...inputs} /> : null}</section>;
+        {pageBlocks.map((block) => {
+          const Tag = block.component;
+          const inputs = block.inputs || block.defaultInputs;
+          return <section key={block.id}>{Tag ? <Tag {...inputs} /> : null}</section>;
         })}
       </>
     );

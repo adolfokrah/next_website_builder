@@ -1,4 +1,4 @@
-import { RenderComponentControllerProps } from '@/lib/types';
+import { RenderBlockControllerProps } from '@/lib/types';
 import TextInputController from './textInputController';
 
 const RenderComponentController = ({
@@ -6,7 +6,7 @@ const RenderComponentController = ({
   propIndex,
   defaultValue,
   handlePropValueChange,
-}: RenderComponentControllerProps) => {
+}: RenderBlockControllerProps) => {
   switch (prop.type) {
     case 'text':
       return (

@@ -1,26 +1,51 @@
 'use client';
-import { ExternalLinkIcon } from '@radix-ui/react-icons';
+import { ChevronDown, ExternalLink, Monitor, Smartphone, Tablet } from 'lucide-react';
 import { Button } from '../button';
-import Link from 'next/link';
+import { useBuilderState } from '@/lib/useBuilderState';
+import { cn } from '@/lib/utils';
 
-type NavBarProps = {
-  handleSaveChanges: () => void;
-  page: string;
-};
+const NavBar = ({ pageName }: { pageName: string }) => {
+  const { showPageSideBar, viewPort, setViewPort, togglePageSideBar } = useBuilderState();
 
-const NavBar = ({ handleSaveChanges, page }: NavBarProps) => {
   return (
-    <div className="p-2 border-b w-full left-0 z-20 bg-white border-b-slate-200 fixed top-0 flex justify-end">
-      <Button className="bg-sky-500 hover:bg-sky-700 text-white" onClick={handleSaveChanges}>
-        Save & Publish
+    <div className=" p-4 border-b w-full left-0 z-20 bg-brand-dark-blue border-b-slate-200 fixed top-0 flex justify-between">
+      <Button className="bg-transparent hover:bg-transparent" onClick={togglePageSideBar}>
+        <ChevronDown className="mr-2 " size="20" />
+        {pageName}
       </Button>
-
-      <Link href={page} target="_blank">
-        <Button variant={'outline'} className="ml-2">
-          Preview
-          <ExternalLinkIcon className="ml-2" />
+      <div className="flex  items-center">
+        <Button
+          className={cn('bg-transparent hover:bg-slate-700', {
+            '!bg-brand-green-50': viewPort == 'Desktop',
+          })}
+          onClick={() => setViewPort('Desktop')}
+        >
+          <Monitor size={20} />
         </Button>
-      </Link>
+        <Button
+          className={cn('bg-transparent hover:bg-slate-700', {
+            '!bg-brand-green-50': viewPort == 'Tablet',
+          })}
+          onClick={() => setViewPort('Tablet')}
+        >
+          <Tablet size={20} />
+        </Button>
+        <Button
+          className={cn('bg-transparent hover:bg-slate-700', {
+            '!bg-brand-green-50': viewPort == 'Mobile',
+          })}
+          onClick={() => setViewPort('Mobile')}
+        >
+          <Smartphone size={20} />
+        </Button>
+      </div>
+      <div className="flex items-center gap-2">
+        <Button className=" text-white" variant={'ghost'}>
+          Preview
+          <ExternalLink size={17} className="ml-2" />
+        </Button>
+        <Button className=" text-white">Save & Publish</Button>
+      </div>
     </div>
   );
 };

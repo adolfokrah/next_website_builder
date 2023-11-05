@@ -11,13 +11,13 @@ interface PageProps {
 export default async function Page(props: PageProps) {
   let data = await prisma.page.findFirst({
     where: {
-      name: `/${props.params.page.join('/')}`,
+      slug: `/${props.params.page.join('/')}`,
     },
   });
   prisma.$disconnect();
   return (
     <>
-      <RenderBuilderContent data={data?.components || ''} />
+      <RenderBuilderContent data={data?.blocks || []} />
     </>
   );
 }

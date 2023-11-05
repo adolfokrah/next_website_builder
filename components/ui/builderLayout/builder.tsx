@@ -1,6 +1,6 @@
 'use client';
 import { Component, ComponentProps, pageComponent } from '@/lib/types';
-import SideBar from './sidebar';
+import SideBar from './sidebarOld';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { v4 as uuidv4 } from 'uuid';

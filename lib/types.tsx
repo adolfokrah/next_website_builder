@@ -1,38 +1,44 @@
-import { ComponentType } from 'react';
+import { Component } from 'react';
 
-export type ComponentPropsValues = 'text' | 'number' | 'list' | 'image';
+export type BlockPropsTypes = 'text' | 'number' | 'list' | 'image';
 
-export type ComponentProps = {
+export type BlockProps = {
   name: string;
-  type: ComponentPropsValues;
+  type: BlockPropsTypes;
   label: string;
 };
 
-export type Component = {
-  component: ComponentType<any>;
+export type Block = {
+  Block: Component<any>;
   title: string;
   icon: React.ReactNode;
-  props?: ComponentProps[];
+  props?: BlockProps[];
   defaultInputs: object;
 };
 
-export type pageComponent = Component & {
+export type pageBlock = Block & {
   selected: boolean;
   inputs: { [key: string]: any } | undefined;
   id: string;
 };
 
 export type SideBarProps = {
-  registeredComponents: Component[];
-  handleAddComponent: (component: Component) => void;
-  selectedComponent: pageComponent | undefined;
-  handleRemoveSelectedComponent: () => void;
+  registeredBlocks: Block[];
+  handleAddBlock: (Block: Block) => void;
+  selectedBlock: pageBlock | undefined;
+  handleRemoveSelectedBlock: () => void;
   handlePropValueChange: (newValue: any, propIndex: number) => void;
 };
 
-export type RenderComponentControllerProps = {
-  prop: ComponentProps;
+export type RenderBlockControllerProps = {
+  prop: BlockProps;
   propIndex: number;
   defaultValue: any;
   handlePropValueChange: (newValue: any, propIndex: number) => void;
+};
+
+export type ToasterProps = {
+  title: string;
+  description: string;
+  type: 'default' | 'destructive';
 };
