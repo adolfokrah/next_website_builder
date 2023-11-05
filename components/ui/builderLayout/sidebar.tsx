@@ -3,7 +3,7 @@
 import { useBuilderState } from '@/lib/useBuilderState';
 import { cn } from '@/lib/utils';
 import { Label } from '@radix-ui/react-label';
-import { useEffect, useState } from 'react';
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import { Input } from '../input';
 import { Textarea } from '../textarea';
 import SubmitButton from './submitButton';
@@ -13,6 +13,8 @@ import { deletePage, updatePageSettings } from '@/lib/actions/pageActions';
 import { Button } from '../button';
 import { CopyIcon, Dot, PlusIcon, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import lodash from 'lodash';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,6 +46,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
   const [selectedPage, setSelectedPage] = useState<SideBarProps>();
   const { toast } = useToast();
   const [error, setError] = useState<ToasterProps>();
+  const [search, setSearch] = useState<string>('');
   const router = useRouter();
   useEffect(() => {
     if (error) {
@@ -88,6 +91,10 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
     }
     setError({ title: 'Success', description: 'Page settings updated', type: 'default' });
   }
+
+  const debouncedInputChange = lodash.debounce((event) => {
+    setSearch(event.target.value);
+  }, 300);
 
   return (
     <div
@@ -215,10 +222,17 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
 
           <div className={'w-[320px] flex-grow-0 flex-shrink-0  flex flex-col gap-4 py-3 px-2'}>
             <div className="w-full">
-              <Input id="search" name="search" type="text" placeholder="Search page" className="w-full mt-1" />
+              <Input
+                id="search"
+                name="search"
+                type="text"
+                placeholder="Search page"
+                className="w-full mt-1"
+                onChange={(event) => debouncedInputChange(event)}
+              />
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm">All pages</span>
+              <span className="text-sm">{search.length ? 'Search results' : 'All pages'}</span>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant={'outline'}>
@@ -233,78 +247,86 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
             </div>
 
             <div>
-              {pages.map((page) => (
-                <div
-                  key={page.id}
-                  className={cn(
-                    'flex group items-center hover:bg-slate-100 transition-colors duration-200 ease-linear justify-between rounded-md  p-2 cursor-pointer',
-                    {
-                      '!bg-slate-200': currentPage.id === page.id,
-                    },
-                  )}
-                >
+              {pages
+                .filter((page) => page.name.toLowerCase().includes(search.toLowerCase()))
+                .map((page) => (
                   <div
-                    onClick={() => {
-                      router.replace(`/builder${page.slug}`);
-                    }}
-                    className="w-[45%] "
+                    key={page.id}
+                    className={cn(
+                      'flex group items-center hover:bg-slate-50 transition-colors duration-200 ease-linear justify-between rounded-md  px-2 cursor-pointer',
+                      {
+                        '!bg-slate-100': currentPage.id === page.id,
+                      },
+                    )}
                   >
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center ">
-                            <Dot className="text-brand-green-50 flex-shrink-0" size={50} />
-                            <div className="w-full">
-                              <h4 className="text-sm truncate font-medium">{page.name}</h4>
-                              <p className="text-xs text-slate-500 truncate">{page.slug}</p>
+                    <div
+                      onClick={() => {
+                        router.replace(`/builder${page.slug}`);
+                      }}
+                      className="w-[45%] "
+                    >
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex items-center ">
+                              <Dot className="text-brand-green-50 flex-shrink-0" size={50} />
+                              <div className="w-full">
+                                <h4
+                                  className={cn('text-sm truncate font-medium', {
+                                    'text-brand-green-50': currentPage.id === page.id,
+                                  })}
+                                >
+                                  {page.name}
+                                </h4>
+                                <p className="text-xs text-slate-500 truncate">{page.slug}</p>
+                              </div>
                             </div>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent align="start">
-                          <p>{page.name}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                  <div
-                    className={cn('gap-2 hidden group-hover:flex', {
-                      '!flex': currentPage.id === page.id,
-                    })}
-                  >
-                    <Button variant={'outline'} className="!bg-white">
-                      <CopyIcon size={17} />
-                    </Button>
+                          </TooltipTrigger>
+                          <TooltipContent align="start">
+                            <p>{page.name}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    <div
+                      className={cn('gap-1 hidden group-hover:flex', {
+                        '!flex': currentPage.id === page.id,
+                      })}
+                    >
+                      <Button variant={'outline'} className="!bg-white">
+                        <CopyIcon size={17} />
+                      </Button>
 
-                    <AlertDialog>
-                      <AlertDialogTrigger
-                        onClick={() => {
-                          setSelectedPage(page);
-                        }}
-                        asChild
-                      >
-                        <Button variant={'outline'} className="!bg-white">
-                          <Trash2 size={17} />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete the page{' '}
-                            <b>{selectedPage?.name}</b>
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction className="bg-red-500 hover:bg-red-600" onClick={handleDeletePage}>
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                      <AlertDialog>
+                        <AlertDialogTrigger
+                          onClick={() => {
+                            setSelectedPage(page);
+                          }}
+                          asChild
+                        >
+                          <Button variant={'outline'} className="!bg-white">
+                            <Trash2 size={17} />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will permanently delete the page{' '}
+                              <b>{selectedPage?.name}</b>
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction className="bg-red-500 hover:bg-red-600" onClick={handleDeletePage}>
+                              Continue
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>
