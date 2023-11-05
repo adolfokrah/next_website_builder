@@ -25,6 +25,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
 import CreatePage from './createPage';
 
 type SideBarProps = {
@@ -139,7 +141,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
             className={'w-[320px] flex-grow-0 flex-shrink-0 flex flex-col gap-4 py-3 px-2'}
           >
             <div className="w-full">
-              <Label htmlFor="pageName" className="text-sm">
+              <Label htmlFor="pageName" className="text-xs font-medium">
                 Page Name
               </Label>
               <Input
@@ -153,7 +155,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
             </div>
 
             <div className="w-full">
-              <Label htmlFor="slug" className="text-sm">
+              <Label htmlFor="slug" className="text-xs font-medium">
                 Slug
               </Label>
               <Input
@@ -167,7 +169,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
             </div>
 
             <div className="w-full">
-              <Label htmlFor="metaTitle" className="text-sm">
+              <Label htmlFor="metaTitle" className="text-xs font-medium">
                 Meta title
               </Label>
               <Input
@@ -181,7 +183,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
             </div>
 
             <div className="w-full">
-              <Label htmlFor="metaKeyWords" className="text-sm">
+              <Label htmlFor="metaKeyWords" className="text-xs font-medium">
                 Meta keywords
               </Label>
               <Input
@@ -195,7 +197,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
             </div>
 
             <div className="w-full">
-              <Label htmlFor="metaDescription" className="text-sm">
+              <Label htmlFor="metaDescription" className="text-xs font-medium">
                 Meta description
               </Label>
               <Textarea
@@ -224,6 +226,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="start">
+                  <h3 className="text-bold mb-3">Add a new page</h3>
                   <CreatePage />
                 </PopoverContent>
               </Popover>
@@ -244,14 +247,24 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
                     onClick={() => {
                       router.replace(`/builder${page.slug}`);
                     }}
+                    className="w-[45%] "
                   >
-                    <div className="flex items-center">
-                      <Dot className="text-brand-green-50" size={50} />
-                      <div>
-                        <h4 className="text-sm text-ellipsis">{page.name}</h4>
-                        <small className="text-xs text-slate-500 text-ellipsis">{page.slug}</small>
-                      </div>
-                    </div>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center ">
+                            <Dot className="text-brand-green-50 flex-shrink-0" size={50} />
+                            <div className="w-full">
+                              <h4 className="text-sm truncate font-medium">{page.name}</h4>
+                              <p className="text-xs text-slate-500 truncate">{page.slug}</p>
+                            </div>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent align="start">
+                          <p>{page.name}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                   <div
                     className={cn('gap-2 hidden group-hover:flex', {

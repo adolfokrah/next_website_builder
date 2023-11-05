@@ -49,14 +49,14 @@ const CreatePage = ({ slug }: { slug?: string }) => {
   return (
     <form action={handleCreatePage}>
       <div className="w-full">
-        <Label htmlFor="pageName" className=" text-sm">
+        <Label htmlFor="pageName" className=" text-xs font-medium">
           Page Name
         </Label>
         <Input id="pageName" name="name" type="text" placeholder="eg. Home page" className="w-full mt-2" />
       </div>
 
       <div className="w-full mt-4">
-        <Label htmlFor="slug" className=" text-sm">
+        <Label htmlFor="slug" className=" text-xs font-medium">
           Slug
         </Label>
         <Input

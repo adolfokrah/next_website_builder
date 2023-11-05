@@ -18,7 +18,7 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
       }}
     >
       <Frame
-        className={cn('w-[100%] transition-all bg-red-600 overflow-scroll duration-300 ease-linear  m-auto', {
+        className={cn('w-[100%] transition-all  overflow-scroll duration-300 ease-linear  m-auto', {
           'w-[458px]': viewPort === 'Mobile',
           'w-[789px]': viewPort === 'Tablet',
         })}
