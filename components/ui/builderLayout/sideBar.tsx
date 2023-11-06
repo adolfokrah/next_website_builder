@@ -39,7 +39,7 @@ type SideBarProps = Partial<Page> & {
 };
 
 const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: SideBarProps[] }) => {
-  const { showPageSideBar } = useBuilderState();
+  const { showPageSideBar, setPageBlocks } = useBuilderState();
   const [currentTab, setCurrentTab] = useState<'settings' | 'pages'>('settings');
   const [selectedPage, setSelectedPage] = useState<SideBarProps>();
   const { toast } = useToast();

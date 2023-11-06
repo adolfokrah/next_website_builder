@@ -83,7 +83,7 @@ export const copyPage = async ({ id }: { id: Page['id'] }) => {
           metaTitle: page.metaTitle,
           metaDescription: page.metaDescription,
           metaKeyWords: page.metaKeyWords,
-          blocks: JSON.parse(JSON.stringify(page.blocks)),
+          blocks: page.blocks as object[],
         },
       });
 

@@ -7,7 +7,7 @@ import { FileIcon, HamburgerMenuIcon, ImageIcon, LayersIcon, SunIcon } from '@ra
 import ContactForm from '@/components/ui/contact-form';
 import Metrics from '@/components/ui/metics';
 
-const registeredComponents: Block[] = [
+const registerBlocks: Block[] = [
   {
     component: Button,
     title: 'Button',
@@ -79,4 +79,4 @@ const registeredComponents: Block[] = [
   },
 ];
 
-export default registeredComponents;
+export default registerBlocks;

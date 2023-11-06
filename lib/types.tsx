@@ -16,7 +16,7 @@ export type Block = {
   defaultInputs: object;
 };
 
-export type pageBlock = Block & {
+export type PageBlock = Block & {
   selected: boolean;
   inputs: { [key: string]: any } | undefined;
   id: string;
@@ -25,7 +25,7 @@ export type pageBlock = Block & {
 export type SideBarProps = {
   registeredBlocks: Block[];
   handleAddBlock: (Block: Block) => void;
-  selectedBlock: pageBlock | undefined;
+  selectedBlock: PageBlock | undefined;
   handleRemoveSelectedBlock: () => void;
   handlePropValueChange: (newValue: any, propIndex: number) => void;
 };
@@ -41,4 +41,15 @@ export type ToasterProps = {
   title: string;
   description: string;
   type: 'default' | 'destructive';
+};
+
+export type ViewPorts = 'Desktop' | 'Mobile' | 'Tablet';
+
+export type BuilderStateProps = {
+  showPageSideBar: boolean;
+  viewPort: ViewPorts;
+  pageBlocks: PageBlock[];
+  togglePageSideBar: () => void;
+  setViewPort: (viewPort: ViewPorts) => void;
+  setPageBlocks: (blocks: object[]) => void;
 };
