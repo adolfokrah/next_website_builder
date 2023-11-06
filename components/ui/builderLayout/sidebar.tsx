@@ -30,16 +30,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import CreatePage from './createPage';
+import { Page } from '@prisma/client';
 
-type SideBarProps = {
+type SideBarProps = Partial<Page> & {
   id: string;
   name: string;
   slug: string;
-  metaTitle?: string | null;
-  metaKeyWords?: string | null;
-  metaDescription?: string | null;
-  featuredImage?: string | null;
 };
+
 const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: SideBarProps[] }) => {
   const { showPageSideBar } = useBuilderState();
   const [currentTab, setCurrentTab] = useState<'settings' | 'pages'>('settings');

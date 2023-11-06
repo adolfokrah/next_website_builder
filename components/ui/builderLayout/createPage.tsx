@@ -25,14 +25,14 @@ const CreatePage = ({ slug }: { slug?: string }) => {
 
   async function handleCreatePage(formData: FormData) {
     let name = (formData.get('name') as string) || null;
-    let slug = (formData.get('slug') as string) || null;
+    let formSlug = (formData.get('slug') as string) || null;
 
-    if (name && slug) {
-      if (slug?.charAt(0) != '/') {
+    if (name && formSlug) {
+      if (formSlug?.charAt(0) != '/') {
         setError({ title: 'Failed', description: 'slug name should start with /', type: 'destructive' });
         return;
       }
-      let data = await createNewPage({ name, slug });
+      let data = await createNewPage({ name, slug: formSlug });
       if (data.error) {
         setError({ title: 'Failed', description: data.error, type: 'destructive' });
         return;
