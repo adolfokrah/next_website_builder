@@ -9,10 +9,10 @@ import { Textarea } from '../textarea';
 import SubmitButton from './submitButton';
 import { useToast } from '../use-toast';
 import { ToasterProps } from '@/lib/types';
-import { deletePage, updatePageSettings } from '@/lib/actions/pageActions';
+import { copyPage, deletePage, updatePageSettings } from '@/lib/actions/pageActions';
 import { Button } from '../button';
 import { CopyIcon, Dot, PlusIcon, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import lodash from 'lodash';
 
 import {
@@ -87,7 +87,19 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
       setError({ title: 'Failed', description: data.error, type: 'destructive' });
       return;
     }
-    setError({ title: 'Success', description: 'Page settings updated', type: 'default' });
+    setError({ title: 'Success', description: 'Page deleted', type: 'default' });
+  }
+
+  async function handleCopyPage({ id }: { id: string }) {
+    let data = await copyPage({ id: id });
+    if (data) {
+      if (data.error) {
+        setError({ title: 'Failed', description: data.error, type: 'destructive' });
+        return;
+      }
+      setError({ title: 'Success', description: 'Page copied', type: 'default' });
+      router.replace(`/builder${data?.data?.slug}`);
+    }
   }
 
   const debouncedInputChange = lodash.debounce((event) => {
@@ -143,7 +155,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
         >
           <form
             action={handleUpdatePageSettings}
-            className={'w-[320px] flex-grow-0 flex-shrink-0 flex flex-col gap-4 py-3 px-2'}
+            className={'w-[320px] flex-grow-0 flex-shrink-0 flex flex-col gap-4 py-3 px-2 px-2 h-[88vh] overflow-auto'}
           >
             <div className="w-full">
               <Label htmlFor="pageName" className="text-xs font-medium">
@@ -218,7 +230,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
             <SubmitButton title="Save changes" loadingTitle="Saving..." />
           </form>
 
-          <div className={'w-[320px] flex-grow-0 flex-shrink-0  flex flex-col gap-4 py-3 px-2'}>
+          <div className={'w-[320px] flex-grow-0 flex-shrink-0  flex flex-col gap-4 py-3 px-2 h-[88vh] overflow-auto'}>
             <div className="w-full">
               <Input
                 id="search"
@@ -291,9 +303,24 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
                         '!flex': currentPage.id === page.id,
                       })}
                     >
-                      <Button variant={'outline'} className="!bg-white">
-                        <CopyIcon size={17} />
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={'outline'}
+                              className="!bg-white"
+                              onClick={() => {
+                                handleCopyPage({ id: page.id });
+                              }}
+                            >
+                              <CopyIcon size={17} />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent align="start">
+                            <p>Copy page</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
 
                       <AlertDialog>
                         <AlertDialogTrigger
@@ -302,9 +329,18 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
                           }}
                           asChild
                         >
-                          <Button variant={'outline'} className="!bg-white">
-                            <Trash2 size={17} />
-                          </Button>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant={'outline'} className="!bg-white">
+                                  <Trash2 size={17} />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent align="end">
+                                <p>Delete page</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>

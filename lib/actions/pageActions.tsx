@@ -68,3 +68,41 @@ export const deletePage = async ({ id }: { id: Page['id'] }) => {
     return { error: 'Oops, something happened' };
   }
 };
+
+export const copyPage = async ({ id }: { id: Page['id'] }) => {
+  try {
+    let page = await prisma.page.findFirst({
+      where: { id },
+    });
+    if (page) {
+      let pageNumber = generateUniqueNumbers();
+      const createdPage = await prisma.page.create({
+        data: {
+          name: `${page.name}-${pageNumber}`,
+          slug: `${page.slug.split(' ').join('-')}-${pageNumber}`,
+          metaTitle: page.metaTitle,
+          metaDescription: page.metaDescription,
+          metaKeyWords: page.metaKeyWords,
+          blocks: JSON.parse(JSON.stringify(page.blocks)),
+        },
+      });
+
+      prisma.$disconnect();
+      return { data: createdPage, error: null };
+    }
+  } catch (error) {
+    console.log(error);
+    return { error: 'Oops, something happened' };
+  }
+};
+
+function generateUniqueNumbers(): string {
+  let numbers: number[] = [];
+  while (numbers.length < 4) {
+    let randomNumber = Math.floor(Math.random() * 10);
+    if (!numbers.includes(randomNumber)) {
+      numbers.push(randomNumber);
+    }
+  }
+  return numbers.join('');
+}
