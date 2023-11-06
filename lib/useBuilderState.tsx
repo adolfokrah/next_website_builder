@@ -5,6 +5,7 @@ export const useBuilderState = create<BuilderStateProps>((set) => ({
   showPageSideBar: false,
   viewPort: 'Desktop',
   pageBlocks: [],
+  pageId: '',
   togglePageSideBar: () => {
     set((state) => ({ showPageSideBar: !state.showPageSideBar }));
   },
@@ -13,5 +14,8 @@ export const useBuilderState = create<BuilderStateProps>((set) => ({
   },
   setPageBlocks: (blocks) => {
     set(() => ({ pageBlocks: blocks as PageBlock[] }));
+  },
+  setPageId: (id) => {
+    set(() => ({ pageId: id }));
   },
 }));

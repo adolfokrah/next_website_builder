@@ -44,7 +44,7 @@ const Page = async (props: PageProps) => {
       <NavBar pageName={page.name} />
       <div className="flex justify-end">
         <SideBar currentPage={page} pages={pages} />
-        <VisioBuilder slug={props.params.page} />
+        <VisioBuilder slug={slug} />
       </div>
     </>
     // </QueryClientProvider>

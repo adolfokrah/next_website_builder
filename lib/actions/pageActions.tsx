@@ -3,6 +3,7 @@
 import { Page } from '@prisma/client';
 import prisma from '../prisma_init';
 import { revalidatePath } from 'next/cache';
+import { PageBlock } from '../types';
 
 export const createNewPage = async ({ name, slug }: { name: Page['name']; slug: Page['slug'] }) => {
   try {
@@ -91,7 +92,24 @@ export const copyPage = async ({ id }: { id: Page['id'] }) => {
       return { data: createdPage, error: null };
     }
   } catch (error) {
-    console.log(error);
+    return { error: 'Oops, something happened' };
+  }
+};
+
+export const savePage = async ({ id, blocks }: { id: Page['id']; blocks: PageBlock[] }) => {
+  try {
+    const data = await prisma.page.update({
+      where: {
+        id,
+      },
+      data: {
+        blocks: blocks as object[],
+      },
+    });
+
+    prisma.$disconnect();
+    return { data: data, error: null };
+  } catch (error) {
     return { error: 'Oops, something happened' };
   }
 };

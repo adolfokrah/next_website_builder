@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 
 type BuilderProps = {
-  slug: string[];
+  slug: string;
 };
 
 const VisioBuilder = ({ slug }: BuilderProps) => {
@@ -22,7 +22,6 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
 
   useEffect(() => {
     postMessageToIframe();
-
     const messageHandler = (event: MessageEvent) => {
       if (event.origin !== 'http://localhost:3000') return;
       try {
@@ -51,7 +50,7 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
         style={{
           height: 'calc(100vh - 65px)',
         }}
-        src="/builder"
+        src={`/builder?page=${slug}`}
       />
     </div>
   );

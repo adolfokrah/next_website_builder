@@ -48,8 +48,10 @@ export type ViewPorts = 'Desktop' | 'Mobile' | 'Tablet';
 export type BuilderStateProps = {
   showPageSideBar: boolean;
   viewPort: ViewPorts;
+  pageId: string;
   pageBlocks: PageBlock[];
   togglePageSideBar: () => void;
   setViewPort: (viewPort: ViewPorts) => void;
   setPageBlocks: (blocks: object[]) => void;
+  setPageId: (id: string) => void;
 };

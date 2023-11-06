@@ -10,7 +10,7 @@ const RenderBuilderContent = async ({ data }: BuilderPageProps) => {
   let content: Page['blocks'] = data;
   if (content) {
     let pageBlocks = content.map((block: any) => {
-      let foundComponent = registeredBlocks.find((c) => c.title === block.component);
+      let foundComponent = registeredBlocks.find((c) => c.title === block.title);
       return {
         ...foundComponent,
         selected: false,
