@@ -3,7 +3,7 @@
 import { useBuilderState } from '@/lib/useBuilderState';
 import { cn } from '@/lib/utils';
 import { Label } from '@radix-ui/react-label';
-import { ChangeEventHandler, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '../input';
 import { Textarea } from '../textarea';
 import SubmitButton from './submitButton';
@@ -12,7 +12,7 @@ import { ToasterProps } from '@/lib/types';
 import { copyPage, deletePage, updatePageSettings } from '@/lib/actions/pageActions';
 import { Button } from '../button';
 import { CopyIcon, Dot, PlusIcon, Trash2 } from 'lucide-react';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import lodash from 'lodash';
 
 import {
@@ -54,7 +54,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
         variant: error?.type,
       });
     }
-  }, [error]);
+  }, [error, toast]);
 
   async function handleUpdatePageSettings(formData: FormData) {
     let name = (formData.get('name') as string) || null;

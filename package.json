@@ -7,9 +7,7 @@
     "build": "next build",
     "start": "next start",
     "format": "prettier --write '**/*.ts' '**/*.tsx'",
-    "lint": "next lint && prettier --check '**/*.ts' '**/*.tsx'",
-    "commit": "cz",
-    "release": "release-it"
+    "lint": "next lint && prettier --check '**/*.ts' '**/*.tsx'"
   },
   "husky": {
     "hooks": {
