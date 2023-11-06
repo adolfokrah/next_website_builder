@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { ComponentType } from 'react';
 
 export type BlockPropsTypes = 'text' | 'number' | 'list' | 'image';
 
@@ -9,7 +9,7 @@ export type BlockProps = {
 };
 
 export type Block = {
-  Block: Component<any>;
+  component: ComponentType<any>;
   title: string;
   icon: React.ReactNode;
   props?: BlockProps[];

@@ -1,4 +1,4 @@
-import { Component } from '@/lib/types';
+import { Block } from '@/lib/types';
 import Hero from '@/components/ui/hero';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,7 @@ import { FileIcon, HamburgerMenuIcon, ImageIcon, LayersIcon, SunIcon } from '@ra
 import ContactForm from '@/components/ui/contact-form';
 import Metrics from '@/components/ui/metics';
 
-const registeredComponents: Component[] = [
+const registeredComponents: Block[] = [
   {
     component: Button,
     title: 'Button',

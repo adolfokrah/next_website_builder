@@ -1,5 +1,5 @@
 import { Input } from '../../input';
-import { RenderComponentControllerProps } from '@/lib/types';
+import { RenderBlockControllerProps } from '@/lib/types';
 
 const TextInputController = ({
   prop,
@@ -7,7 +7,7 @@ const TextInputController = ({
   defaultValue,
   handlePropValueChange,
   type,
-}: RenderComponentControllerProps & { type: string }) => {
+}: RenderBlockControllerProps & { type: string }) => {
   return (
     <>
       <label className=" text-xs font-semibold">{prop.label}</label>
