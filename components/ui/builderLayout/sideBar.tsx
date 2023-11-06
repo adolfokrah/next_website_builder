@@ -332,18 +332,9 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
                           }}
                           asChild
                         >
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant={'outline'} className="!bg-white">
-                                  <Trash2 size={17} />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent align="end">
-                                <p>Delete page</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          <Button variant={'outline'} className="!bg-white">
+                            <Trash2 size={17} />
+                          </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>

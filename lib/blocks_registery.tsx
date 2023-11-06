@@ -1,23 +1,27 @@
 import { Block } from '@/lib/types';
 import Hero from '@/components/ui/hero';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 import { FileIcon, HamburgerMenuIcon, ImageIcon, LayersIcon, SunIcon } from '@radix-ui/react-icons';
 import ContactForm from '@/components/ui/contact-form';
 import Metrics from '@/components/ui/metics';
+import Header from '@/components/ui/header';
+import { Box, Grid, SheetIcon } from 'lucide-react';
+import WorkWithUs from '@/components/ui/work-with-us';
+import Collections from '@/components/ui/collections';
+import Features from '@/components/ui/features';
+import NewsLetter from '@/components/ui/newsLetter';
 
 const registerBlocks: Block[] = [
   {
-    component: Button,
-    title: 'Button',
+    component: WorkWithUs,
+    title: 'Work with us',
     icon: <ImageIcon />,
     defaultInputs: { children: 'button' },
     props: [{ name: 'children', type: 'text', label: 'Title' }],
   },
   {
-    component: Input,
-    title: 'Text input',
+    component: Collections,
+    title: 'Collections',
     icon: <SunIcon />,
     defaultInputs: { placeholder: 'first name' },
     props: [{ name: 'placeholder', type: 'text', label: 'Placeholder' }],
@@ -75,6 +79,24 @@ const registerBlocks: Block[] = [
     component: Metrics,
     title: 'metics',
     icon: <HamburgerMenuIcon />,
+    defaultInputs: {},
+  },
+  {
+    component: Header,
+    title: 'Nav bar',
+    icon: <Box />,
+    defaultInputs: {},
+  },
+  {
+    component: Features,
+    title: 'Features',
+    icon: <Grid />,
+    defaultInputs: {},
+  },
+  {
+    component: NewsLetter,
+    title: 'News letter',
+    icon: <SheetIcon />,
     defaultInputs: {},
   },
 ];

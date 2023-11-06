@@ -103,7 +103,7 @@ export const savePage = async ({ id, blocks }: { id: Page['id']; blocks: PageBlo
         id,
       },
       data: {
-        blocks: blocks as object[],
+        blocks: blocks.map((block) => ({ ...block, icon: '', component: '' })) as object[],
       },
     });
 
