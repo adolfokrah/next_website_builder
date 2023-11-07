@@ -39,9 +39,10 @@ const registerBlocks: Block[] = [
     },
     props: [
       { name: 'title', type: 'text', label: 'Title' },
-      { name: 'subTitle', type: 'text', label: 'Sub title' },
-      { name: 'color', type: 'text', label: 'Title color' },
+      { name: 'subTitle', type: 'textArea', label: 'Sub title' },
+      { name: 'color', type: 'colorSetter', label: 'Set Color' },
       { name: 'initialCount', type: 'number', label: 'Initial count' },
+      { name: 'images', type: 'text', label: 'Images' },
     ],
   },
   {

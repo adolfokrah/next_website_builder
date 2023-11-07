@@ -1,5 +1,7 @@
 import { RenderBlockControllerProps } from '@/lib/types';
 import TextInputController from './textInputController';
+import ColorSetter from './colorSetter';
+import TextAreaController from './textAreaController';
 
 const RenderBlockController = ({
   prop,
@@ -25,6 +27,25 @@ const RenderBlockController = ({
           propIndex={propIndex}
           defaultValue={defaultValue}
           type={prop.type}
+          handlePropValueChange={handlePropValueChange}
+        />
+      );
+    case 'colorSetter':
+      return (
+        <ColorSetter
+          prop={prop}
+          propIndex={propIndex}
+          defaultValue={defaultValue}
+          type={prop.type}
+          handlePropValueChange={handlePropValueChange}
+        />
+      );
+    case 'textArea':
+      return (
+        <TextAreaController
+          prop={prop}
+          propIndex={propIndex}
+          defaultValue={defaultValue}
           handlePropValueChange={handlePropValueChange}
         />
       );

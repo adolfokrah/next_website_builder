@@ -30,7 +30,7 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
       } else {
         try {
           let data = JSON.parse(event.data);
-          handlePropValueChange(data.newValue, data.propIndex);
+          handlePropValueChange(data.newValue, data.propIndex, data.prop);
         } catch (e) {}
       }
     };
@@ -79,25 +79,54 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
     });
   };
 
-  const handlePropValueChange = (newValue: any, propsIndex: number) => {
+  const handlePropValueChange = (newValue: any, propsIndex: number, prop: BlockProps) => {
     setPageBlocks((prevState) => {
-      let components = [...prevState];
-      let selectedComponentIndex = components.findIndex((c) => c.selected);
-      let selectedComponent = components[selectedComponentIndex];
-      let selectedComponentProp: BlockProps | undefined = selectedComponent.props
-        ? selectedComponent.props[propsIndex]
-        : undefined;
+      let blocks = [...prevState];
+      let selectedBlockIndex = blocks.findIndex((c) => c.selected);
+      let foundRegisterBlock = registerBlocks.find(
+        (c) => c.title.toLowerCase() === blocks[selectedBlockIndex].title.toLowerCase(),
+      );
 
-      if (selectedComponentProp) {
-        let inputs = {
-          ...selectedComponent.inputs,
-          [selectedComponentProp.name]: newValue,
+      if (foundRegisterBlock) {
+        let selectedBlock = blocks[selectedBlockIndex];
+
+        const getPropInput = (rProp: BlockProps): any => {
+          //check if the non editing prop has an input in the state
+          let value = newValue;
+          if (rProp.name != prop.name) {
+            if (selectedBlock.inputs) {
+              value =
+                selectedBlock.inputs[rProp.name] != null
+                  ? selectedBlock.inputs[rProp.name]
+                  : foundRegisterBlock?.defaultInputs[rProp.name] != null
+                  ? foundRegisterBlock?.defaultInputs[rProp.name]
+                  : null;
+            } else {
+              value =
+                foundRegisterBlock?.defaultInputs[rProp.name] != null
+                  ? foundRegisterBlock?.defaultInputs[rProp.name]
+                  : null;
+            }
+          }
+          return value;
         };
 
-        selectedComponent.inputs = inputs;
-        components[selectedComponentIndex] = selectedComponent;
+        let inputs = foundRegisterBlock?.props?.map((rProp) => ({
+          [rProp.name]: getPropInput(rProp),
+        }));
+
+        const mergedInputs = inputs?.reduce((result, currentObject) => {
+          for (let key in currentObject) {
+            result[key] = currentObject[key];
+          }
+          return result;
+        }, {});
+
+        selectedBlock.inputs = mergedInputs;
+        blocks[selectedBlockIndex] = selectedBlock;
       }
-      return [...components];
+
+      return [...blocks];
     });
   };
 

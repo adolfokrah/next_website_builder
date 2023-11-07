@@ -4,12 +4,17 @@ import { cn } from '@/lib/utils';
 import { Button } from '../button';
 import { XIcon } from 'lucide-react';
 import RenderBlockController from './blockControllers/renderBlocksController';
+import registerBlocks from '@/lib/blocks_registery';
+import { BlockProps } from '@/lib/types';
 
 const ControllersSideBar = () => {
   const { pageBlocks, setMessageToIframe } = useBuilderState();
   const selectedBlock = pageBlocks.find((block) => block.selected);
-  const handlePropValueChange = (newValue: any, propIndex: number) => {
-    setMessageToIframe(JSON.stringify({ newValue, propIndex }));
+  const foundBlockInRegister = registerBlocks.find(
+    (block) => block.title.toLowerCase() === selectedBlock?.title.toLowerCase(),
+  );
+  const handlePropValueChange = (newValue: any, propIndex: number, prop: BlockProps) => {
+    setMessageToIframe(JSON.stringify({ newValue, propIndex, prop }));
   };
 
   return (
@@ -38,15 +43,17 @@ const ControllersSideBar = () => {
           </Button>
         </div>
         <div className="p-2">
-          {selectedBlock?.props &&
-            selectedBlock.props.map((prop, index) => {
-              let defaultValue = selectedBlock.inputs ? selectedBlock.inputs[prop.name] : '';
+          {foundBlockInRegister?.props &&
+            selectedBlock?.props &&
+            foundBlockInRegister.props.map((prop) => {
+              let defaultValue = selectedBlock.inputs ? selectedBlock.inputs[prop.name] : null;
+              let index = selectedBlock.props?.findIndex((iProp) => iProp.type === prop.type);
 
               return (
-                <div key={`${selectedBlock.id}_${prop.name}`} className="mb-2">
+                <div key={`${selectedBlock.id}_${prop.name}_${prop.type}`} className="mb-2">
                   <RenderBlockController
                     prop={prop}
-                    propIndex={index}
+                    propIndex={index == null ? -1 : index}
                     defaultValue={defaultValue}
                     handlePropValueChange={handlePropValueChange}
                   />

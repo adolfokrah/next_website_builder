@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
 
-export type ControllerTypes = 'text' | 'number' | 'list' | 'image';
+export type ControllerTypes = 'text' | 'number' | 'list' | 'image' | 'colorSetter' | 'textArea';
 
 export type BlockProps = {
   name: string;
@@ -13,7 +13,7 @@ export type Block = {
   title: string;
   icon: React.ReactNode;
   props?: BlockProps[];
-  defaultInputs: object;
+  defaultInputs: { [key: string]: any };
 };
 
 export type PageBlock = Block & {
@@ -34,7 +34,7 @@ export type RenderBlockControllerProps = {
   prop: BlockProps;
   propIndex: number;
   defaultValue: any;
-  handlePropValueChange: (newValue: any, propIndex: number) => void;
+  handlePropValueChange: (newValue: any, propIndex: number, prop: BlockProps) => void;
 };
 
 export type ToasterProps = {

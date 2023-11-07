@@ -1,7 +1,8 @@
+import { Button } from '../../button';
 import { Input } from '../../input';
 import { RenderBlockControllerProps } from '@/lib/types';
 
-const TextInputController = ({
+const ColorSetter = ({
   prop,
   propIndex,
   defaultValue,
@@ -11,16 +12,17 @@ const TextInputController = ({
   return (
     <>
       <label className=" text-xs font-semibold">{prop.label}</label>
-      <Input
+      <br />
+      <Button
         className="mb-3 mt-1"
-        defaultValue={defaultValue}
-        onChange={(e) => {
-          handlePropValueChange(e.target.value, propIndex, prop);
+        onClick={() => {
+          handlePropValueChange('yellow', propIndex, prop);
         }}
-        type={type}
-      />
+      >
+        set color to yellow
+      </Button>
     </>
   );
 };
 
-export default TextInputController;
+export default ColorSetter;

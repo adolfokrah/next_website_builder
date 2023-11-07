@@ -23,10 +23,7 @@ const Hero = ({ title, subTitle, color, initialCount }: HeroProps) => {
         <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
           <div className="sm:max-w-lg">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">{title}</h1>
-            <p className="mt-4 text-xl text-gray-500">
-              This year, our new summer collection will shelter you from the harsh elements of a world that does not
-              care if you live or die.
-            </p>
+            <p className="mt-4 text-xl text-gray-500">{subTitle}</p>
           </div>
           <div>
             <div className="mt-10">
@@ -99,6 +96,7 @@ const Hero = ({ title, subTitle, color, initialCount }: HeroProps) => {
               <a
                 href="#"
                 className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700"
+                style={{ backgroundColor: color }}
               >
                 Shop Collection
               </a>
