@@ -12,7 +12,7 @@ const ColorPickerController = ({
   defaultValue,
   handlePropValueChange,
 }: RenderBlockControllerProps) => {
-  const [colorState, setColorState] = useState<string>(defaultValue);
+  const [colorState, setColorState] = useState<string>(defaultValue || '#FFFFFF');
   return (
     <>
       <label className=" text-xs font-semibold">{prop.label}</label>

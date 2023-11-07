@@ -2,7 +2,7 @@
 import { useBuilderState } from '@/lib/useBuilderState';
 import { cn } from '@/lib/utils';
 import { Button } from '../button';
-import { XIcon } from 'lucide-react';
+import { SlidersHorizontal, XIcon } from 'lucide-react';
 import RenderBlockController from './blockControllers/renderBlocksController';
 import registerBlocks from '@/lib/blocks_registery';
 import { BlockProps } from '@/lib/types';
@@ -61,6 +61,16 @@ const ControllersSideBar = () => {
               );
             })}
         </div>
+        {!foundBlockInRegister?.props && (
+          <div className="h-full w-full grid place-items-center">
+            <div className="text-center">
+              <div className=" mb-4 w-28 h-28 grid place-items-center bg-slate-100 rounded-full m-auto">
+                <SlidersHorizontal className=" text-slate-500" size={40} />
+              </div>
+              <p className="text-sm text-slate-700">This block has no controllers</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
