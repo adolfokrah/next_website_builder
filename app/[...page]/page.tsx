@@ -1,8 +1,8 @@
 import RenderBuilderContent from '@/components/ui/builderLayout/renderBuilderContent';
-import { PrismaClient } from '@prisma/client';
+import { PageStatus, PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-import type { Metadata, ResolvingMetadata } from 'next';
-
+import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 interface PageProps {
   params: {
     page: string[];
@@ -36,15 +36,19 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 }
 
 export default async function Page(props: PageProps) {
-  let data = await prisma.page.findFirst({
+  let page = await prisma.page.findFirst({
     where: {
       slug: `/${props.params.page.join('/')}`,
     },
   });
   prisma.$disconnect();
+
+  if (page?.status !== PageStatus.PUBLISHED) {
+    redirect('/404');
+  }
   return (
     <>
-      <RenderBuilderContent data={data?.blocks || []} />
+      <RenderBuilderContent data={page?.blocks || []} />
     </>
   );
 }

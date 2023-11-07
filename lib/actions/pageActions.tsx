@@ -1,16 +1,20 @@
 'use server';
 
-import { Page } from '@prisma/client';
+import { Page, PageStatus } from '@prisma/client';
 import prisma from '../prisma_init';
 import { revalidatePath } from 'next/cache';
 import { PageBlock } from '../types';
 
 export const createNewPage = async ({ name, slug }: { name: Page['name']; slug: Page['slug'] }) => {
   try {
+    if (slug == '/404') {
+      return { error: 'slug 404 is a reserved page' };
+    }
     const createdPage = await prisma.page.create({
       data: {
         name,
         slug: `${slug.split(' ').join('-')}`,
+        status: PageStatus.DRAFT,
       },
     });
     prisma.$disconnect();
@@ -36,7 +40,10 @@ export const updatePageSettings = async ({
   metaDescription: Page['metaDescription'];
 }) => {
   try {
-    const createdPage = await prisma.page.update({
+    if (slug == '/404') {
+      return { error: 'slug 404 is a reserved page' };
+    }
+    const updatedPage = await prisma.page.update({
       where: {
         id,
       },
@@ -49,7 +56,7 @@ export const updatePageSettings = async ({
       },
     });
     prisma.$disconnect();
-    return { data: createdPage, error: null };
+    return { data: updatedPage, error: null };
   } catch (error) {
     return { error: 'Kindly ensure that the page name or slug does not already exist.' };
   }
@@ -85,6 +92,7 @@ export const copyPage = async ({ id }: { id: Page['id'] }) => {
           metaDescription: page.metaDescription,
           metaKeyWords: page.metaKeyWords,
           blocks: page.blocks as object[],
+          status: page.status || PageStatus.DRAFT,
         },
       });
 
@@ -96,7 +104,7 @@ export const copyPage = async ({ id }: { id: Page['id'] }) => {
   }
 };
 
-export const savePage = async ({ id, blocks }: { id: Page['id']; blocks: PageBlock[] }) => {
+export const savePage = async ({ id, blocks, status }: { id: Page['id']; blocks: PageBlock[]; status: PageStatus }) => {
   try {
     const data = await prisma.page.update({
       where: {
@@ -104,10 +112,12 @@ export const savePage = async ({ id, blocks }: { id: Page['id']; blocks: PageBlo
       },
       data: {
         blocks: blocks.map((block) => ({ ...block, icon: '', component: '', selected: false })) as object[],
+        status,
       },
     });
 
     prisma.$disconnect();
+    revalidatePath('/');
     return { data: data, error: null };
   } catch (error) {
     return { error: 'Oops, something happened' };

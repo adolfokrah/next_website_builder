@@ -7,6 +7,15 @@ import { savePage } from '@/lib/actions/pageActions';
 import { useToast } from '../use-toast';
 import { useEffect, useState } from 'react';
 import { ToasterProps } from '@/lib/types';
+import { PageStatus } from '@prisma/client';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const NavBar = ({ pageName }: { pageName: string }) => {
   const { pageBlocks, viewPort, pageId, setViewPort, togglePageSideBar } = useBuilderState();
@@ -23,9 +32,9 @@ const NavBar = ({ pageName }: { pageName: string }) => {
     }
   }, [error, toast]);
 
-  async function handleSaveAndPublishPage() {
+  async function handleSaveAndPublishPage(status: PageStatus) {
     setLoading(true);
-    let data = await savePage({ blocks: pageBlocks, id: pageId });
+    let data = await savePage({ blocks: pageBlocks, id: pageId, status });
     setLoading(false);
     if (data.error) {
       setError({ title: 'Failed', description: data.error, type: 'destructive' });
@@ -71,16 +80,39 @@ const NavBar = ({ pageName }: { pageName: string }) => {
           Preview
           <ExternalLink size={17} className="ml-2" />
         </Button>
-        <Button className=" text-white" onClick={handleSaveAndPublishPage}>
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {'Saving...'}
-            </>
-          ) : (
-            'Save & Publish'
-          )}
-        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className=" text-white">
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {'Saving...'}
+                </>
+              ) : (
+                'Save changes'
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => {
+                handleSaveAndPublishPage(PageStatus.DRAFT);
+              }}
+            >
+              Save as draft
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => {
+                handleSaveAndPublishPage(PageStatus.PUBLISHED);
+              }}
+            >
+              Save and publish
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

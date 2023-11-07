@@ -32,7 +32,7 @@ const Page = async (props: PageProps) => {
   });
 
   let pages = await prisma.page.findMany({
-    select: { name: true, slug: true, id: true },
+    select: { name: true, slug: true, id: true, status: true },
   });
 
   if (!page) {

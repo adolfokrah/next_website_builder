@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { SketchPicker } from 'react-color';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '../../button';
-import { BoxIcon, Square } from 'lucide-react';
+import { Square } from 'lucide-react';
 
 const ColorPickerController = ({
   prop,

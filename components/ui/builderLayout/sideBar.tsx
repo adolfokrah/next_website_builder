@@ -30,7 +30,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import CreatePage from './createPage';
-import { Page } from '@prisma/client';
+import { Page, PageStatus } from '@prisma/client';
 
 type SideBarProps = Partial<Page> & {
   id: string;
@@ -291,7 +291,12 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <div className="flex items-center ">
-                                <Dot className="text-brand-green-50 flex-shrink-0" size={50} />
+                                <Dot
+                                  className={cn('text-brand-green-50 flex-shrink-0', {
+                                    'text-slate-300': page.status === PageStatus.DRAFT,
+                                  })}
+                                  size={50}
+                                />
                                 <div className="w-full">
                                   <h4
                                     className={cn('text-sm truncate font-medium', {
