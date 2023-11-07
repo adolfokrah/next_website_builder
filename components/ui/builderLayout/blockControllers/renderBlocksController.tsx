@@ -1,7 +1,7 @@
 import { RenderBlockControllerProps } from '@/lib/types';
 import TextInputController from './textInputController';
-import ColorSetter from './colorSetter';
 import TextAreaController from './textAreaController';
+import ColorPickerController from './colorPickerController';
 
 const RenderBlockController = ({
   prop,
@@ -30,13 +30,12 @@ const RenderBlockController = ({
           handlePropValueChange={handlePropValueChange}
         />
       );
-    case 'colorSetter':
+    case 'colorPicker':
       return (
-        <ColorSetter
+        <ColorPickerController
           prop={prop}
           propIndex={propIndex}
           defaultValue={defaultValue}
-          type={prop.type}
           handlePropValueChange={handlePropValueChange}
         />
       );

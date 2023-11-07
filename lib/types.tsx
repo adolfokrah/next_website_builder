@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
 
-export type ControllerTypes = 'text' | 'number' | 'list' | 'image' | 'colorSetter' | 'textArea';
+export type ControllerTypes = 'text' | 'number' | 'list' | 'image' | 'colorPicker' | 'textArea';
 
 export type BlockProps = {
   name: string;
