@@ -3,6 +3,7 @@ import VisioBuilder from '@/components/ui/builderLayout/visioBuilder';
 import prisma from '@/lib/prisma_init';
 import CreateNewPage from './createNewPage';
 import SideBar from '@/components/ui/builderLayout/sideBar';
+import ControllersSideBar from '@/components/ui/builderLayout/controllersSideBar';
 
 // import { QueryClient, QueryClientProvider } from 'react-query';
 
@@ -45,6 +46,7 @@ const Page = async (props: PageProps) => {
       <div className="flex justify-end">
         <SideBar currentPage={page} pages={pages} />
         <VisioBuilder slug={slug} />
+        <ControllersSideBar />
       </div>
     </>
     // </QueryClientProvider>

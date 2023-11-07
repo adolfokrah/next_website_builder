@@ -111,250 +111,260 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
 
   return (
     <div
-      className={cn(
-        'h-screen bg-gray-50 z-10  fixed w-[320px] pt-[60px] border-r left-[-330px]  border-r-slate-200 transition-all duration-300 ease-linear',
-        {
-          'left-0': showPageSideBar,
-        },
-      )}
+      className={cn('w-[320px] h-screen flex-shrink-0 transition-all duration-300 ease-linear', {
+        'w-0': !showPageSideBar,
+      })}
     >
-      <div className="bg-white w-full relative">
-        <div className="flex">
-          <div
-            className={cn(
-              'w-1/2 text-center border-b border-b-slate-100 text-slate-500 px-2 py-4 text-sm transition-colors duration-150 ease-linear cursor-pointer',
-              {
-                'text-black': currentTab === 'settings',
-              },
-            )}
-            onClick={() => setCurrentTab('settings')}
-          >
-            Settings
+      <div
+        className={cn(
+          'h-screen bg-transparent z-10  fixed w-[320px] pt-[60px] border-r left-[-330px]  border-r-slate-200 transition-all duration-300 ease-linear',
+          {
+            'left-0': showPageSideBar,
+          },
+        )}
+      >
+        <div className="bg-white w-full relative">
+          <div className="flex">
+            <div
+              className={cn(
+                'w-1/2 text-center border-b border-b-slate-100 text-slate-500 px-2 py-4 text-sm transition-colors duration-150 ease-linear cursor-pointer',
+                {
+                  'text-black': currentTab === 'settings',
+                },
+              )}
+              onClick={() => setCurrentTab('settings')}
+            >
+              Settings
+            </div>
+            <div
+              className={cn(
+                'w-1/2 text-center border-b border-b-slate-100 text-slate-500 px-2 py-4 text-sm transition-colors duration-150 ease-linear cursor-pointer',
+                {
+                  'text-black': currentTab === 'pages',
+                },
+              )}
+              onClick={() => setCurrentTab('pages')}
+            >
+              Pages
+            </div>
           </div>
           <div
-            className={cn(
-              'w-1/2 text-center border-b border-b-slate-100 text-slate-500 px-2 py-4 text-sm transition-colors duration-150 ease-linear cursor-pointer',
-              {
-                'text-black': currentTab === 'pages',
-              },
-            )}
-            onClick={() => setCurrentTab('pages')}
-          >
-            Pages
-          </div>
+            className={cn('bg-brand-green-50 h-[2px] w-1/2 absolute transition-all duration-200 ease-in-out bottom-0', {
+              'translate-x-full': currentTab === 'pages',
+            })}
+          />
         </div>
-        <div
-          className={cn('bg-brand-green-50 h-[2px] w-1/2 absolute transition-all duration-200 ease-in-out bottom-0', {
-            'translate-x-full': currentTab === 'pages',
-          })}
-        />
-      </div>
 
-      <div className={cn('overflow-hidden h-full')}>
-        <div
-          className={cn('flex h-full w-[640px]  transition-all duration-300', {
-            '-translate-x-1/2': currentTab === 'pages',
-          })}
-        >
-          <form
-            action={handleUpdatePageSettings}
-            className={'w-[320px] flex-grow-0 flex-shrink-0 flex flex-col gap-4 py-3 px-2 px-2 h-[88vh] overflow-auto'}
+        <div className={cn('overflow-hidden h-full')}>
+          <div
+            className={cn('flex h-full w-[640px]  transition-all duration-300', {
+              '-translate-x-1/2': currentTab === 'pages',
+            })}
           >
-            <div className="w-full">
-              <Label htmlFor="pageName" className="text-xs font-medium">
-                Page Name
-              </Label>
-              <Input
-                id="pageName"
-                defaultValue={currentPage.name}
-                name="name"
-                type="text"
-                placeholder="eg. Home page"
-                className="w-full mt-1"
-              />
-            </div>
+            <form
+              action={handleUpdatePageSettings}
+              className={
+                'w-[320px] flex-grow-0 flex-shrink-0 flex flex-col gap-4 py-3 px-2 px-2 h-[88vh] overflow-auto'
+              }
+            >
+              <div className="w-full">
+                <Label htmlFor="pageName" className="text-xs font-medium">
+                  Page Name
+                </Label>
+                <Input
+                  id="pageName"
+                  defaultValue={currentPage.name}
+                  name="name"
+                  type="text"
+                  placeholder="eg. Home page"
+                  className="w-full mt-1"
+                />
+              </div>
 
-            <div className="w-full">
-              <Label htmlFor="slug" className="text-xs font-medium">
-                Slug
-              </Label>
-              <Input
-                id="slug"
-                defaultValue={currentPage.slug}
-                name="slug"
-                type="text"
-                placeholder="eg. /my-home-page"
-                className="w-full mt-1"
-              />
-            </div>
+              <div className="w-full">
+                <Label htmlFor="slug" className="text-xs font-medium">
+                  Slug
+                </Label>
+                <Input
+                  id="slug"
+                  defaultValue={currentPage.slug}
+                  name="slug"
+                  type="text"
+                  placeholder="eg. /my-home-page"
+                  className="w-full mt-1"
+                />
+              </div>
 
-            <div className="w-full">
-              <Label htmlFor="metaTitle" className="text-xs font-medium">
-                Meta title
-              </Label>
-              <Input
-                id="metaTitle"
-                defaultValue={currentPage.metaTitle || ''}
-                name="metaTitle"
-                type="text"
-                placeholder="eg. Home of electrical appliances"
-                className="w-full mt-1"
-              />
-            </div>
+              <div className="w-full">
+                <Label htmlFor="metaTitle" className="text-xs font-medium">
+                  Meta title
+                </Label>
+                <Input
+                  id="metaTitle"
+                  defaultValue={currentPage.metaTitle || ''}
+                  name="metaTitle"
+                  type="text"
+                  placeholder="eg. Home of electrical appliances"
+                  className="w-full mt-1"
+                />
+              </div>
 
-            <div className="w-full">
-              <Label htmlFor="metaKeyWords" className="text-xs font-medium">
-                Meta keywords
-              </Label>
-              <Input
-                id="metaKeyWords"
-                defaultValue={currentPage.metaKeyWords || ''}
-                name="metaKeyWords"
-                type="text"
-                placeholder="eg. furnitures, home decor, appliances, real estate"
-                className="w-full mt-1"
-              />
-            </div>
+              <div className="w-full">
+                <Label htmlFor="metaKeyWords" className="text-xs font-medium">
+                  Meta keywords
+                </Label>
+                <Input
+                  id="metaKeyWords"
+                  defaultValue={currentPage.metaKeyWords || ''}
+                  name="metaKeyWords"
+                  type="text"
+                  placeholder="eg. furnitures, home decor, appliances, real estate"
+                  className="w-full mt-1"
+                />
+              </div>
 
-            <div className="w-full">
-              <Label htmlFor="metaDescription" className="text-xs font-medium">
-                Meta description
-              </Label>
-              <Textarea
-                id="metaDescription"
-                defaultValue={currentPage.metaDescription || ''}
-                name="metaDescription"
-                placeholder="eg. We deal in quality home appliances...."
-                className="w-full mt-1"
-              />
-            </div>
+              <div className="w-full">
+                <Label htmlFor="metaDescription" className="text-xs font-medium">
+                  Meta description
+                </Label>
+                <Textarea
+                  id="metaDescription"
+                  defaultValue={currentPage.metaDescription || ''}
+                  name="metaDescription"
+                  placeholder="eg. We deal in quality home appliances...."
+                  className="w-full mt-1"
+                />
+              </div>
 
-            <input type="hidden" name="id" defaultValue={currentPage.id} />
-            <SubmitButton title="Save changes" loadingTitle="Saving..." />
-          </form>
+              <input type="hidden" name="id" defaultValue={currentPage.id} />
+              <SubmitButton title="Save changes" loadingTitle="Saving..." />
+            </form>
 
-          <div className={'w-[320px] flex-grow-0 flex-shrink-0  flex flex-col gap-4 py-3 px-2 h-[88vh] overflow-auto'}>
-            <div className="w-full">
-              <Input
-                id="search"
-                name="search"
-                type="text"
-                placeholder="Search page"
-                className="w-full mt-1"
-                onChange={(event) => debouncedInputChange(event)}
-              />
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm">{search.length ? 'Search results' : 'All pages'}</span>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant={'outline'}>
-                    <PlusIcon size={20} />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent align="start">
-                  <h3 className="text-bold mb-3">Add a new page</h3>
-                  <CreatePage />
-                </PopoverContent>
-              </Popover>
-            </div>
+            <div
+              className={'w-[320px] flex-grow-0 flex-shrink-0  flex flex-col gap-4 py-3 px-2 h-[88vh] overflow-auto'}
+            >
+              <div className="w-full">
+                <Input
+                  id="search"
+                  name="search"
+                  type="text"
+                  placeholder="Search page"
+                  className="w-full mt-1"
+                  onChange={(event) => debouncedInputChange(event)}
+                />
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm">{search.length ? 'Search results' : 'All pages'}</span>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant={'outline'}>
+                      <PlusIcon size={20} />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent align="start">
+                    <h3 className="text-bold mb-3">Add a new page</h3>
+                    <CreatePage />
+                  </PopoverContent>
+                </Popover>
+              </div>
 
-            <div>
-              {pages
-                .filter((page) => page.name.toLowerCase().includes(search.toLowerCase()))
-                .map((page) => (
-                  <div
-                    key={page.id}
-                    className={cn(
-                      'flex group items-center hover:bg-slate-50 transition-colors duration-200 ease-linear justify-between rounded-md  px-2 cursor-pointer',
-                      {
-                        '!bg-slate-100': currentPage.id === page.id,
-                      },
-                    )}
-                  >
+              <div>
+                {pages
+                  .filter((page) => page.name.toLowerCase().includes(search.toLowerCase()))
+                  .map((page) => (
                     <div
-                      onClick={() => {
-                        router.replace(`/builder${page.slug}`);
-                      }}
-                      className="w-[45%] "
+                      key={page.id}
+                      className={cn(
+                        'flex group items-center hover:bg-slate-50 transition-colors duration-200 ease-linear justify-between rounded-md  px-2 cursor-pointer',
+                        {
+                          '!bg-slate-100': currentPage.id === page.id,
+                        },
+                      )}
                     >
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className="flex items-center ">
-                              <Dot className="text-brand-green-50 flex-shrink-0" size={50} />
-                              <div className="w-full">
-                                <h4
-                                  className={cn('text-sm truncate font-medium', {
-                                    'text-brand-green-50': currentPage.id === page.id,
-                                  })}
-                                >
-                                  {page.name}
-                                </h4>
-                                <p className="text-xs text-slate-500 truncate">{page.slug}</p>
+                      <div
+                        onClick={() => {
+                          router.replace(`/builder${page.slug}`);
+                        }}
+                        className="w-[45%] "
+                      >
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center ">
+                                <Dot className="text-brand-green-50 flex-shrink-0" size={50} />
+                                <div className="w-full">
+                                  <h4
+                                    className={cn('text-sm truncate font-medium', {
+                                      'text-brand-green-50': currentPage.id === page.id,
+                                    })}
+                                  >
+                                    {page.name}
+                                  </h4>
+                                  <p className="text-xs text-slate-500 truncate">{page.slug}</p>
+                                </div>
                               </div>
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent align="start">
-                            <p>{page.name}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                    <div
-                      className={cn('gap-1 hidden group-hover:flex', {
-                        '!flex': currentPage.id === page.id,
-                      })}
-                    >
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant={'outline'}
-                              className="!bg-white"
-                              onClick={() => {
-                                handleCopyPage({ id: page.id });
-                              }}
-                            >
-                              <CopyIcon size={17} />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent align="start">
-                            <p>Copy page</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                            </TooltipTrigger>
+                            <TooltipContent align="start">
+                              <p>{page.name}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      <div
+                        className={cn('gap-1 hidden group-hover:flex', {
+                          '!flex': currentPage.id === page.id,
+                        })}
+                      >
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant={'outline'}
+                                className="!bg-white"
+                                onClick={() => {
+                                  handleCopyPage({ id: page.id });
+                                }}
+                              >
+                                <CopyIcon size={17} />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent align="start">
+                              <p>Copy page</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
 
-                      <AlertDialog>
-                        <AlertDialogTrigger
-                          onClick={() => {
-                            setSelectedPage(page);
-                          }}
-                          asChild
-                        >
-                          <Button variant={'outline'} className="!bg-white">
-                            <Trash2 size={17} />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete the page{' '}
-                              <b>{selectedPage?.name}</b>
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction className="bg-red-500 hover:bg-red-600" onClick={handleDeletePage}>
-                              Continue
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                        <AlertDialog>
+                          <AlertDialogTrigger
+                            onClick={() => {
+                              setSelectedPage(page);
+                            }}
+                            asChild
+                          >
+                            <Button variant={'outline'} className="!bg-white">
+                              <Trash2 size={17} />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the page{' '}
+                                <b>{selectedPage?.name}</b>
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction className="bg-red-500 hover:bg-red-600" onClick={handleDeletePage}>
+                                Continue
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+              </div>
             </div>
           </div>
         </div>

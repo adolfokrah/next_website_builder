@@ -1,10 +1,10 @@
 import { ComponentType } from 'react';
 
-export type BlockPropsTypes = 'text' | 'number' | 'list' | 'image';
+export type ControllerTypes = 'text' | 'number' | 'list' | 'image';
 
 export type BlockProps = {
   name: string;
-  type: BlockPropsTypes;
+  type: ControllerTypes;
   label: string;
 };
 
@@ -50,8 +50,10 @@ export type BuilderStateProps = {
   viewPort: ViewPorts;
   pageId: string;
   pageBlocks: PageBlock[];
+  messageToIframe: string;
   togglePageSideBar: () => void;
   setViewPort: (viewPort: ViewPorts) => void;
   setPageBlocks: (blocks: object[]) => void;
   setPageId: (id: string) => void;
+  setMessageToIframe: (message: string) => void;
 };

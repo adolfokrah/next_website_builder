@@ -1,7 +1,7 @@
 import { RenderBlockControllerProps } from '@/lib/types';
 import TextInputController from './textInputController';
 
-const RenderComponentController = ({
+const RenderBlockController = ({
   prop,
   propIndex,
   defaultValue,
@@ -33,4 +33,4 @@ const RenderComponentController = ({
   }
 };
 
-export default RenderComponentController;
+export default RenderBlockController;

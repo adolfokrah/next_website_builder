@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import BlocksCommandPallet from '@/components/ui/builderLayout/blocksCommandPallet';
 import registerBlocks from '@/lib/blocks_registery';
-import { PageBlock } from '@/lib/types';
+import { BlockProps, PageBlock } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -25,6 +25,13 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
       if (event.origin !== 'http://localhost:3000') return;
       if (event.data === 'build') {
         setBuild(true);
+      } else if (event.data === 'deSelectComponent') {
+        handleRemoveSelectedBlocks();
+      } else {
+        try {
+          let data = JSON.parse(event.data);
+          handlePropValueChange(data.newValue, data.propIndex);
+        } catch (e) {}
       }
     };
     window.addEventListener('message', messageHandler);
@@ -69,6 +76,28 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
     setPageBlocks((prevState) => {
       const updatedComponents = prevState.filter((_, i) => i !== index);
       return updatedComponents;
+    });
+  };
+
+  const handlePropValueChange = (newValue: any, propsIndex: number) => {
+    setPageBlocks((prevState) => {
+      let components = [...prevState];
+      let selectedComponentIndex = components.findIndex((c) => c.selected);
+      let selectedComponent = components[selectedComponentIndex];
+      let selectedComponentProp: BlockProps | undefined = selectedComponent.props
+        ? selectedComponent.props[propsIndex]
+        : undefined;
+
+      if (selectedComponentProp) {
+        let inputs = {
+          ...selectedComponent.inputs,
+          [selectedComponentProp.name]: newValue,
+        };
+
+        selectedComponent.inputs = inputs;
+        components[selectedComponentIndex] = selectedComponent;
+      }
+      return [...components];
     });
   };
 
