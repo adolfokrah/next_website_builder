@@ -56,6 +56,7 @@ const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }:
 
           {image && (
             <Image
+              loading="lazy"
               src={image?.url || ''}
               sizes="100%"
               alt="no-alt"

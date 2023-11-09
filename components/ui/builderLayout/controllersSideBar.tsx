@@ -42,26 +42,8 @@ const ControllersSideBar = () => {
             <XIcon size={17} />
           </Button>
         </div>
-        <div className="p-2 overflow-y-auto h-full">
-          {foundBlockInRegister?.props &&
-            selectedBlock?.props &&
-            foundBlockInRegister.props.map((prop) => {
-              let defaultValue = selectedBlock.inputs ? selectedBlock.inputs[prop.name] : null;
-              let index = selectedBlock.props?.findIndex((iProp) => iProp.type === prop.type);
 
-              return (
-                <div key={`${selectedBlock.id}_${prop.name}_${prop.type}`} className="mb-2">
-                  <RenderBlockController
-                    prop={prop}
-                    propIndex={index == null ? -1 : index}
-                    defaultValue={defaultValue}
-                    handlePropValueChange={handlePropValueChange}
-                  />
-                </div>
-              );
-            })}
-        </div>
-        {!foundBlockInRegister?.props && (
+        {!foundBlockInRegister?.props ? (
           <div className="h-full w-full grid place-items-center">
             <div className="text-center">
               <div className=" mb-4 w-28 h-28 grid place-items-center bg-slate-100 rounded-full m-auto">
@@ -69,6 +51,26 @@ const ControllersSideBar = () => {
               </div>
               <p className="text-sm text-slate-700">This block has no controllers</p>
             </div>
+          </div>
+        ) : (
+          <div className="p-2 overflow-y-auto h-full">
+            {foundBlockInRegister?.props &&
+              selectedBlock?.props &&
+              foundBlockInRegister.props.map((prop) => {
+                let defaultValue = selectedBlock.inputs ? selectedBlock.inputs[prop.name] : null;
+                let index = selectedBlock.props?.findIndex((iProp) => iProp.type === prop.type);
+
+                return (
+                  <div key={`${selectedBlock.id}_${prop.name}_${prop.type}`} className="mb-2">
+                    <RenderBlockController
+                      prop={prop}
+                      propIndex={index == null ? -1 : index}
+                      defaultValue={defaultValue}
+                      handlePropValueChange={handlePropValueChange}
+                    />
+                  </div>
+                );
+              })}
           </div>
         )}
       </div>
