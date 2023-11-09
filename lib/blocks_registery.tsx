@@ -17,7 +17,7 @@ const registerBlocks: Block[] = [
     title: 'Work with us',
     icon: <ImageIcon />,
     defaultInputs: { children: 'button' },
-    props: [{ name: 'children', type: 'text', label: 'Title' }],
+    props: [{ name: 'backgroundImage', type: 'image', label: 'Background Image' }],
   },
   {
     component: Collections,
@@ -36,6 +36,12 @@ const registerBlocks: Block[] = [
         'Set the DATABASE_URL in the .env file to point to your existing database. If your database has no tables yet, read https://pris.ly/d/getting-started',
       color: '#FFFFFF',
       initialCount: 0,
+      image: {
+        path: '',
+        width: 100,
+        height: 200,
+        alt: 'helle world',
+      },
     },
     props: [
       { name: 'title', type: 'text', label: 'Title' },
@@ -43,7 +49,7 @@ const registerBlocks: Block[] = [
       { name: 'color', type: 'colorPicker', label: 'Button Color' },
       { name: 'backgroundColor', type: 'colorPicker', label: 'Background Color' },
       { name: 'initialCount', type: 'number', label: 'Initial count' },
-      { name: 'images', type: 'text', label: 'Images' },
+      { name: 'image', type: 'image', label: 'Background image' },
     ],
   },
   {

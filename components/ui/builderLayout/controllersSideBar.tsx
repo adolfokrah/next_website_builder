@@ -42,7 +42,7 @@ const ControllersSideBar = () => {
             <XIcon size={17} />
           </Button>
         </div>
-        <div className="p-2">
+        <div className="p-2 overflow-y-auto h-full">
           {foundBlockInRegister?.props &&
             selectedBlock?.props &&
             foundBlockInRegister.props.map((prop) => {

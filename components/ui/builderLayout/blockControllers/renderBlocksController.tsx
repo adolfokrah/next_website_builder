@@ -2,6 +2,7 @@ import { RenderBlockControllerProps } from '@/lib/types';
 import TextInputController from './textInputController';
 import TextAreaController from './textAreaController';
 import ColorPickerController from './colorPickerController';
+import ImageUploader from './imageUploader';
 
 const RenderBlockController = ({
   prop,
@@ -42,6 +43,15 @@ const RenderBlockController = ({
     case 'textArea':
       return (
         <TextAreaController
+          prop={prop}
+          propIndex={propIndex}
+          defaultValue={defaultValue}
+          handlePropValueChange={handlePropValueChange}
+        />
+      );
+    case 'image':
+      return (
+        <ImageUploader
           prop={prop}
           propIndex={propIndex}
           defaultValue={defaultValue}

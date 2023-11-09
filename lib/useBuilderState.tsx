@@ -6,6 +6,7 @@ export const useBuilderState = create<BuilderStateProps>((set) => ({
   viewPort: 'Desktop',
   pageBlocks: [],
   pageId: '',
+  buildStatus: 'saved',
   messageToIframe: 'build',
   togglePageSideBar: () => {
     set((state) => ({ showPageSideBar: !state.showPageSideBar }));
@@ -21,5 +22,8 @@ export const useBuilderState = create<BuilderStateProps>((set) => ({
   },
   setMessageToIframe: (message) => {
     set(() => ({ messageToIframe: message }));
+  },
+  setBuildStatus: (status) => {
+    set(() => ({ buildStatus: status }));
   },
 }));

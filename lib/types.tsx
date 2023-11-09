@@ -45,15 +45,26 @@ export type ToasterProps = {
 
 export type ViewPorts = 'Desktop' | 'Mobile' | 'Tablet';
 
+type buildStatusT = 'saved' | 'unSaved';
+
 export type BuilderStateProps = {
   showPageSideBar: boolean;
   viewPort: ViewPorts;
   pageId: string;
   pageBlocks: PageBlock[];
+  buildStatus: 'saved' | 'unSaved';
   messageToIframe: string;
   togglePageSideBar: () => void;
   setViewPort: (viewPort: ViewPorts) => void;
   setPageBlocks: (blocks: object[]) => void;
   setPageId: (id: string) => void;
   setMessageToIframe: (message: string) => void;
+  setBuildStatus: (status: buildStatusT) => void;
+};
+
+export type ImageT = {
+  url: string;
+  width: number;
+  height: number;
+  alt?: string;
 };

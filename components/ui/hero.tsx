@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from './button';
 import Link from 'next/link';
+import { ImageT } from '@/lib/types';
 
 type HeroProps = {
   title: string;
@@ -9,14 +10,13 @@ type HeroProps = {
   color: string;
   initialCount: number;
   backgroundColor: string;
+  image: ImageT;
 };
 
-const Hero = ({ title, subTitle, color, initialCount, backgroundColor }: HeroProps) => {
-  const [counter, setCounter] = useState<number>(0);
-
+const Hero = ({ title, subTitle, color, initialCount, backgroundColor, image }: HeroProps) => {
   useEffect(() => {
-    setCounter(initialCount);
-  }, [initialCount]);
+    console.log(image);
+  }, [image]);
 
   return (
     <div className="relative overflow-hidden bg-white" style={{ background: backgroundColor }}>
@@ -38,7 +38,10 @@ const Hero = ({ title, subTitle, color, initialCount, backgroundColor }: HeroPro
                     <div className="grid flex-shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
                       <div className="h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100">
                         <img
-                          src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg"
+                          src={
+                            image?.url ||
+                            'https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg'
+                          }
                           alt=""
                           className="h-full w-full object-cover object-center"
                         />

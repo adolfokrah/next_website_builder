@@ -30,3 +30,10 @@ model Page {
   status          PageStatus @default(DRAFT)  
 }
 
+model File {
+   id            String     @id @default(auto()) @map("_id") @db.ObjectId
+   url           String
+   name          String?
+   width         Int
+   height        Int
+}

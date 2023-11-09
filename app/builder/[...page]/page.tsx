@@ -5,9 +5,6 @@ import CreateNewPage from './createNewPage';
 import SideBar from '@/components/ui/builderLayout/sideBar';
 import ControllersSideBar from '@/components/ui/builderLayout/controllersSideBar';
 
-// import { QueryClient, QueryClientProvider } from 'react-query';
-
-// const queryClient = new QueryClient();
 interface PageProps {
   params: {
     page: string[];
@@ -40,16 +37,14 @@ const Page = async (props: PageProps) => {
   }
 
   return (
-    // <QueryClientProvider client={queryClient}>
     <>
-      <NavBar pageName={page.name} />
+      <NavBar pageName={page.name} slug={slug} />
       <div className="flex justify-end">
         <SideBar currentPage={page} pages={pages} />
         <VisioBuilder slug={slug} />
         <ControllersSideBar />
       </div>
     </>
-    // </QueryClientProvider>
   );
 };
 

@@ -8,20 +8,22 @@ import { useToast } from '../use-toast';
 import { useEffect, useState } from 'react';
 import { ToasterProps } from '@/lib/types';
 import { PageStatus } from '@prisma/client';
+import Link from 'next/link';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useRouter } from 'next/navigation';
 
-const NavBar = ({ pageName }: { pageName: string }) => {
-  const { pageBlocks, viewPort, pageId, setViewPort, togglePageSideBar } = useBuilderState();
+const NavBar = ({ pageName, slug }: { pageName: string; slug: string }) => {
+  const { pageBlocks, viewPort, pageId, setViewPort, togglePageSideBar, buildStatus, setBuildStatus } =
+    useBuilderState();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ToasterProps>();
+  const router = useRouter();
   useEffect(() => {
     if (error) {
       toast({
@@ -32,10 +34,15 @@ const NavBar = ({ pageName }: { pageName: string }) => {
     }
   }, [error, toast]);
 
+  useEffect(() => {
+    setBuildStatus('unSaved');
+  }, [pageBlocks]);
+
   async function handleSaveAndPublishPage(status: PageStatus) {
     setLoading(true);
     let data = await savePage({ blocks: pageBlocks, id: pageId, status });
     setLoading(false);
+    setBuildStatus('saved');
     if (data.error) {
       setError({ title: 'Failed', description: data.error, type: 'destructive' });
       return;
@@ -76,14 +83,23 @@ const NavBar = ({ pageName }: { pageName: string }) => {
         </Button>
       </div>
       <div className="flex items-center gap-2">
-        <Button className=" text-white" variant={'ghost'}>
-          Preview
-          <ExternalLink size={17} className="ml-2" />
-        </Button>
+        {buildStatus == 'saved' ? (
+          <Link href={`${slug}`} target="_blank">
+            <Button className=" text-white" variant={'ghost'}>
+              Preview
+              <ExternalLink size={17} className="ml-2" />
+            </Button>
+          </Link>
+        ) : (
+          <Button className=" text-white" variant={'ghost'} disabled={true}>
+            Preview
+            <ExternalLink size={17} className="ml-2" />
+          </Button>
+        )}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className=" text-white">
+            <Button className=" text-white" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
