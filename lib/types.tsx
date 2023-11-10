@@ -1,6 +1,12 @@
+import { Page } from '@prisma/client';
 import { ComponentType } from 'react';
 
-export type ControllerTypes = 'text' | 'number' | 'list' | 'image' | 'colorPicker' | 'textArea';
+export type ControllerTypes = 'text' | 'number' | 'list' | 'image' | 'colorPicker' | 'textArea' | 'link';
+
+export type LinkT = {
+  url: string;
+  target: string;
+};
 export type BlockProps = {
   name: string;
   type: ControllerTypes;
@@ -54,6 +60,7 @@ export type ViewPorts = 'Desktop' | 'Mobile' | 'Tablet';
 type buildStatusT = 'saved' | 'unSaved';
 
 export type BuilderStateProps = {
+  pages: Page[];
   showPageSideBar: boolean;
   viewPort: ViewPorts;
   pageId: string;
@@ -66,6 +73,7 @@ export type BuilderStateProps = {
   setPageId: (id: string) => void;
   setMessageToIframe: (message: string) => void;
   setBuildStatus: (status: buildStatusT) => void;
+  setPages: (pages: Page[]) => void;
 };
 
 export type ImageT = {

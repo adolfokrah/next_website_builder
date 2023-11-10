@@ -38,8 +38,8 @@ type SideBarProps = Partial<Page> & {
   slug: string;
 };
 
-const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: SideBarProps[] }) => {
-  const { showPageSideBar, setPageId } = useBuilderState();
+const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Page[] }) => {
+  const { showPageSideBar, setPageId, setPages } = useBuilderState();
   const [currentTab, setCurrentTab] = useState<'settings' | 'pages'>('settings');
   const [selectedPage, setSelectedPage] = useState<SideBarProps>();
   const { toast } = useToast();
@@ -57,6 +57,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
   }, [error, toast]);
   useEffect(() => {
     setPageId(currentPage.id);
+    setPages(pages);
   }, []);
 
   async function handleUpdatePageSettings(formData: FormData) {

@@ -4,6 +4,7 @@ import TextAreaController from './textAreaController';
 import ColorPickerController from './colorPickerController';
 import ImageController from './imageController';
 import ListController from './listController';
+import LinkController from './linkController';
 
 const RenderBlockController = ({
   prop,
@@ -62,6 +63,15 @@ const RenderBlockController = ({
     case 'list':
       return (
         <ListController
+          prop={prop}
+          propIndex={propIndex}
+          defaultValue={defaultValue}
+          handlePropValueChange={handlePropValueChange}
+        />
+      );
+    case 'link':
+      return (
+        <LinkController
           prop={prop}
           propIndex={propIndex}
           defaultValue={defaultValue}

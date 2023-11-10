@@ -77,7 +77,7 @@ const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }:
         )}
       </div>
 
-      <MediaLibrary open={openDialog} setOpen={setOpenDialog} onChange={setImage} />
+      <MediaLibrary open={openDialog} setOpen={setOpenDialog} onChange={setImage} selectedImageUrl={image?.url} />
     </>
   );
 };

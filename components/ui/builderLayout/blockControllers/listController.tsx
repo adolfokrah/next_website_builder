@@ -8,6 +8,7 @@ import RenderBlockController from './renderBlocksController';
 import { v4 as uuidv4 } from 'uuid';
 import { cn } from '@/lib/utils';
 import { DragDropContext, Droppable, Draggable, OnDragEndResponder, DropResult } from 'react-beautiful-dnd';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }: RenderBlockControllerProps) => {
   const [listItems, setLIstItems] = useState<{ [key: string]: any }[]>(defaultValue || []);
@@ -43,6 +44,18 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
       }
       return [...updatedItems];
     });
+  };
+
+  const getListDisplayedLabel = (labelString: string, item: { [key: string]: any }): string => {
+    let label = '';
+    let captionArray = labelString.split('.');
+    if (typeof item[captionArray[0]] == 'object') {
+      label = item[captionArray[0]][captionArray[captionArray.length - 1]];
+    } else {
+      label = item[labelString];
+    }
+
+    return label;
   };
 
   return (
@@ -92,9 +105,19 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
           <>
             <div className="flex justify-between items-center">
               <p className="text-xs text-slate-400">{listItems.length} items</p>
-              <Button variant="outline" onClick={addNewItem}>
-                <PlusIcon size={17} />
-              </Button>
+
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" onClick={addNewItem}>
+                      <PlusIcon size={17} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent align="center">
+                    <p>Add a new item</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <div className="mt-2">
@@ -104,63 +127,71 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
                     <div {...provided.droppableProps} ref={provided.innerRef}>
                       {listItems?.map((item, index) => (
                         <Draggable key={index} draggableId={`item-${index}`} index={index}>
-                          {(provided) => (
-                            <div
-                              key={item.key}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              ref={provided.innerRef}
-                            >
+                          {(provided) => {
+                            let caption = '';
+                            let title = '';
+                            if (prop.listDisplayedLabels) {
+                              if (prop.listDisplayedLabels.caption) {
+                                caption = getListDisplayedLabel(prop.listDisplayedLabels.caption, item);
+                              }
+                              if (prop.listDisplayedLabels.title) {
+                                title = getListDisplayedLabel(prop.listDisplayedLabels.title, item);
+                              }
+                            }
+                            return (
                               <div
-                                className=" flex gap-2 p-2 bg-white relative justify-between group hover:bg-slate-100 rounded-md transition-colors duration-100 ease-linear cursor-pointer"
-                                onClick={() => setSelectedItemIndex(index)}
+                                key={item.key}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                ref={provided.innerRef}
                               >
-                                <div className="flex gap-2 text-center flex-1">
-                                  {prop.listDisplayedLabels?.image && item[prop.listDisplayedLabels.image]?.url && (
-                                    <div className="w-[50px] h-[50px] relative flex-shrink-0">
-                                      <Image
-                                        fill
-                                        sizes="100%"
-                                        alt="fancy-list-image"
-                                        src={item[prop.listDisplayedLabels.image]?.url || ''}
-                                        className="rounded-sm object-fill"
-                                      />
-                                    </div>
-                                  )}
-                                  <div className={cn('text-left flex-1 ')}>
-                                    <p className="text-sm truncate w-full">
-                                      {prop.listDisplayedLabels
-                                        ? item[prop.listDisplayedLabels.title] || `Item ${index}`
-                                        : `Item ${index}`}
-                                    </p>
-                                    {prop.listDisplayedLabels?.caption && (
-                                      <p className="text-xs text-slate-400 mt-1 w-full truncate">
-                                        {item[prop.listDisplayedLabels.caption] || ''}
-                                      </p>
+                                <div
+                                  className=" flex gap-2 p-2 bg-white relative justify-between group hover:bg-slate-100 rounded-md transition-colors duration-100 ease-linear cursor-pointer"
+                                  onClick={() => setSelectedItemIndex(index)}
+                                >
+                                  <div className="flex gap-2 text-center flex-1">
+                                    {prop.listDisplayedLabels?.image && item[prop.listDisplayedLabels.image]?.url && (
+                                      <div className="w-[50px] h-[50px] relative flex-shrink-0">
+                                        <Image
+                                          fill
+                                          sizes="100%"
+                                          alt="fancy-list-image"
+                                          src={item[prop.listDisplayedLabels.image]?.url || ''}
+                                          className="rounded-sm object-fill"
+                                        />
+                                      </div>
                                     )}
+                                    <div className={cn('text-left flex-1 ')}>
+                                      <p className="text-sm truncate w-full">
+                                        {prop.listDisplayedLabels ? title || `Item ${index}` : `Item ${index}`}
+                                      </p>
+                                      {prop.listDisplayedLabels?.caption && (
+                                        <p className="text-xs text-slate-400 mt-1 w-full truncate">{caption}</p>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="absolute right-0 flex gap-1 h-full items-center justify-center top-0 pl-5 bg-gradient-to-r from-transparent to-white">
+                                    <Button variant={'outline'} className="hidden group-hover:block bg-white">
+                                      <Edit2 size={17} />
+                                    </Button>
+                                    <Button
+                                      variant={'outline'}
+                                      className=" invisible group-hover:visible bg-white"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setLIstItems((prevState) => [
+                                          ...prevState.filter((listItem, listIndex) => index != listIndex),
+                                        ]);
+                                      }}
+                                    >
+                                      <Trash2Icon size={17} />
+                                    </Button>
                                   </div>
                                 </div>
-                                <div className="absolute right-0 flex gap-1 h-full items-center justify-center top-0 pl-5 bg-gradient-to-r from-transparent to-white">
-                                  <Button variant={'outline'} className="hidden group-hover:block bg-white">
-                                    <Edit2 size={17} />
-                                  </Button>
-                                  <Button
-                                    variant={'outline'}
-                                    className=" invisible group-hover:visible bg-white"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setLIstItems((prevState) => [
-                                        ...prevState.filter((listItem, listIndex) => index != listIndex),
-                                      ]);
-                                    }}
-                                  >
-                                    <Trash2Icon size={17} />
-                                  </Button>
-                                </div>
+                                {index < listItems.length - 1 && <Separator className="my-2" />}
                               </div>
-                              {index < listItems.length - 1 && <Separator className="my-2" />}
-                            </div>
-                          )}
+                            );
+                          }}
                         </Draggable>
                       ))}
                       {provided.placeholder}
@@ -168,59 +199,6 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
                   )}
                 </Droppable>
               </DragDropContext>
-
-              {/* {listItems?.map((item, index) => (
-                <div key={item.key}>
-                  <div
-                    className=" flex gap-2 p-2 relative justify-between group hover:bg-slate-100 rounded-md transition-colors duration-100 ease-linear cursor-pointer"
-                    onClick={() => setSelectedItemIndex(index)}
-                  >
-                    <div className="flex gap-2 text-center flex-1">
-                      {prop.listDisplayedLabels?.image && item[prop.listDisplayedLabels.image]?.url && (
-                        <div className="w-[50px] h-[50px] relative flex-shrink-0">
-                          <Image
-                            fill
-                            sizes="100%"
-                            alt="fancy-list-image"
-                            src={item[prop.listDisplayedLabels.image]?.url || ''}
-                            className="rounded-sm object-fill"
-                          />
-                        </div>
-                      )}
-                      <div className={cn('text-left flex-1 ')}>
-                        <p className="text-sm truncate w-full">
-                          {prop.listDisplayedLabels
-                            ? item[prop.listDisplayedLabels.title] || `Item ${index}`
-                            : `Item ${index}`}
-                        </p>
-                        {prop.listDisplayedLabels?.caption && (
-                          <p className="text-xs text-slate-400 mt-1 w-full truncate">
-                            {item[prop.listDisplayedLabels.caption] || ''}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="absolute right-0 flex gap-1 h-full items-center justify-center top-0 pl-5 bg-gradient-to-r from-transparent to-white">
-                      <Button variant={'outline'} className="hidden group-hover:block bg-white">
-                        <Edit2 size={17} />
-                      </Button>
-                      <Button
-                        variant={'outline'}
-                        className=" invisible group-hover:visible bg-white"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setLIstItems((prevState) => [
-                            ...prevState.filter((listItem, listIndex) => index != listIndex),
-                          ]);
-                        }}
-                      >
-                        <Trash2Icon size={17} />
-                      </Button>
-                    </div>
-                  </div>
-                  {index < listItems.length - 1 && <Separator className="my-2" />}
-                </div>
-              ))} */}
             </div>
           </>
         )}

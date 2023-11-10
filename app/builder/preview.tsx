@@ -259,7 +259,7 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent align="center">
-                        <p>Copy block</p>
+                        <p>Duplicate block</p>
                       </TooltipContent>
                     </Tooltip>
 

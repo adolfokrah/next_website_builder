@@ -5,6 +5,7 @@ export const useBuilderState = create<BuilderStateProps>((set) => ({
   showPageSideBar: false,
   viewPort: 'Desktop',
   pageBlocks: [],
+  pages: [],
   pageId: '',
   buildStatus: 'saved',
   messageToIframe: 'build',
@@ -25,5 +26,8 @@ export const useBuilderState = create<BuilderStateProps>((set) => ({
   },
   setBuildStatus: (status) => {
     set(() => ({ buildStatus: status }));
+  },
+  setPages: (pages) => {
+    set(() => ({ pages }));
   },
 }));

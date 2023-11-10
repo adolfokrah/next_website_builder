@@ -1,4 +1,4 @@
-import { ImageT } from '@/lib/types';
+import { ImageT, LinkT } from '@/lib/types';
 import Image from 'next/image';
 
 /*
@@ -44,7 +44,7 @@ type CollectionsT = {
   headline: string;
   image: ImageT;
   key: string;
-  link: string;
+  link: LinkT;
 };
 
 export default function Collections({ collections, title }: { collections: CollectionsT[]; title: string }) {
@@ -66,7 +66,7 @@ export default function Collections({ collections, title }: { collections: Colle
                   />
                 </div>
                 <h3 className="mt-6 text-sm text-gray-500">
-                  <a href={collection.link}>
+                  <a href={collection?.link?.url} target={collection?.link?.target}>
                     <span className="absolute inset-0" />
                     {collection.headline}
                   </a>

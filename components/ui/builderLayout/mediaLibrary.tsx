@@ -26,6 +26,7 @@ import { deleteFileDetails, getAllFilesDetails, saveFileDetails } from '@/lib/ac
 
 type MediaLibraryProps = {
   open: boolean;
+  selectedImageUrl: string | undefined;
   setOpen: (open: boolean) => void;
   onChange: (image: ImageT) => void;
 };
@@ -45,7 +46,7 @@ type ImageDimensions = {
   width: number;
   height: number;
 };
-const MediaLibrary = ({ open, setOpen, onChange }: MediaLibraryProps) => {
+const MediaLibrary = ({ open, setOpen, onChange, selectedImageUrl }: MediaLibraryProps) => {
   const { edgestore } = useEdgeStore();
   const [currentTab, setCurrentTab] = useState<'upload' | 'media'>('upload');
   const [filesState, setFilesState] = useState<FileState[]>([]);
@@ -131,6 +132,7 @@ const MediaLibrary = ({ open, setOpen, onChange }: MediaLibraryProps) => {
       'image/jpeg': [],
       'image/png': [],
       'image/gif': [],
+      'image/svg+xml': [],
     },
   });
 
@@ -165,10 +167,11 @@ const MediaLibrary = ({ open, setOpen, onChange }: MediaLibraryProps) => {
   const fetchAllFiles = async () => {
     try {
       setFetchingFiles(true);
-
       let res = await getAllFilesDetails();
-      let data: FileState[] = [...res.data.map((file) => ({ ...file, selected: false, progress: 0 }))];
-      setFilesState((prevState) => [...data]);
+      let data: FileState[] = [
+        ...res.data.map((file) => ({ ...file, selected: file.url === selectedImageUrl, progress: 0 })),
+      ];
+      setFilesState([...data]);
     } catch (e) {
       throw 'An error occurred';
     } finally {

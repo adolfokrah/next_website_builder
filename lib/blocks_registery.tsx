@@ -39,7 +39,7 @@ const registerBlocks: Block[] = [
         schema: [
           { type: 'text', label: 'Tittle', name: 'title' },
           { type: 'text', label: 'HeadLine', name: 'headline' },
-          { type: 'text', label: 'Link', name: 'link' },
+          { type: 'link', label: 'Link', name: 'link' },
           { type: 'image', label: 'Image', name: 'image' },
         ],
       },
@@ -148,22 +148,22 @@ const registerBlocks: Block[] = [
         label: 'Navigation',
         listDisplayedLabels: {
           title: 'name', //map title to item[x] name controller
-          caption: 'href', //map caption to item[x] link controller
+          caption: 'href.url', //map caption to item[x] link controller
         },
         schema: [
           { type: 'text', name: 'name', label: 'Name' }, //add text controller
-          { type: 'text', name: 'href', label: 'Link' }, //add text controller
+          { type: 'link', name: 'href', label: 'Link' }, //add text controller
           {
             type: 'list',
             name: 'subMenu',
             label: 'Sub Menus',
             listDisplayedLabels: {
               title: 'name',
-              caption: 'href',
+              caption: 'href.url',
             },
             schema: [
               { type: 'text', name: 'name', label: 'Name' },
-              { type: 'text', name: 'href', label: 'Link' },
+              { type: 'link', name: 'href', label: 'Link' },
             ],
           },
         ],
