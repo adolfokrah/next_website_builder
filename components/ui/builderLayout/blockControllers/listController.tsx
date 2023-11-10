@@ -103,14 +103,14 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
                           />
                         </div>
                       )}
-                      <div className="text-left">
-                        <p className="text-sm truncate w-[120px]">
+                      <div className="text-left w-[170px]  flex-shrink-0">
+                        <p className="text-sm truncate w-full">
                           {prop.listDisplayedLabels
                             ? item[prop.listDisplayedLabels.title] || `Item ${index}`
                             : `Item ${index}`}
                         </p>
                         {prop.listDisplayedLabels?.caption && (
-                          <p className="text-xs text-slate-400 mt-1 w-[120px] truncate">
+                          <p className="text-xs text-slate-400 mt-1 w-full truncate">
                             {item[prop.listDisplayedLabels.caption] || ''}
                           </p>
                         )}
