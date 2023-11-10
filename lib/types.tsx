@@ -1,4 +1,4 @@
-import { Page } from '@prisma/client';
+import { Page, PageStatus } from '@prisma/client';
 import { ComponentType } from 'react';
 
 export type ControllerTypes = 'text' | 'number' | 'list' | 'image' | 'colorPicker' | 'textArea' | 'link';
@@ -59,8 +59,9 @@ export type ViewPorts = 'Desktop' | 'Mobile' | 'Tablet';
 
 type buildStatusT = 'saved' | 'unSaved';
 
+export type SideBarPage = { name: string; slug: string; id: string; status: PageStatus };
 export type BuilderStateProps = {
-  pages: Page[];
+  pages: SideBarPage[];
   showPageSideBar: boolean;
   viewPort: ViewPorts;
   pageId: string;
@@ -73,7 +74,7 @@ export type BuilderStateProps = {
   setPageId: (id: string) => void;
   setMessageToIframe: (message: string) => void;
   setBuildStatus: (status: buildStatusT) => void;
-  setPages: (pages: Page[]) => void;
+  setPages: (pages: SideBarPage[]) => void;
 };
 
 export type ImageT = {

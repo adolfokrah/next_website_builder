@@ -8,7 +8,7 @@ import { Input } from '../input';
 import { Textarea } from '../textarea';
 import SubmitButton from './submitButton';
 import { useToast } from '../use-toast';
-import { ToasterProps } from '@/lib/types';
+import { SideBarPage, ToasterProps } from '@/lib/types';
 import { copyPage, deletePage, updatePageSettings } from '@/lib/actions/pageActions';
 import { Button } from '../button';
 import { CopyIcon, Dot, PlusIcon, Trash2 } from 'lucide-react';
@@ -38,7 +38,7 @@ type SideBarProps = Partial<Page> & {
   slug: string;
 };
 
-const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Page[] }) => {
+const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: SideBarPage[] }) => {
   const { showPageSideBar, setPageId, setPages } = useBuilderState();
   const [currentTab, setCurrentTab] = useState<'settings' | 'pages'>('settings');
   const [selectedPage, setSelectedPage] = useState<SideBarProps>();
