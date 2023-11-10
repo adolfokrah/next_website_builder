@@ -20,6 +20,7 @@ type navigationT = {
   name: string;
   href: string;
   current?: boolean;
+  subMenu?: navigationT[];
 };
 
 export default function Header({ navigation, logo }: { navigation: navigationT[]; logo: ImageT }) {
@@ -49,19 +50,29 @@ export default function Header({ navigation, logo }: { navigation: navigationT[]
                   {navigation && (
                     <div className="flex space-x-4">
                       {navigation?.map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className={classNames(
-                            item?.current
-                              ? 'bg-gray-900 text-white'
-                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                            'rounded-md px-3 py-2 text-sm font-medium',
+                        <div key={item.name} className=" relative group z-30">
+                          <a
+                            href={item.href}
+                            className={classNames(
+                              item?.current
+                                ? 'bg-gray-900 text-white'
+                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                              'rounded-md px-3 py-2 text-sm font-medium',
+                            )}
+                            aria-current={item?.current ? 'page' : undefined}
+                          >
+                            {item.name}
+                          </a>
+                          {item.subMenu && (
+                            <div className="absolute top-[30px] w-[200px] bg-white overflow-hidden text-slate-900 rounded-sm  flex-col hidden group-hover:flex">
+                              {item.subMenu.map((menu) => (
+                                <a key={menu.name} href={menu.href} className="p-2 hover:bg-slate-100">
+                                  {menu.name}
+                                </a>
+                              ))}
+                            </div>
                           )}
-                          aria-current={item?.current ? 'page' : undefined}
-                        >
-                          {item.name}
-                        </a>
+                        </div>
                       ))}
                     </div>
                   )}

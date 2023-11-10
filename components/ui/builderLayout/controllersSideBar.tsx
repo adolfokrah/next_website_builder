@@ -51,7 +51,7 @@ const ControllersSideBar = () => {
             </div>
           </div>
         ) : (
-          <div className="p-2 overflow-y-auto h-full">
+          <div className="p-2 overflow-y-auto h-[90%]">
             {foundBlockInRegister?.props &&
               selectedBlock?.props &&
               foundBlockInRegister.props.map((prop) => {

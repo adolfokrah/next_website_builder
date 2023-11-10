@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Button } from './button';
+import { Button } from '../button';
 import Link from 'next/link';
 import { ImageT } from '@/lib/types';
 

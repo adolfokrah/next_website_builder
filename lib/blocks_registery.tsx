@@ -1,15 +1,15 @@
 import { Block } from '@/lib/types';
-import Hero from '@/components/ui/hero';
+import Hero from '@/components/ui/blocks/hero';
 
 import { FileIcon, HamburgerMenuIcon, ImageIcon, LayersIcon, SunIcon } from '@radix-ui/react-icons';
-import ContactForm from '@/components/ui/contact-form';
-import Metrics from '@/components/ui/metics';
-import Header from '@/components/ui/header';
+import ContactForm from '@/components/ui/blocks/contact-form';
+import Metrics from '@/components/ui/blocks/metics';
+import Header from '@/components/ui/blocks/header';
 import { Box, Grid, SheetIcon } from 'lucide-react';
-import WorkWithUs from '@/components/ui/work-with-us';
-import Collections from '@/components/ui/collections';
-import Features from '@/components/ui/features';
-import NewsLetter from '@/components/ui/newsLetter';
+import WorkWithUs from '@/components/ui/blocks/work-with-us';
+import Collections from '@/components/ui/blocks/collections';
+import Features from '@/components/ui/blocks/features';
+import NewsLetter from '@/components/ui/blocks/newsLetter';
 
 const registerBlocks: Block[] = [
   {
@@ -147,12 +147,25 @@ const registerBlocks: Block[] = [
         name: 'navigation',
         label: 'Navigation',
         listDisplayedLabels: {
-          title: 'name',
-          caption: 'href',
+          title: 'name', //map title to item[x] name controller
+          caption: 'href', //map caption to item[x] link controller
         },
         schema: [
-          { type: 'text', name: 'name', label: 'Name' },
-          { type: 'text', name: 'href', label: 'Link' },
+          { type: 'text', name: 'name', label: 'Name' }, //add text controller
+          { type: 'text', name: 'href', label: 'Link' }, //add text controller
+          {
+            type: 'list',
+            name: 'subMenu',
+            label: 'Sub Menus',
+            listDisplayedLabels: {
+              title: 'name',
+              caption: 'href',
+            },
+            schema: [
+              { type: 'text', name: 'name', label: 'Name' },
+              { type: 'text', name: 'href', label: 'Link' },
+            ],
+          },
         ],
       },
     ],

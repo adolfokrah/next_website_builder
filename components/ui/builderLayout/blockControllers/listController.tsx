@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }: RenderBlockControllerProps) => {
   const [listItems, setLIstItems] = useState<{ [key: string]: any }[]>(defaultValue || []);
-  const [selectedItemIndex, setSelectedItemIndex] = useState<number | null>();
+  const [selectedItemIndex, setSelectedItemIndex] = useState<number | undefined>();
 
   useEffect(() => {
     handlePropValueChange(listItems, propIndex, prop);
@@ -36,10 +36,10 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
     <>
       <label className=" text-xs font-semibold">{prop.label}</label>
       <div className="w-full rounded-md border mt-2 border-slate-200  p-2 relative">
-        {selectedItemIndex != null && (
+        {selectedItemIndex != undefined && (
           <>
             <div className="flex gap-2 items-center">
-              <Button variant="ghost" onClick={() => setSelectedItemIndex(null)}>
+              <Button variant="ghost" onClick={() => setSelectedItemIndex(undefined)}>
                 <ChevronLeftIcon size={17} />
               </Button>
               <p className="text-sm text-slate-800 truncate w-[300px]">
@@ -53,7 +53,7 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
 
             <div className="mt-2">
               {prop.schema?.map((schema) => {
-                let value = listItems[selectedItemIndex][schema.name] || '';
+                let value = listItems[selectedItemIndex][schema.name] || null;
                 return (
                   <div key={schema.name}>
                     <RenderBlockController
@@ -75,7 +75,7 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
           </>
         )}
 
-        {selectedItemIndex == null && (
+        {selectedItemIndex === undefined && (
           <>
             <div className="flex justify-between items-center">
               <p className="text-xs text-slate-400">{listItems.length} items</p>
