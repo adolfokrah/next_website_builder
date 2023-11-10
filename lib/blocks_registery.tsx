@@ -18,18 +18,39 @@ const registerBlocks: Block[] = [
     icon: <ImageIcon />,
     defaultInputs: { children: 'button' },
     props: [{ name: 'backgroundImage', type: 'image', label: 'Background Image' }],
+    key: 'workWithUs',
   },
   {
     component: Collections,
     title: 'Collections',
     icon: <SunIcon />,
-    defaultInputs: { placeholder: 'first name' },
-    props: [{ name: 'placeholder', type: 'text', label: 'Placeholder' }],
+    defaultInputs: { collections: [], title: 'Collections' },
+    props: [
+      { type: 'text', label: 'Tittle', name: 'title' },
+      {
+        name: 'collections',
+        type: 'list',
+        label: 'Collections',
+        listDisplayedLabels: {
+          title: 'title',
+          caption: 'headline',
+          image: 'image',
+        },
+        schema: [
+          { type: 'text', label: 'Tittle', name: 'title' },
+          { type: 'text', label: 'HeadLine', name: 'headline' },
+          { type: 'text', label: 'Link', name: 'link' },
+          { type: 'image', label: 'Image', name: 'image' },
+        ],
+      },
+    ],
+    key: 'collections',
   },
   {
     component: Hero,
     title: 'Hero',
     icon: <LayersIcon />,
+    key: 'hero',
     defaultInputs: {
       title: 'This is a hero',
       subTitle:
@@ -41,6 +62,7 @@ const registerBlocks: Block[] = [
         width: 100,
         height: 200,
         alt: 'helle world',
+        url: 'https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg',
       },
     },
     props: [
@@ -56,6 +78,7 @@ const registerBlocks: Block[] = [
     component: ContactForm,
     title: 'Contact form',
     icon: <FileIcon />,
+    key: 'contactForm',
     defaultInputs: {
       emailLabel: 'Email',
       emailPlaceHolder: 'Enter your email',
@@ -85,25 +108,66 @@ const registerBlocks: Block[] = [
   },
   {
     component: Metrics,
-    title: 'metics',
+    title: 'Metrics',
+    key: 'metrics',
     icon: <HamburgerMenuIcon />,
-    defaultInputs: {},
+    defaultInputs: {
+      metrics: [
+        { figure: '$119 trillion', caption: 'Assets under holding', key: 'caption2' },
+        { figure: '44 million', caption: 'Transactions every 24 hours', key: 'caption3' },
+        { figure: '46,000', caption: 'New users annually', key: 'caption5' },
+      ],
+    },
+    props: [
+      {
+        name: 'metrics',
+        type: 'list',
+        label: 'Items',
+        listDisplayedLabels: {
+          title: 'figure',
+          caption: 'caption',
+        },
+        schema: [
+          { type: 'text', label: 'Figure', name: 'figure' },
+          { type: 'text', label: 'Caption', name: 'caption' },
+        ],
+      },
+    ],
   },
   {
     component: Header,
     title: 'Nav bar',
+    key: 'navBar',
     icon: <Box />,
-    defaultInputs: {},
+    defaultInputs: { navigation: [], logo: {} },
+    props: [
+      { type: 'image', name: 'logo', label: 'Logo' },
+      {
+        type: 'list',
+        name: 'navigation',
+        label: 'Navigation',
+        listDisplayedLabels: {
+          title: 'name',
+          caption: 'href',
+        },
+        schema: [
+          { type: 'text', name: 'name', label: 'Name' },
+          { type: 'text', name: 'href', label: 'Link' },
+        ],
+      },
+    ],
   },
   {
     component: Features,
     title: 'Features',
     icon: <Grid />,
     defaultInputs: {},
+    key: 'features',
   },
   {
     component: NewsLetter,
     title: 'News letter',
+    key: 'newsLetter',
     icon: <SheetIcon />,
     defaultInputs: {},
   },

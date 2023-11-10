@@ -1,16 +1,23 @@
 import { ComponentType } from 'react';
 
 export type ControllerTypes = 'text' | 'number' | 'list' | 'image' | 'colorPicker' | 'textArea';
-
+export type SchemaT = { type: Omit<ControllerTypes, 'list'>; name: string; label: string };
 export type BlockProps = {
   name: string;
   type: ControllerTypes;
   label: string;
+  schema?: SchemaT[];
+  listDisplayedLabels?: {
+    title: string;
+    caption?: string;
+    image?: string;
+  };
 };
 
 export type Block = {
   component: ComponentType<any>;
   title: string;
+  key: string;
   icon: React.ReactNode;
   props?: BlockProps[];
   defaultInputs: { [key: string]: any };

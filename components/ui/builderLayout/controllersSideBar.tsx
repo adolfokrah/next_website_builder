@@ -10,9 +10,7 @@ import { BlockProps } from '@/lib/types';
 const ControllersSideBar = () => {
   const { pageBlocks, setMessageToIframe } = useBuilderState();
   const selectedBlock = pageBlocks.find((block) => block.selected);
-  const foundBlockInRegister = registerBlocks.find(
-    (block) => block.title.toLowerCase() === selectedBlock?.title.toLowerCase(),
-  );
+  const foundBlockInRegister = registerBlocks.find((block) => block.key === selectedBlock?.key);
   const handlePropValueChange = (newValue: any, propIndex: number, prop: BlockProps) => {
     setMessageToIframe(JSON.stringify({ newValue, propIndex, prop }));
   };
@@ -32,7 +30,7 @@ const ControllersSideBar = () => {
         )}
       >
         <div className="w-full text-center border-b items-center flex justify-between border-b-slate-100 text-slate-900 px-2 py-4 text-sm transition-colors duration-150 ease-linear cursor-pointer">
-          <div className="text-center w-full">{selectedBlock?.title}</div>
+          <div className="text-center w-full">{foundBlockInRegister?.title}</div>
           <Button
             variant={'outline'}
             onClick={() => {
@@ -57,7 +55,9 @@ const ControllersSideBar = () => {
             {foundBlockInRegister?.props &&
               selectedBlock?.props &&
               foundBlockInRegister.props.map((prop) => {
-                let defaultValue = selectedBlock.inputs ? selectedBlock.inputs[prop.name] : null;
+                let defaultValue = selectedBlock.inputs
+                  ? selectedBlock.inputs[prop.name]
+                  : foundBlockInRegister.defaultInputs;
                 let index = selectedBlock.props?.findIndex((iProp) => iProp.type === prop.type);
 
                 return (

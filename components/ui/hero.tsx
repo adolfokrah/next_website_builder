@@ -14,10 +14,6 @@ type HeroProps = {
 };
 
 const Hero = ({ title, subTitle, color, initialCount, backgroundColor, image }: HeroProps) => {
-  useEffect(() => {
-    console.log(image);
-  }, [image]);
-
   return (
     <div className="relative overflow-hidden bg-white" style={{ background: backgroundColor }}>
       <div className="pb-80 pt-16 sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40">
@@ -38,11 +34,8 @@ const Hero = ({ title, subTitle, color, initialCount, backgroundColor, image }: 
                     <div className="grid flex-shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
                       <div className="h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100">
                         <img
-                          src={
-                            image?.url ||
-                            'https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg'
-                          }
-                          alt=""
+                          src={image?.url || ''}
+                          alt={image?.alt || ''}
                           className="h-full w-full object-cover object-center"
                         />
                       </div>

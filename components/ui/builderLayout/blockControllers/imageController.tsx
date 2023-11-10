@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 import MediaLibrary from '../mediaLibrary';
 import Image from 'next/image';
+import { Input } from '../../input';
 
 const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }: RenderBlockControllerProps) => {
   const [image, setImage] = useState<ImageT | undefined>(defaultValue);
@@ -14,6 +15,7 @@ const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }:
   useEffect(() => {
     handlePropValueChange(image, propIndex, prop);
   }, [image]);
+
   return (
     <>
       <div>
@@ -65,6 +67,14 @@ const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }:
             />
           )}
         </div>
+        {image && (
+          <Input
+            className="mt-2"
+            placeholder="alt"
+            defaultValue={image?.alt || ''}
+            onChange={(e) => setImage({ ...image, alt: e.target.value })}
+          />
+        )}
       </div>
 
       <MediaLibrary open={openDialog} setOpen={setOpenDialog} onChange={setImage} />

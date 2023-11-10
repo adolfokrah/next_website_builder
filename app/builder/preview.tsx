@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Plus, ChevronUp, Trash2, Copy } from 'lucide-react';
+import { ChevronDown, Plus, ChevronUp, Trash2, Copy, FileWarning } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import BlocksCommandPallet from '@/components/ui/builderLayout/blocksCommandPallet';
@@ -83,9 +83,7 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
     setPageBlocks((prevState) => {
       let blocks = [...prevState];
       let selectedBlockIndex = blocks.findIndex((c) => c.selected);
-      let foundRegisterBlock = registerBlocks.find(
-        (c) => c.title.toLowerCase() === blocks[selectedBlockIndex].title.toLowerCase(),
-      );
+      let foundRegisterBlock = registerBlocks.find((c) => c.key === blocks[selectedBlockIndex].key);
 
       if (foundRegisterBlock) {
         let selectedBlock = blocks[selectedBlockIndex];
@@ -155,6 +153,7 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
           open={open}
           setOpen={setOpen}
           addPageBlock={(block) => {
+            console.log('blocksdfs', block);
             handleRemoveSelectedBlocks();
             setPageBlocks((prevState) => [...prevState, block]);
           }}
@@ -184,7 +183,7 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
         }}
       />
       {pageBlocks.map((block, index) => {
-        const foundBlock = registerBlocks.find((rBlock) => rBlock.title.toLowerCase() === block.title.toLowerCase());
+        const foundBlock = registerBlocks.find((rBlock) => rBlock.key === block.key);
         const inputs = block.inputs;
         if (foundBlock) {
           let Tag = foundBlock.component;
@@ -324,7 +323,25 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
             </section>
           );
         }
-        return <section key={block.id}>Tag not found</section>;
+        return (
+          <section key={block.id} className="w-full h-56 border border-slate-200 text-center grid place-items-center ">
+            <div>
+              <div className="flex gap-2  items-center justify-center">
+                <Button className="rounded-full  p-0 w-12 h-12" variant={'outline'}>
+                  <FileWarning className="text-red-400" size={20} />
+                </Button>
+                <Button
+                  className="rounded-full  p-0 w-12 h-12"
+                  variant={'outline'}
+                  onClick={() => handleDeleteSection(index)}
+                >
+                  <Trash2 className="text-red-400" size={20} />
+                </Button>
+              </div>
+              <p className="text-xs mt-2">{block.title} not found in blocks registry</p>
+            </div>
+          </section>
+        );
       })}
     </div>
   );
