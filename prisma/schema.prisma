@@ -16,6 +16,7 @@ enum PageStatus {
   PUBLISHED
 }
 
+
 model Page {
   id              String     @id @default(auto()) @map("_id") @db.ObjectId
   name            String     @unique
@@ -36,4 +37,10 @@ model File {
    name          String?
    width         Int
    height        Int
+}
+
+model GlobalBlock {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  name          String     @unique
+  block         Json
 }

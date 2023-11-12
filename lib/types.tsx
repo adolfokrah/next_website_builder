@@ -32,6 +32,14 @@ export type PageBlock = Block & {
   selected: boolean;
   inputs: { [key: string]: any } | undefined;
   id: string;
+  globalId?: string;
+};
+
+export type GlobalBlock = {
+  id: string;
+  key: string;
+  inputs: { [key: string]: any };
+  globalId: string | null;
 };
 
 export type SideBarProps = {

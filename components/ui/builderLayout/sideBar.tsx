@@ -58,7 +58,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
   useEffect(() => {
     setPageId(currentPage.id);
     setPages(pages);
-  }, []);
+  }, [currentPage.id, pages, setPageId, setPages]);
 
   async function handleUpdatePageSettings(formData: FormData) {
     let name = (formData.get('name') as string) || null;
@@ -164,9 +164,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
           >
             <form
               action={handleUpdatePageSettings}
-              className={
-                'w-[320px] flex-grow-0 flex-shrink-0 flex flex-col gap-4 py-3 px-2 px-2 h-[88vh] overflow-auto'
-              }
+              className={'w-[320px] flex-grow-0 flex-shrink-0 flex flex-col gap-4 py-3 px-2 h-[88vh] overflow-auto'}
             >
               <div className="w-full">
                 <Label htmlFor="pageName" className="text-xs font-medium">

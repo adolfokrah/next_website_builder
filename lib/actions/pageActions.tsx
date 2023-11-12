@@ -3,7 +3,7 @@
 import { Page, PageStatus } from '@prisma/client';
 import prisma from '../prisma_init';
 import { revalidatePath } from 'next/cache';
-import { PageBlock } from '../types';
+import { GlobalBlock, PageBlock } from '../types';
 
 export const createNewPage = async ({ name, slug }: { name: Page['name']; slug: Page['slug'] }) => {
   try {
@@ -91,7 +91,7 @@ export const duplicatePage = async ({ id }: { id: Page['id'] }) => {
           metaTitle: page.metaTitle,
           metaDescription: page.metaDescription,
           metaKeyWords: page.metaKeyWords,
-          blocks: page.blocks as object[],
+          blocks: page.blocks as GlobalBlock[],
           status: page.status || PageStatus.DRAFT,
         },
       });
@@ -106,7 +106,7 @@ export const duplicatePage = async ({ id }: { id: Page['id'] }) => {
 
 export const savePage = async ({ id, blocks, status }: { id: Page['id']; blocks: PageBlock[]; status: PageStatus }) => {
   try {
-    const data = await prisma.page.update({
+    const page = await prisma.page.update({
       where: {
         id,
       },
@@ -115,15 +115,17 @@ export const savePage = async ({ id, blocks, status }: { id: Page['id']; blocks:
           id: block.id,
           key: block.key,
           inputs: block.inputs,
-        })),
+          globalId: block?.globalId,
+        })) as object,
         status,
       },
     });
 
     prisma.$disconnect();
     revalidatePath('/');
-    return { data: data, error: null };
+    return { data: page, error: null };
   } catch (error) {
+    console.log(error);
     return { error: 'Oops, something happened' };
   }
 };

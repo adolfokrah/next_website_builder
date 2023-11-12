@@ -9,16 +9,80 @@ import registerBlocks from '@/lib/blocks_registery';
 import { BlockProps, PageBlock } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { v4 as uuidv4 } from 'uuid';
+import { Toaster } from '@/components/ui/toaster';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  ContextMenuShortcut,
+} from '@/components/ui/context-menu';
+import { insertGlobalBlock, removeGlobalBlock } from '@/lib/actions/blockActions';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { ToasterProps } from '@/lib/types';
+import { useToast } from '@/components/ui/use-toast';
+import { Input } from '@/components/ui/input';
+import { GlobalBlock } from '@prisma/client';
 
 type insertBlockAboveT = {
   position: 'top' | 'bottom';
   index: number;
 };
-const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
-  const [pageBlocks, setPageBlocks] = useState<PageBlock[]>([...blocks] as PageBlock[]);
+const BuilderBlocks = ({
+  blocks,
+  slug,
+  globals,
+}: {
+  blocks: PageBlock[];
+  slug: string;
+  globals: GlobalBlock[] | [];
+}) => {
+  const [pageBlocks, setPageBlocks] = useState<PageBlock[]>([]);
   const [build, setBuild] = useState<boolean>();
   const [open, setOpen] = useState(false);
   const [insertBlockAbove, setInsertBlockAbove] = useState<insertBlockAboveT>();
+  const [toastProps, setToastProps] = useState<ToasterProps | null>();
+  const { toast } = useToast();
+  const [globalBlockInputName, setGlobalBlockInputName] = useState('');
+  const [alertStatus, setAlertStatus] = useState<{
+    open: boolean;
+    action: 'insertGlobal' | 'removeGlobal';
+    value?: number | string | undefined;
+  }>({
+    open: false,
+    action: 'insertGlobal',
+  });
+
+  useEffect(() => {
+    if (toast) {
+      toast({
+        title: toastProps?.title,
+        description: toastProps?.description,
+        variant: toastProps?.type,
+      });
+    }
+  }, [toastProps]);
+
+  useEffect(() => {
+    setPageBlocks((prevState) => {
+      if (prevState.length) {
+        return [...blocks].map((block) => ({
+          ...block,
+          selected: prevState.find((b) => b.key === block.key)?.selected,
+        })) as PageBlock[];
+      }
+      return [...blocks] as PageBlock[];
+    });
+  }, [blocks]);
 
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
@@ -38,7 +102,7 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
     return () => {
       window.removeEventListener('message', messageHandler);
     };
-  }, []);
+  }, [blocks]);
 
   useEffect(() => {
     if (pageBlocks) {
@@ -62,7 +126,7 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
     });
   };
 
-  const handleCopyBlock = (index: number) => {
+  const handleDuplicateBlock = (index: number) => {
     handleRemoveSelectedBlocks();
     setPageBlocks((prevState) => {
       const components = [...prevState];
@@ -128,6 +192,24 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
     });
   };
 
+  async function handleSaveGlobalBlock(index: number) {
+    let data = await insertGlobalBlock({ block: pageBlocks[index], name: globalBlockInputName, slug });
+    if (data?.error) {
+      setToastProps({ title: 'Failed', description: data.error, type: 'destructive' });
+      return;
+    }
+    setToastProps({ title: 'Success', description: 'Block saved as global', type: 'default' });
+  }
+
+  async function handleRemoveGlobalBlock(globalId: string) {
+    let data = await removeGlobalBlock({ id: globalId });
+    if (data?.error) {
+      setToastProps({ title: 'Failed', description: data.error, type: 'destructive' });
+      return;
+    }
+    setToastProps({ title: 'Success', description: 'Block removed from globals', type: 'default' });
+  }
+
   //   if (!build) return null;
 
   if (!pageBlocks.length) {
@@ -151,9 +233,9 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
         </div>
         <BlocksCommandPallet
           open={open}
+          globals={globals}
           setOpen={setOpen}
           addPageBlock={(block) => {
-            console.log('blocksdfs', block);
             handleRemoveSelectedBlocks();
             setPageBlocks((prevState) => [...prevState, block]);
           }}
@@ -163,9 +245,66 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
   }
   return (
     <div className="mt-[40px] builder">
+      <AlertDialog
+        open={alertStatus.open}
+        onOpenChange={(open) => setAlertStatus((prevState) => ({ ...prevState, open }))}
+      >
+        <AlertDialogContent>
+          {alertStatus.action === 'removeGlobal' ? (
+            <>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently de-register all instances of this block as global
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                <AlertDialogAction
+                  className="bg-red-500 hover:bg-red-600"
+                  onClick={() => handleRemoveGlobalBlock(alertStatus.value as string)}
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </>
+          ) : (
+            <>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Save this block as global</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action will make the block accessible and usable across all pages.
+                  <div className="mt-2">
+                    <label className=" text-xs font-semibold">Name</label>
+                    <Input
+                      className="mb-3 mt-1 w-full"
+                      onChange={(e) => {
+                        setGlobalBlockInputName(e.target.value);
+                      }}
+                    />
+                  </div>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                <AlertDialogAction
+                  disabled={!globalBlockInputName.length}
+                  onClick={() => handleSaveGlobalBlock(alertStatus.value as number)}
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </>
+          )}
+        </AlertDialogContent>
+      </AlertDialog>
+
       <BlocksCommandPallet
         open={open}
         setOpen={setOpen}
+        globals={globals}
         addPageBlock={(block) => {
           handleRemoveSelectedBlocks();
           setPageBlocks((prevState) => {
@@ -191,134 +330,207 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
           return (
             <section key={block.id} className="relative group">
               <TooltipProvider>
-                <div
-                  className={cn(
-                    'absolute z-20 px-1 top-[-30px] justify-between items-center left-0 hidden gap-1 w-full',
-                    {
-                      flex: selected,
-                    },
-                  )}
-                >
-                  <div className="flex gap-1">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          className=" w-6 h-6 p-0"
-                          onClick={() => handleMoveBlock('bottom', index)}
-                          disabled={index == pageBlocks.length - 1}
-                        >
-                          <ChevronDown size={17} />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent align="center">
-                        <p>Move Down</p>
-                      </TooltipContent>
-                    </Tooltip>
+                <ContextMenu>
+                  <ContextMenuTrigger asChild disabled={!selected}>
+                    <div>
+                      <div
+                        className={cn(
+                          'absolute z-20 px-1 top-[-30px] justify-between items-center left-0 hidden gap-1 w-full',
+                          {
+                            flex: selected,
+                          },
+                        )}
+                      >
+                        <div className="flex gap-1">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                className={cn('w-6 h-6 p-0', {
+                                  'bg-blue-400 hover:bg-blue-600': block.globalId,
+                                })}
+                                onClick={() => handleMoveBlock('bottom', index)}
+                                disabled={index == pageBlocks.length - 1}
+                              >
+                                <ChevronDown size={17} />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent align="center">
+                              <p>Move Down</p>
+                            </TooltipContent>
+                          </Tooltip>
 
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          className=" w-6 h-6 p-0"
-                          onClick={() => handleMoveBlock('up', index)}
-                          disabled={index == 0}
-                        >
-                          <ChevronUp size={17} />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent align="center">
-                        <p>Move Up</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                className={cn('w-6 h-6 p-0', {
+                                  'bg-blue-400 hover:bg-blue-600': block.globalId,
+                                })}
+                                onClick={() => handleMoveBlock('up', index)}
+                                disabled={index == 0}
+                              >
+                                <ChevronUp size={17} />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent align="center">
+                              <p>Move Up</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
 
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        className=" w-6 h-6 p-0"
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              className={cn('w-6 h-6 p-0', {
+                                'bg-blue-400 hover:bg-blue-600': block.globalId,
+                              })}
+                              onClick={() => {
+                                setInsertBlockAbove({
+                                  position: 'top',
+                                  index,
+                                });
+                                setOpen(true);
+                              }}
+                            >
+                              <Plus size={17} />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent align="center">
+                            <p>Add new block above</p>
+                          </TooltipContent>
+                        </Tooltip>
+
+                        <div className="flex gap-1">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                className={cn('w-6 h-6 p-0', {
+                                  'bg-blue-400 hover:bg-blue-600': block.globalId,
+                                })}
+                                onClick={() => handleDuplicateBlock(index)}
+                              >
+                                <Copy size={17} />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent align="center">
+                              <p>Duplicate block</p>
+                            </TooltipContent>
+                          </Tooltip>
+
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                className={cn('w-6 h-6 p-0', {
+                                  'bg-blue-400 hover:bg-blue-600': block.globalId,
+                                })}
+                                onClick={() => handleDeleteSection(index)}
+                              >
+                                <Trash2 size={17} />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent align="center">
+                              <p>Delete block</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                      </div>
+
+                      <div
+                        className={cn(' border-transparent ', {
+                          'border-brand-green-50 border-[2px]': selected,
+                          'border-blue-400': block.globalId,
+                        })}
                         onClick={() => {
-                          setInsertBlockAbove({
-                            position: 'top',
-                            index,
+                          setPageBlocks((prevBlocks) => {
+                            let components = [...prevBlocks].map((c) => ({
+                              ...c,
+                              selected: false,
+                            }));
+                            components[index].selected = true;
+                            return [...components];
                           });
-                          setOpen(true);
                         }}
                       >
-                        <Plus size={17} />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent align="center">
-                      <p>Add new block above</p>
-                    </TooltipContent>
-                  </Tooltip>
+                        <Tag {...inputs} />
+                      </div>
 
-                  <div className="flex gap-1">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button className=" w-6 h-6 p-0" onClick={() => handleCopyBlock(index)}>
-                          <Copy size={17} />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent align="center">
-                        <p>Duplicate block</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button className=" w-6 h-6 p-0" onClick={() => handleDeleteSection(index)}>
-                          <Trash2 size={17} />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent align="center">
-                        <p>Delete block</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </div>
-
-                <div
-                  className={cn(' border-transparent ', {
-                    'border-brand-green-50 border-[2px]': selected,
-                  })}
-                  onClick={() => {
-                    setPageBlocks((prevBlocks) => {
-                      let components = [...prevBlocks].map((c) => ({
-                        ...c,
-                        selected: false,
-                      }));
-                      components[index].selected = true;
-                      return [...components];
-                    });
-                  }}
-                >
-                  <Tag {...inputs} />
-                </div>
-
-                <div
-                  className={cn('absolute z-20 px-1 bottom-[-30px] hidden justify-center left-0  gap-1 w-full', {
-                    flex: selected,
-                  })}
-                >
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        className=" w-6 h-6 p-0"
-                        onClick={() => {
-                          setInsertBlockAbove({
-                            position: 'bottom',
-                            index,
-                          });
-                          setOpen(true);
-                        }}
+                      <div
+                        className={cn('absolute z-20 px-1 bottom-[-30px] hidden justify-center left-0  gap-1 w-full', {
+                          flex: selected,
+                        })}
                       >
-                        <Plus size={17} />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent align="center">
-                      <p>Add new block below</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              className={cn('w-6 h-6 p-0', {
+                                'bg-blue-400 hover:bg-blue-600': block.globalId,
+                              })}
+                              onClick={() => {
+                                setInsertBlockAbove({
+                                  position: 'bottom',
+                                  index,
+                                });
+                                setOpen(true);
+                              }}
+                            >
+                              <Plus size={17} />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent align="center">
+                            <p>Add new block below</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    </div>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent className="w-64">
+                    {!block.globalId && (
+                      <ContextMenuItem
+                        className="cursor-pointer"
+                        onClick={() =>
+                          setAlertStatus((prevState) => ({
+                            ...prevState,
+                            open: true,
+                            value: index,
+                            action: 'insertGlobal',
+                          }))
+                        }
+                      >
+                        Save as global
+                        <ContextMenuShortcut>{`⌘G`}</ContextMenuShortcut>
+                      </ContextMenuItem>
+                    )}
+
+                    {block.globalId && (
+                      <ContextMenuItem
+                        className="cursor-pointer"
+                        onClick={() =>
+                          setAlertStatus((prevState) => ({
+                            ...prevState,
+                            open: true,
+                            value: block.globalId,
+                            action: 'removeGlobal',
+                          }))
+                        }
+                      >
+                        Remove as global
+                        <ContextMenuShortcut>{`⌘G`}</ContextMenuShortcut>
+                      </ContextMenuItem>
+                    )}
+
+                    <ContextMenuItem className="cursor-pointer" onClick={() => handleDuplicateBlock(index)}>
+                      Duplicate
+                      <ContextMenuShortcut>{`⌘D`}</ContextMenuShortcut>
+                    </ContextMenuItem>
+                    <ContextMenuItem className="cursor-pointer">
+                      Copy
+                      <ContextMenuShortcut>{`⌘C`}</ContextMenuShortcut>
+                    </ContextMenuItem>
+                    <ContextMenuItem className="cursor-pointer" onClick={() => handleDeleteSection(index)}>
+                      Delete
+                      <ContextMenuShortcut>{`⌘X`}</ContextMenuShortcut>
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
               </TooltipProvider>
             </section>
           );
@@ -343,6 +555,7 @@ const BuilderBlocks = ({ blocks }: { blocks: object[] }) => {
           </section>
         );
       })}
+      <Toaster />
     </div>
   );
 };

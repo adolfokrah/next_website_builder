@@ -19,7 +19,6 @@ export const saveFileDetails = async ({ url, width, height }: { url: string; wid
 
     return { data: createdFile, error: null };
   } catch (error) {
-    console.log(error);
     throw { error: 'An error occurred' };
   }
 };

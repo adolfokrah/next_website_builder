@@ -1,4 +1,5 @@
 import RenderBuilderContent from '@/components/ui/builderLayout/renderBuilderContent';
+import { getPageBlocks } from '@/lib/utils';
 import { PageStatus, PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 import type { Metadata } from 'next';
@@ -40,15 +41,24 @@ export default async function Page(props: PageProps) {
     where: {
       slug: `/${props.params.page.join('/')}`,
     },
+    select: {
+      blocks: true,
+      status: true,
+    },
   });
   prisma.$disconnect();
 
   if (page?.status !== PageStatus.PUBLISHED) {
     redirect('/404');
   }
+
+  if (page?.blocks) {
+    page.blocks = (await getPageBlocks(JSON.parse(JSON.stringify(page.blocks)))) || page.blocks;
+  }
+
   return (
     <>
-      <RenderBuilderContent data={page?.blocks || []} />
+      <RenderBuilderContent data={page?.blocks || []} />{' '}
     </>
   );
 }

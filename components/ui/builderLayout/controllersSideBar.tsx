@@ -2,15 +2,47 @@
 import { useBuilderState } from '@/lib/useBuilderState';
 import { cn } from '@/lib/utils';
 import { Button } from '../button';
-import { SlidersHorizontal, XIcon } from 'lucide-react';
+import { InfoIcon, Loader2, SlidersHorizontal, XIcon } from 'lucide-react';
 import RenderBlockController from './blockControllers/renderBlocksController';
 import registerBlocks from '@/lib/blocks_registery';
-import { BlockProps } from '@/lib/types';
+import { BlockProps, GlobalBlock } from '@/lib/types';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useToast } from '../use-toast';
+import { useEffect, useState } from 'react';
+import { ToasterProps } from '@/lib/types';
+import { updateGlobalBlock } from '@/lib/actions/blockActions';
 
 const ControllersSideBar = () => {
   const { pageBlocks, setMessageToIframe } = useBuilderState();
   const selectedBlock = pageBlocks.find((block) => block.selected);
   const foundBlockInRegister = registerBlocks.find((block) => block.key === selectedBlock?.key);
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [toastProps, setToastProps] = useState<ToasterProps>();
+
+  useEffect(() => {
+    if (toastProps) {
+      toast({
+        title: toastProps?.title,
+        description: toastProps?.description,
+        variant: toastProps?.type,
+      });
+    }
+  }, [toastProps, toast]);
+
+  async function handleSaveGlobalBlock(block: GlobalBlock, id: string | undefined) {
+    if (id) {
+      setLoading(true);
+      let data = await updateGlobalBlock({ block, id });
+      setLoading(false);
+      if (data.error) {
+        setToastProps({ title: 'Failed', description: data.error, type: 'destructive' });
+        return;
+      }
+      setToastProps({ title: 'Success', description: 'Global block updated', type: 'default' });
+    }
+  }
+
   const handlePropValueChange = (newValue: any, propIndex: number, prop: BlockProps) => {
     setMessageToIframe(JSON.stringify({ newValue, propIndex, prop }));
   };
@@ -52,6 +84,16 @@ const ControllersSideBar = () => {
           </div>
         ) : (
           <div className="p-2 overflow-y-auto h-[90%]">
+            {selectedBlock?.globalId && (
+              <Alert className=" bg-sky-300">
+                <InfoIcon className="mr-2" size={17} />
+                <AlertDescription className="text-sm">
+                  Changes made to this global block will affect all instances. <br />
+                  <small>Scroll down to see saved changes button</small>
+                </AlertDescription>
+              </Alert>
+            )}
+
             {foundBlockInRegister?.props &&
               selectedBlock?.props &&
               foundBlockInRegister.props.map((prop) => {
@@ -61,7 +103,7 @@ const ControllersSideBar = () => {
                 let index = selectedBlock.props?.findIndex((iProp) => iProp.type === prop.type);
 
                 return (
-                  <div key={`${selectedBlock.id}_${prop.name}_${prop.type}`} className="mb-2">
+                  <div key={`${selectedBlock.id}_${prop.name}_${prop.type}`} className="mb-2 mt-2">
                     <RenderBlockController
                       prop={prop}
                       propIndex={index == null ? -1 : index}
@@ -71,6 +113,32 @@ const ControllersSideBar = () => {
                   </div>
                 );
               })}
+
+            {selectedBlock?.globalId && (
+              <Button
+                className="w-full mt-2"
+                onClick={() =>
+                  handleSaveGlobalBlock(
+                    {
+                      id: selectedBlock.id,
+                      key: selectedBlock.key,
+                      inputs: selectedBlock.inputs as object[],
+                      globalId: selectedBlock.globalId || '',
+                    },
+                    selectedBlock?.globalId,
+                  )
+                }
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {'Saving...'}
+                  </>
+                ) : (
+                  'Save global changes'
+                )}
+              </Button>
+            )}
           </div>
         )}
       </div>
