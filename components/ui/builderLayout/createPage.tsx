@@ -10,18 +10,7 @@ import SubmitButton from '@/components/ui/builderLayout/submitButton';
 
 const CreatePage = ({ slug }: { slug?: string }) => {
   const { toast } = useToast();
-  const [error, setError] = useState<ToasterProps>();
   const router = useRouter();
-
-  useEffect(() => {
-    if (error) {
-      toast({
-        title: error?.title,
-        description: error?.description,
-        variant: error?.type,
-      });
-    }
-  }, [error]);
 
   async function handleCreatePage(formData: FormData) {
     let name = (formData.get('name') as string) || null;
@@ -29,12 +18,12 @@ const CreatePage = ({ slug }: { slug?: string }) => {
 
     if (name && formSlug) {
       if (formSlug?.charAt(0) != '/') {
-        setError({ title: 'Failed', description: 'slug name should start with /', type: 'destructive' });
+        toast({ title: 'Failed', description: 'slug name should start with /', variant: 'destructive' });
         return;
       }
       let data = await createNewPage({ name, slug: formSlug });
       if (data.error) {
-        setError({ title: 'Failed', description: data.error, type: 'destructive' });
+        toast({ title: 'Failed', description: data.error, variant: 'destructive' });
         return;
       }
       if (slug != data.data?.slug) {
@@ -43,7 +32,7 @@ const CreatePage = ({ slug }: { slug?: string }) => {
         router.refresh();
       }
     } else {
-      setError({ title: 'Failed', description: 'Both page name and slug needed', type: 'destructive' });
+      toast({ title: 'Failed', description: 'Both page name and slug needed', variant: 'destructive' });
     }
   }
   return (

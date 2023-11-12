@@ -5,12 +5,13 @@ import { FileIcon, HamburgerMenuIcon, ImageIcon, LayersIcon, SunIcon } from '@ra
 import ContactForm from '@/components/ui/blocks/contact-form';
 import Metrics from '@/components/ui/blocks/metics';
 import Header from '@/components/ui/blocks/header';
-import { Box, Grid, RectangleHorizontalIcon, SheetIcon } from 'lucide-react';
+import { Box, Grid, RectangleHorizontalIcon, SheetIcon, Table2Icon } from 'lucide-react';
 import WorkWithUs from '@/components/ui/blocks/work-with-us';
 import Collections from '@/components/ui/blocks/collections';
 import Features from '@/components/ui/blocks/features';
 import NewsLetter from '@/components/ui/blocks/newsLetter';
 import Footer from '@/components/ui/blocks/footer';
+import LoginForm from '@/components/ui/blocks/login-form';
 
 const registerBlocks: Block[] = [
   {
@@ -174,6 +175,13 @@ const registerBlocks: Block[] = [
     icon: <RectangleHorizontalIcon />,
     defaultInputs: {},
     props: [{ type: 'image', label: 'Logo', name: 'image' }],
+  },
+  {
+    component: LoginForm,
+    title: 'Login Form',
+    key: 'loginForm',
+    icon: <Table2Icon />,
+    defaultInputs: {},
   },
 ];
 

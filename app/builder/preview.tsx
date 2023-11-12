@@ -50,7 +50,6 @@ const BuilderBlocks = ({
   const [build, setBuild] = useState<boolean>();
   const [open, setOpen] = useState(false);
   const [insertBlockAbove, setInsertBlockAbove] = useState<insertBlockAboveT>();
-  const [toastProps, setToastProps] = useState<ToasterProps | null>();
   const { toast } = useToast();
   const [globalBlockInputName, setGlobalBlockInputName] = useState('');
   const [alertStatus, setAlertStatus] = useState<{
@@ -61,16 +60,6 @@ const BuilderBlocks = ({
     open: false,
     action: 'insertGlobal',
   });
-
-  useEffect(() => {
-    if (toast) {
-      toast({
-        title: toastProps?.title,
-        description: toastProps?.description,
-        variant: toastProps?.type,
-      });
-    }
-  }, [toastProps]);
 
   useEffect(() => {
     setPageBlocks((prevState) => {
@@ -195,24 +184,24 @@ const BuilderBlocks = ({
   async function handleSaveGlobalBlock(index: number) {
     let data = await insertGlobalBlock({ block: pageBlocks[index], name: globalBlockInputName, slug });
     if (data?.error) {
-      setToastProps({ title: 'Failed', description: data.error, type: 'destructive' });
+      toast({ title: 'Failed', description: data.error, variant: 'destructive' });
       return;
     }
-    setToastProps({ title: 'Success', description: 'Block saved as global', type: 'default' });
+    toast({ title: 'Success', description: 'Block saved as global', variant: 'default' });
   }
 
   async function handleRemoveGlobalBlock(globalId: string) {
     let data = await removeGlobalBlock({ id: globalId });
     if (data?.error) {
-      setToastProps({ title: 'Failed', description: data.error, type: 'destructive' });
+      toast({ title: 'Failed', description: data.error, variant: 'destructive' });
       return;
     }
-    setToastProps({ title: 'Success', description: 'Block removed from globals', type: 'default' });
+    toast({ title: 'Success', description: 'Block removed from globals', variant: 'default' });
   }
 
   const handleCopyBlock = (index: number) => {
     localStorage.setItem('copiedBlock', JSON.stringify(pageBlocks[index]));
-    setToastProps({ title: 'Success', description: 'Block copied!', type: 'default' });
+    toast({ title: 'Success', description: 'Block copied!', variant: 'default' });
   };
 
   const handlePasteBlock = (index: number, position: 'above' | 'below') => {

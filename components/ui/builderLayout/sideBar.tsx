@@ -43,18 +43,9 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
   const [currentTab, setCurrentTab] = useState<'settings' | 'pages'>('settings');
   const [selectedPage, setSelectedPage] = useState<SideBarProps>();
   const { toast } = useToast();
-  const [error, setError] = useState<ToasterProps>();
   const [search, setSearch] = useState<string>('');
   const router = useRouter();
-  useEffect(() => {
-    if (error) {
-      toast({
-        title: error?.title,
-        description: error?.description,
-        variant: error?.type,
-      });
-    }
-  }, [error, toast]);
+
   useEffect(() => {
     setPageId(currentPage.id);
     setPages(pages);
@@ -70,38 +61,38 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
 
     if (name && slug && id) {
       if (slug?.charAt(0) != '/') {
-        setError({ title: 'Failed', description: 'slug name should start with /', type: 'destructive' });
+        toast({ title: 'Failed', description: 'slug name should start with /', variant: 'destructive' });
         return;
       }
       let data = await updatePageSettings({ name, slug, metaTitle, metaKeyWords, metaDescription, id });
       if (data.error) {
-        setError({ title: 'Failed', description: data.error, type: 'destructive' });
+        toast({ title: 'Failed', description: data.error, variant: 'destructive' });
         return;
       }
-      setError({ title: 'Success', description: 'Page settings updated', type: 'default' });
+      toast({ title: 'Success', description: 'Page settings updated', variant: 'default' });
       router.replace(`/builder${data.data?.slug}` || '/');
     } else {
-      setError({ title: 'Failed', description: 'Both page name and slug needed', type: 'destructive' });
+      toast({ title: 'Failed', description: 'Both page name and slug needed', variant: 'destructive' });
     }
   }
 
   async function handleDeletePage() {
     let data = await deletePage({ id: selectedPage?.id || '' });
     if (data.error) {
-      setError({ title: 'Failed', description: data.error, type: 'destructive' });
+      toast({ title: 'Failed', description: data.error, variant: 'destructive' });
       return;
     }
-    setError({ title: 'Success', description: 'Page deleted', type: 'default' });
+    toast({ title: 'Success', description: 'Page deleted', variant: 'default' });
   }
 
   async function handleduplicatePage({ id }: { id: string }) {
     let data = await duplicatePage({ id: id });
     if (data) {
       if (data.error) {
-        setError({ title: 'Failed', description: data.error, type: 'destructive' });
+        toast({ title: 'Failed', description: data.error, variant: 'destructive' });
         return;
       }
-      setError({ title: 'Success', description: 'Page copied', type: 'default' });
+      toast({ title: 'Success', description: 'Page copied', variant: 'default' });
       router.replace(`/builder${data?.data?.slug}`);
     }
   }
