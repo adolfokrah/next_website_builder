@@ -210,27 +210,65 @@ const BuilderBlocks = ({
     setToastProps({ title: 'Success', description: 'Block removed from globals', type: 'default' });
   }
 
+  const handleCopyBlock = (index: number) => {
+    localStorage.setItem('copiedBlock', JSON.stringify(pageBlocks[index]));
+    setToastProps({ title: 'Success', description: 'Block copied!', type: 'default' });
+  };
+
+  const handlePasteBlock = (index: number, position: 'above' | 'below') => {
+    let block = JSON.parse(localStorage.getItem('copiedBlock') || '');
+    handleRemoveSelectedBlocks();
+    setPageBlocks((prevState) => {
+      const components = [...prevState];
+      const componentToDuplicate = block;
+      const location = position == 'below' ? index + 1 : index;
+      components.splice(location, 0, { ...componentToDuplicate, id: uuidv4(), selected: true });
+      localStorage.removeItem('copiedBlock');
+      return components;
+    });
+  };
+
   //   if (!build) return null;
 
   if (!pageBlocks.length) {
     return (
-      <>
-        <div className="w-full h-screen grid place-items-center">
-          <div className=" w-[90%] md:w-1/2 p-[120px] rounded-2xl border grid place-items-center border-slate-200">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" className="rounded-full w-14 h-14 p-0" onClick={() => setOpen(true)}>
-                    <Plus size={20} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent align="center">
-                  <p>Add a block</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </div>
+      <div>
+        <TooltipProvider>
+          <ContextMenu>
+            <ContextMenuTrigger asChild>
+              <div className="w-full h-screen grid place-items-center">
+                <div className=" w-[90%] md:w-1/2 p-[120px] rounded-2xl border grid place-items-center border-slate-200">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" className="rounded-full w-14 h-14 p-0" onClick={() => setOpen(true)}>
+                          <Plus size={20} />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent align="center">
+                        <p>Add a block</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
+            </ContextMenuTrigger>
+            <ContextMenuContent className="w-64">
+              <ContextMenuItem className="cursor-pointer" onClick={() => setOpen(true)}>
+                Add a block
+              </ContextMenuItem>
+
+              {typeof window !== 'undefined' && localStorage.getItem('copiedBlock') && (
+                <>
+                  <ContextMenuItem className="cursor-pointer" onClick={() => handlePasteBlock(0, 'above')}>
+                    Paste block here
+                    <ContextMenuShortcut>{`⌘V`}</ContextMenuShortcut>
+                  </ContextMenuItem>
+                </>
+              )}
+            </ContextMenuContent>
+          </ContextMenu>
+        </TooltipProvider>
         <BlocksCommandPallet
           open={open}
           globals={globals}
@@ -240,7 +278,7 @@ const BuilderBlocks = ({
             setPageBlocks((prevState) => [...prevState, block]);
           }}
         />
-      </>
+      </div>
     );
   }
   return (
@@ -521,10 +559,23 @@ const BuilderBlocks = ({
                       Duplicate
                       <ContextMenuShortcut>{`⌘D`}</ContextMenuShortcut>
                     </ContextMenuItem>
-                    <ContextMenuItem className="cursor-pointer">
-                      Copy
-                      <ContextMenuShortcut>{`⌘C`}</ContextMenuShortcut>
-                    </ContextMenuItem>
+                    {localStorage.getItem('copiedBlock') ? (
+                      <>
+                        <ContextMenuItem className="cursor-pointer" onClick={() => handlePasteBlock(index, 'above')}>
+                          Paste block above
+                          <ContextMenuShortcut>{`⌘V`}</ContextMenuShortcut>
+                        </ContextMenuItem>
+                        <ContextMenuItem className="cursor-pointer" onClick={() => handlePasteBlock(index, 'below')}>
+                          Past block below
+                          <ContextMenuShortcut>{`⌘V`}</ContextMenuShortcut>
+                        </ContextMenuItem>
+                      </>
+                    ) : (
+                      <ContextMenuItem className="cursor-pointer" onClick={() => handleCopyBlock(index)}>
+                        Copy
+                        <ContextMenuShortcut>{`⌘C`}</ContextMenuShortcut>
+                      </ContextMenuItem>
+                    )}
                     <ContextMenuItem className="cursor-pointer" onClick={() => handleDeleteSection(index)}>
                       Delete
                       <ContextMenuShortcut>{`⌘X`}</ContextMenuShortcut>

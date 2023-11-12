@@ -81,30 +81,12 @@ const registerBlocks: Block[] = [
     icon: <FileIcon />,
     key: 'contactForm',
     defaultInputs: {
-      emailLabel: 'Email',
-      emailPlaceHolder: 'Enter your email',
-      messageLabel: 'Message',
-      messagePlaceHolder: 'Enter message here',
       title: 'Contact us',
       subTitle: 'Get in touch with us with just a message',
-      buttonText: 'Send message',
     },
     props: [
       { name: 'title', type: 'text', label: 'Title' },
       { name: 'subTitle', type: 'text', label: 'Sub title' },
-      { name: 'emailLabel', type: 'text', label: 'Email label' },
-      { name: 'emailPlaceHolder', type: 'text', label: 'Email placeholder' },
-      { name: 'messageLabel', type: 'text', label: 'Message Label' },
-      {
-        name: 'messagePlaceHolder',
-        type: 'text',
-        label: 'Message placeholder',
-      },
-      {
-        name: 'buttonText',
-        type: 'text',
-        label: 'Button text',
-      },
     ],
   },
   {

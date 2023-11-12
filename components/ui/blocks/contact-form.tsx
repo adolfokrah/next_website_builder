@@ -1,12 +1,6 @@
-import { useState } from 'react';
+import { ChevronDownIcon, Subtitles } from 'lucide-react';
 
-import { ChevronDownIcon } from 'lucide-react';
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(' ');
-}
-
-export default function ContactForm() {
+export default function ContactForm({ title, subTitle }: { title: string; subTitle: string }) {
   return (
     <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8 relative overflow-hidden">
       <div
@@ -22,10 +16,8 @@ export default function ContactForm() {
         />
       </div>
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Contact sales</h2>
-        <p className="mt-2 text-lg leading-8 text-gray-600">
-          Aute magna irure deserunt veniam aliqua magna enim voluptate.
-        </p>
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{title}</h2>
+        <p className="mt-2 text-lg leading-8 text-gray-600">{subTitle}</p>
       </div>
       <form action="#" method="POST" className="mx-auto mt-16 max-w-xl sm:mt-20">
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
