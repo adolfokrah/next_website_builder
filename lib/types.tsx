@@ -1,11 +1,11 @@
-import { Page, PageStatus } from '@prisma/client';
+import { PageStatus } from '@prisma/client';
 import { ComponentType } from 'react';
 
 export type ControllerTypes = 'text' | 'number' | 'list' | 'image' | 'colorPicker' | 'textArea' | 'link';
 
 export type LinkT = {
-  url: string;
-  target: string;
+  url: string | undefined;
+  target: string | undefined;
 };
 export type BlockProps = {
   name: string;
@@ -70,7 +70,7 @@ export type BuilderStateProps = {
   messageToIframe: string;
   togglePageSideBar: () => void;
   setViewPort: (viewPort: ViewPorts) => void;
-  setPageBlocks: (blocks: object[]) => void;
+  setPageBlocks: (blocks: PageBlock[]) => void;
   setPageId: (id: string) => void;
   setMessageToIframe: (message: string) => void;
   setBuildStatus: (status: buildStatusT) => void;

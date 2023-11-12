@@ -4,6 +4,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ImageT, LinkT } from '@/lib/types';
 import Image from 'next/image';
+import Link from 'next/link';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -44,8 +45,8 @@ export default function Header({ navigation, logo }: { navigation: navigationT[]
                     <div className="flex space-x-4">
                       {navigation?.map((item) => (
                         <div key={item.name} className=" relative group z-30">
-                          <a
-                            href={item.href?.url}
+                          <Link
+                            href={item.href?.url || ''}
                             target={item.href?.target}
                             className={classNames(
                               item?.current
@@ -56,18 +57,18 @@ export default function Header({ navigation, logo }: { navigation: navigationT[]
                             aria-current={item?.current ? 'page' : undefined}
                           >
                             {item.name}
-                          </a>
+                          </Link>
                           {item.subMenu && (
                             <div className="absolute top-[30px] w-[200px] bg-white overflow-hidden text-slate-900 rounded-sm  flex-col hidden group-hover:flex">
                               {item.subMenu.map((menu) => (
-                                <a
+                                <Link
                                   key={menu.name}
-                                  href={menu.href?.url}
-                                  target={menu.href.target}
+                                  href={menu.href?.url || ''}
+                                  target={menu.href?.target}
                                   className="p-2 hover:bg-slate-100"
                                 >
                                   {menu.name}
-                                </a>
+                                </Link>
                               ))}
                             </div>
                           )}

@@ -77,7 +77,7 @@ export const deletePage = async ({ id }: { id: Page['id'] }) => {
   }
 };
 
-export const copyPage = async ({ id }: { id: Page['id'] }) => {
+export const duplicatePage = async ({ id }: { id: Page['id'] }) => {
   try {
     let page = await prisma.page.findFirst({
       where: { id },
@@ -111,7 +111,11 @@ export const savePage = async ({ id, blocks, status }: { id: Page['id']; blocks:
         id,
       },
       data: {
-        blocks: blocks.map((block) => ({ ...block, icon: '', component: '', selected: false })) as object[],
+        blocks: blocks.map((block) => ({
+          id: block.id,
+          key: block.key,
+          inputs: block.inputs,
+        })),
         status,
       },
     });

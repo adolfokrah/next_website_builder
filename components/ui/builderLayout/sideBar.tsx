@@ -9,7 +9,7 @@ import { Textarea } from '../textarea';
 import SubmitButton from './submitButton';
 import { useToast } from '../use-toast';
 import { SideBarPage, ToasterProps } from '@/lib/types';
-import { copyPage, deletePage, updatePageSettings } from '@/lib/actions/pageActions';
+import { duplicatePage, deletePage, updatePageSettings } from '@/lib/actions/pageActions';
 import { Button } from '../button';
 import { CopyIcon, Dot, PlusIcon, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -94,8 +94,8 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
     setError({ title: 'Success', description: 'Page deleted', type: 'default' });
   }
 
-  async function handleCopyPage({ id }: { id: string }) {
-    let data = await copyPage({ id: id });
+  async function handleduplicatePage({ id }: { id: string }) {
+    let data = await duplicatePage({ id: id });
     if (data) {
       if (data.error) {
         setError({ title: 'Failed', description: data.error, type: 'destructive' });
@@ -328,7 +328,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
                                 variant={'outline'}
                                 className="!bg-white"
                                 onClick={() => {
-                                  handleCopyPage({ id: page.id });
+                                  handleduplicatePage({ id: page.id });
                                 }}
                               >
                                 <CopyIcon size={17} />

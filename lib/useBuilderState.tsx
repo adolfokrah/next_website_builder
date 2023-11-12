@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { BuilderStateProps, PageBlock } from './types';
+import registerBlocks from './blocks_registery';
 
 export const useBuilderState = create<BuilderStateProps>((set) => ({
   showPageSideBar: false,
@@ -16,7 +17,12 @@ export const useBuilderState = create<BuilderStateProps>((set) => ({
     set(() => ({ viewPort: viewPort }));
   },
   setPageBlocks: (blocks) => {
-    set(() => ({ pageBlocks: blocks as PageBlock[] }));
+    set(() => ({
+      pageBlocks: blocks.map((block) => ({
+        ...block,
+        props: registerBlocks.find((foundBlock) => foundBlock.key === block.key)?.props || [],
+      })) as PageBlock[],
+    }));
   },
   setPageId: (id) => {
     set(() => ({ pageId: id }));
