@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import MediaLibrary from '../mediaLibrary';
 import Image from 'next/image';
 import { Input } from '../../input';
+import { Label } from '../../label';
 
 const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }: RenderBlockControllerProps) => {
   const [image, setImage] = useState<ImageT | undefined>(defaultValue);
@@ -68,12 +69,37 @@ const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }:
           )}
         </div>
         {image && (
-          <Input
-            className="mt-2"
-            placeholder="alt"
-            defaultValue={image?.alt || ''}
-            onChange={(e) => setImage({ ...image, alt: e.target.value })}
-          />
+          <>
+            <Input
+              className="mt-2"
+              placeholder="alt"
+              defaultValue={image?.alt || ''}
+              onChange={(e) => setImage({ ...image, alt: e.target.value })}
+            />
+
+            <div className="flex gap-2 mt-2">
+              <div>
+                <Label className=" text-xs font-semibold">Width</Label>
+                <Input
+                  className="mt-2"
+                  placeholder="alt"
+                  type="number"
+                  defaultValue={image?.width || ''}
+                  onChange={(e) => setImage({ ...image, width: Number(e.target.value) })}
+                />
+              </div>
+              <div>
+                <Label className=" text-xs font-semibold">Height</Label>
+                <Input
+                  className="mt-2"
+                  placeholder="alt"
+                  type="number"
+                  defaultValue={image?.height || ''}
+                  onChange={(e) => setImage({ ...image, height: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+          </>
         )}
       </div>
 

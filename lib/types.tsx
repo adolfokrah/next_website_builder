@@ -86,8 +86,8 @@ export type BuilderStateProps = {
 };
 
 export type ImageT = {
-  url: string;
-  width: number;
-  height: number;
+  url: string | undefined;
+  width: number | undefined;
+  height: number | undefined;
   alt?: string;
 };

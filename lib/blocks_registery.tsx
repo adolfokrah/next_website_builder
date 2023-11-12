@@ -5,11 +5,12 @@ import { FileIcon, HamburgerMenuIcon, ImageIcon, LayersIcon, SunIcon } from '@ra
 import ContactForm from '@/components/ui/blocks/contact-form';
 import Metrics from '@/components/ui/blocks/metics';
 import Header from '@/components/ui/blocks/header';
-import { Box, Grid, SheetIcon } from 'lucide-react';
+import { Box, Grid, RectangleHorizontalIcon, SheetIcon } from 'lucide-react';
 import WorkWithUs from '@/components/ui/blocks/work-with-us';
 import Collections from '@/components/ui/blocks/collections';
 import Features from '@/components/ui/blocks/features';
 import NewsLetter from '@/components/ui/blocks/newsLetter';
+import Footer from '@/components/ui/blocks/footer';
 
 const registerBlocks: Block[] = [
   {
@@ -183,6 +184,14 @@ const registerBlocks: Block[] = [
     key: 'newsLetter',
     icon: <SheetIcon />,
     defaultInputs: {},
+  },
+  {
+    component: Footer,
+    title: 'Footer',
+    key: 'footer',
+    icon: <RectangleHorizontalIcon />,
+    defaultInputs: {},
+    props: [{ type: 'image', label: 'Logo', name: 'image' }],
   },
 ];
 
