@@ -69,7 +69,7 @@ const registerBlocks: Block[] = [
     },
     props: [
       { name: 'title', type: 'text', label: 'Title' },
-      { name: 'subTitle', type: 'textArea', label: 'Sub title' },
+      { name: 'subTitle', type: 'richText', label: 'Sub title' },
       { name: 'color', type: 'colorPicker', label: 'Button Color' },
       { name: 'backgroundColor', type: 'colorPicker', label: 'Background Color' },
       { name: 'initialCount', type: 'number', label: 'Initial count' },

@@ -34,3 +34,13 @@ export async function getPageBlocks (blocks: GlobalBlock[]):Promise<GlobalBlock[
     );
     return blocks
 }
+
+export  const isValidUrl = (url: string) => {
+    const urlRegex = /^(https?):\/\/[^\s/$.?#].[^\s]*$/;
+    return urlRegex.test(url);
+  };
+
+  export const isValidImageUrl=(url: string)=>{
+    const urlRegex = /^(https?|data:image\/[a-z]+;base64,)/i;
+    return urlRegex.test(url);
+  }

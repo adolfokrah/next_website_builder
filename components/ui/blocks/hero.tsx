@@ -1,8 +1,5 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { Button } from '../button';
-import Link from 'next/link';
 import { ImageT } from '@/lib/types';
+import { Markup } from 'react-render-markup';
 
 type HeroProps = {
   title: string;
@@ -20,7 +17,9 @@ const Hero = ({ title, subTitle, color, initialCount, backgroundColor, image }: 
         <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
           <div className="sm:max-w-lg">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">{title}</h1>
-            <p className="mt-4 text-xl text-gray-500">{subTitle}</p>
+            <div className="mt-4 text-xl ">
+              <Markup markup={subTitle} />
+            </div>
           </div>
           <div>
             <div className="mt-10">

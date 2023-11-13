@@ -1,7 +1,7 @@
 import { PageStatus } from '@prisma/client';
 import { ComponentType } from 'react';
 
-export type ControllerTypes = 'text' | 'number' | 'list' | 'image' | 'colorPicker' | 'textArea' | 'link';
+export type ControllerTypes = 'text' | 'number' | 'list' | 'image' | 'colorPicker' | 'textArea' | 'link' | 'richText';
 
 export type LinkT = {
   url: string | undefined;

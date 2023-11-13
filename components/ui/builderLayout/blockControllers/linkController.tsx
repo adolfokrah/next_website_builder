@@ -1,7 +1,7 @@
 'use client';
 import { RenderBlockControllerProps } from '@/lib/types';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
-import { cn } from '@/lib/utils';
+import { cn, isValidUrl } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -17,10 +17,6 @@ const LinkController = ({ prop, propIndex, defaultValue, handlePropValueChange }
   const [openAsNewWindow, setOpenAsNewWindow] = useState<boolean>(defaultValue?.target === '_blank');
   const [search, setSearch] = useState('');
 
-  const isValidUrl = (url: string) => {
-    const urlRegex = /^(https?):\/\/[^\s/$.?#].[^\s]*$/;
-    return urlRegex.test(url);
-  };
 
   const addLink = () => {
     setValue(search);

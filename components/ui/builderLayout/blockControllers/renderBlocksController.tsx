@@ -5,6 +5,7 @@ import ColorPickerController from './colorPickerController';
 import ImageController from './imageController';
 import ListController from './listController';
 import LinkController from './linkController';
+import RichTextEditorController from './richTextEditorController/richTextEditor';
 
 const RenderBlockController = ({
   prop,
@@ -72,6 +73,15 @@ const RenderBlockController = ({
     case 'link':
       return (
         <LinkController
+          prop={prop}
+          propIndex={propIndex}
+          defaultValue={defaultValue}
+          handlePropValueChange={handlePropValueChange}
+        />
+      );
+    case 'richText':
+      return (
+        <RichTextEditorController
           prop={prop}
           propIndex={propIndex}
           defaultValue={defaultValue}
