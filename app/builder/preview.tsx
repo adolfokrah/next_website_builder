@@ -75,7 +75,7 @@ const BuilderBlocks = ({
 
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
-      if (event.origin !== 'http://localhost:3000') return;
+      if (event.origin !== process.env.NEXT_PUBLIC_ORIGIN) return;
       if (event.data === 'build') {
         setBuild(true);
       } else if (event.data === 'deSelectComponent') {
@@ -96,7 +96,8 @@ const BuilderBlocks = ({
   useEffect(() => {
     if (pageBlocks) {
       const message = JSON.stringify(pageBlocks);
-      window.parent.postMessage(message, 'http://localhost:3000');
+      const origin = process.env.NEXT_PUBLIC_ORIGIN || 'http://localhost:3000'
+      window.parent.postMessage(message, origin);
     }
   }, [pageBlocks]);
 

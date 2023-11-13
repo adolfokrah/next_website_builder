@@ -16,7 +16,7 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
   const postMessageToIframe = () => {
     if (iframeRef.current) {
       const message = messageToIframe;
-      const targetOrigin = 'http://localhost:3000';
+      const targetOrigin = process.env.NEXT_PUBLIC_ORIGIN || 'http://localhost:3000';
       iframeRef.current.contentWindow?.postMessage(message, targetOrigin);
     }
   };
@@ -27,7 +27,7 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
 
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
-      if (event.origin !== 'http://localhost:3000') return;
+      if (event.origin !== process.env.NEXT_PUBLIC_ORIGIN) return;
       try {
         let data = JSON.parse(event.data) as PageBlock[];
         setPageBlocks(data);
