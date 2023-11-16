@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import BlocksCommandPallet from '@/components/ui/builderLayout/blocksCommandPallet';
 import registerBlocks from '@/lib/blocks_registery';
-import { BlockProps, PageBlock } from '@/lib/types';
+import { Block, BlockProps, PageBlock } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { v4 as uuidv4 } from 'uuid';
 import { Toaster } from '@/components/ui/toaster';
@@ -18,19 +18,11 @@ import {
   ContextMenuShortcut,
 } from '@/components/ui/context-menu';
 import { insertGlobalBlock, removeGlobalBlock } from '@/lib/actions/blockActions';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+
 import { useToast } from '@/components/ui/use-toast';
 import { Input } from '@/components/ui/input';
 import { GlobalBlock } from '@prisma/client';
+import AddRemoveBlockAlert from '@/components/ui/builderLayout/addRemoveBlockAlert';
 
 type insertBlockAboveT = {
   position: 'top' | 'bottom';
@@ -241,7 +233,14 @@ const BuilderBlocks = ({
   };
 
   async function handleSaveGlobalBlock(index: number) {
-    let data = await insertGlobalBlock({ block: pageBlocks[index], name: globalBlockInputName, slug });
+    let clonedBlocks = pageBlocks.map((block) => ({ ...block, component: '', icon: '' }));
+    console.log(clonedBlocks);
+    let data = await insertGlobalBlock({
+      block: clonedBlocks[index],
+      name: globalBlockInputName,
+      slug,
+      blocks: clonedBlocks,
+    });
     if (data?.error) {
       toast({ title: 'Failed', description: data.error, variant: 'destructive' });
       return;
@@ -336,71 +335,14 @@ const BuilderBlocks = ({
   }
   return (
     <div className="mt-[40px] builder">
-      <div>
-        <Button variant={'ghost'} disabled={!canUndo} onClick={undo}>
-          Undo
-        </Button>
-        <Button variant={'ghost'} disabled={!canRedo} onClick={redo}>
-          Redo
-        </Button>
-      </div>
-
-      <AlertDialog
-        open={alertStatus.open}
-        onOpenChange={(open) => setAlertStatus((prevState) => ({ ...prevState, open }))}
-      >
-        <AlertDialogContent>
-          {alertStatus.action === 'removeGlobal' ? (
-            <>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently de-register all instances of this block as global
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-
-                <AlertDialogAction
-                  className="bg-red-500 hover:bg-red-600"
-                  onClick={() => handleRemoveGlobalBlock(alertStatus.value as string)}
-                >
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </>
-          ) : (
-            <>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Save this block as global</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action will make the block accessible and usable across all pages.
-                  <div className="mt-2">
-                    <label className=" text-xs font-semibold">Name</label>
-                    <Input
-                      className="mb-3 mt-1 w-full"
-                      onChange={(e) => {
-                        setGlobalBlockInputName(e.target.value);
-                      }}
-                    />
-                  </div>
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-
-                <AlertDialogAction
-                  disabled={!globalBlockInputName.length}
-                  onClick={() => handleSaveGlobalBlock(alertStatus.value as number)}
-                >
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </>
-          )}
-        </AlertDialogContent>
-      </AlertDialog>
-
+      <AddRemoveBlockAlert
+        alertStatus={alertStatus}
+        setAlertStatus={(open) => setAlertStatus((prevState) => ({ ...prevState, open }))}
+        handleRemoveGlobalBlock={handleRemoveGlobalBlock}
+        globalBlockInputName={globalBlockInputName}
+        setGlobalBlockInputName={setGlobalBlockInputName}
+        handleSaveGlobalBlock={handleSaveGlobalBlock}
+      />
       <BlocksCommandPallet
         open={open}
         setOpen={setOpen}
@@ -535,9 +477,10 @@ const BuilderBlocks = ({
                       </div>
 
                       <div
-                        className={cn(' border-transparent ', {
+                        className={cn('border-transparent border-[1px]  hover:border-brand-green-50', {
                           'border-brand-green-50 border-[2px]': selected,
-                          'border-blue-400': block.globalId,
+                          ' hover:border-blue-400': block.globalId,
+                          'border-blue-400': block.globalId && selected,
                         })}
                         onClick={() => {
                           if (selected) return;

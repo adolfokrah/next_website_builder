@@ -4,8 +4,19 @@ import prisma from '../prisma_init';
 import { revalidatePath } from 'next/cache';
 import { GlobalBlock, PageBlock } from '../types';
 import { savePage } from './pageActions';
+import { PageStatus } from '@prisma/client';
 
-export const insertGlobalBlock = async ({ name, block, slug }: { name: string; block: PageBlock; slug: string }) => {
+export const insertGlobalBlock = async ({
+  name,
+  block,
+  slug,
+  blocks,
+}: {
+  name: string;
+  block: PageBlock;
+  slug: string;
+  blocks: PageBlock[];
+}) => {
   try {
     const createdBlock = await prisma.globalBlock.create({
       data: {
@@ -19,7 +30,7 @@ export const insertGlobalBlock = async ({ name, block, slug }: { name: string; b
     });
     prisma.$disconnect();
 
-    let page = await prisma.page.findFirst({
+    let foundPage = await prisma.page.findFirst({
       where: {
         slug,
       },
@@ -30,8 +41,9 @@ export const insertGlobalBlock = async ({ name, block, slug }: { name: string; b
       },
     });
 
-    if (page) {
-      let pageBlocks = page.blocks
+    if (foundPage) {
+      let page = await savePage({ id: foundPage.id, blocks: blocks, status: foundPage.status });
+      let pageBlocks = page.data?.blocks
         .map((pageBlock) => {
           if (pageBlock) {
             let pBlock = pageBlock as Pick<PageBlock, 'id' | 'key' | 'inputs' | 'globalId'>;
@@ -43,7 +55,11 @@ export const insertGlobalBlock = async ({ name, block, slug }: { name: string; b
           return null;
         })
         .filter(Boolean) as PageBlock[];
-      let data = await savePage({ id: page.id, blocks: pageBlocks, status: page.status });
+      let data = await savePage({
+        id: page.data?.id || '',
+        blocks: pageBlocks,
+        status: page.data?.status || PageStatus.DRAFT,
+      });
       revalidatePath('/');
     }
   } catch (error) {

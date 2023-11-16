@@ -20,7 +20,7 @@ export type BlockProps = {
 };
 
 export type Block = {
-  component: ComponentType<any>;
+  component: ComponentType<any> | string;
   title: string;
   key: string;
   icon: React.ReactNode;
