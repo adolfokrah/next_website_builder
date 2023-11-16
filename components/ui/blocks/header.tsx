@@ -44,7 +44,7 @@ export default function Header({ navigation, logo }: { navigation: navigationT[]
                   {navigation && (
                     <div className="flex space-x-4">
                       {navigation?.map((item) => (
-                        <div key={item.name} className=" relative group z-30">
+                        <div key={item.name} className=" relative group/nav z-30">
                           <Link
                             href={item.href?.url || ''}
                             target={item.href?.target}
@@ -59,7 +59,7 @@ export default function Header({ navigation, logo }: { navigation: navigationT[]
                             {item.name}
                           </Link>
                           {item.subMenu && (
-                            <div className="absolute top-[30px] w-[200px] bg-white overflow-hidden text-slate-900 rounded-sm  flex-col hidden group-hover:flex">
+                            <div className="absolute top-[30px] w-[200px] bg-white overflow-hidden text-slate-900 rounded-sm  flex-col hidden group-hover/nav:flex">
                               {item.subMenu.map((menu) => (
                                 <Link
                                   key={menu.name}

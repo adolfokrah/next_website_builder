@@ -1,5 +1,5 @@
 import { ImageT } from '@/lib/types';
-import { Markup } from 'react-render-markup';
+import RenderRichText from '../renderRichText';
 
 type HeroProps = {
   title: string;
@@ -18,7 +18,7 @@ const Hero = ({ title, subTitle, color, initialCount, backgroundColor, image }: 
           <div className="sm:max-w-lg">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">{title}</h1>
             <div className="mt-4 text-xl ">
-              <Markup markup={subTitle} />
+              <RenderRichText htmlContent={subTitle} />
             </div>
           </div>
           <div>

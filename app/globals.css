@@ -102,23 +102,32 @@
     @apply !outline-none !border-none;
   }
 
-  .text-editor blockquote {
+  blockquote {
     @apply border-l-2 pl-2 border-l-slate-200 ml-3;
   }
 
-  .text-editor ol {
+  .text-editor ol,
+  .rich-text ol {
     @apply list-decimal ml-9;
   }
 
-  .text-editor ul {
+  .text-editor ul,
+  .rich-text ul {
     @apply ml-9 list-disc;
   }
 
-  .text-editor a {
+  .text-editor a,
+  .rich-text a {
     @apply text-primary underline;
   }
 
-  .text-editor pre {
+  .rich-text p:empty::before {
+    content: '';
+    display: inline-block;
+    @apply h-1;
+  }
+
+  pre {
     @apply bg-slate-900 text-xs text-white rounded-sm p-2;
   }
 }

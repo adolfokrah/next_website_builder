@@ -5,13 +5,10 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import MenuBar from './menubar';
 import Underline from '@tiptap/extension-underline';
-import Paragraph from '@tiptap/extension-paragraph';
 import Heading from '@tiptap/extension-heading';
-import Blockquote from '@tiptap/extension-blockquote';
 import TextAlign from '@tiptap/extension-text-align';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
-import Strike from '@tiptap/extension-strike';
 import CodeBlock from '@tiptap/extension-code-block';
 import { Color } from '@tiptap/extension-color';
 import TextStyle from '@tiptap/extension-text-style';
@@ -27,10 +24,7 @@ const RichTextEditorController = ({
     extensions: [
       StarterKit,
       Underline,
-      Paragraph,
-      Blockquote,
       TextStyle,
-      Strike,
       Image,
       CodeBlock,
       Color,

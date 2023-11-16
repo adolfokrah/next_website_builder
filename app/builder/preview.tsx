@@ -370,7 +370,7 @@ const BuilderBlocks = ({
           let Tag = foundBlock.component;
           let selected = block.selected;
           return (
-            <section key={block.id} className="relative group">
+            <section key={block.id} className="relative">
               <TooltipProvider>
                 <ContextMenu>
                   <ContextMenuTrigger asChild disabled={!selected}>
