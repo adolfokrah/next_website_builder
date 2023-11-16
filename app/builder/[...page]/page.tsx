@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma_init';
 import CreateNewPage from './createNewPage';
 import SideBar from '@/components/ui/builderLayout/sideBar';
 import ControllersSideBar from '@/components/ui/builderLayout/controllersSideBar';
-
+import { EdgeStoreProvider } from '@/lib/edgestore';
 interface PageProps {
   params: {
     page: string[];
@@ -37,14 +37,16 @@ const Page = async (props: PageProps) => {
   }
 
   return (
-    <>
-      <NavBar pageName={page.name} slug={slug} />
-      <div className="flex justify-end">
-        <SideBar currentPage={page} pages={pages} />
-        <VisioBuilder slug={slug} />
-        <ControllersSideBar />
-      </div>
-    </>
+    <EdgeStoreProvider>
+      <>
+        <NavBar pageName={page.name} slug={slug} />
+        <div className="flex justify-end">
+          <SideBar currentPage={page} pages={pages} />
+          <VisioBuilder slug={slug} />
+          <ControllersSideBar />
+        </div>
+      </>
+    </EdgeStoreProvider>
   );
 };
 
