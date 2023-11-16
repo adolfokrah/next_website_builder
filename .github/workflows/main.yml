@@ -14,18 +14,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Install pnpm
-      run: npm install -g pnpm
-
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '20' 
 
     - name: Install dependencies
-      run: pnpm install
+      run: npm install
 
     - name: Run linting and Prettier
       run: |
-        pnpm run format
-        pnpm run lint
+        npm run format
+        npm run lint
