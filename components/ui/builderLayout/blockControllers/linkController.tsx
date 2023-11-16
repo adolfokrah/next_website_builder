@@ -11,12 +11,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Checkbox } from '../../checkbox';
 
 const LinkController = ({ prop, propIndex, defaultValue, handlePropValueChange }: RenderBlockControllerProps) => {
-  const { pages } = useBuilderState();
+  const pages = useBuilderState((state) => state.pages);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(defaultValue?.url || '');
   const [openAsNewWindow, setOpenAsNewWindow] = useState<boolean>(defaultValue?.target === '_blank');
   const [search, setSearch] = useState('');
-
 
   const addLink = () => {
     setValue(search);

@@ -1,6 +1,6 @@
 'use client';
 import { RenderBlockControllerProps } from '@/lib/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SketchPicker } from 'react-color';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '../../button';
@@ -12,7 +12,12 @@ const ColorPickerController = ({
   defaultValue,
   handlePropValueChange,
 }: RenderBlockControllerProps) => {
-  const [colorState, setColorState] = useState<string>(defaultValue || '#FFFFFF');
+  const [colorState, setColorState] = useState<string>();
+
+  useEffect(() => {
+    setColorState(defaultValue || '#FFFFFF');
+  }, [defaultValue]);
+
   return (
     <>
       <label className=" text-xs font-semibold">{prop.label}</label>

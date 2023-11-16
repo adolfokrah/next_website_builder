@@ -11,9 +11,11 @@ import { useToast } from '../use-toast';
 import { useEffect, useState } from 'react';
 import { ToasterProps } from '@/lib/types';
 import { updateGlobalBlock } from '@/lib/actions/blockActions';
+import { usePageBlocksState } from '@/lib/usePageBlockState';
 
 const ControllersSideBar = () => {
-  const { pageBlocks, setMessageToIframe } = useBuilderState();
+  const setMessageToIframe = useBuilderState((state) => state.setMessageToIframe);
+  const pageBlocks = usePageBlocksState((state) => state.pageBlocks);
   const selectedBlock = pageBlocks.find((block) => block.selected);
   const foundBlockInRegister = registerBlocks.find((block) => block.key === selectedBlock?.key);
   const { toast } = useToast();

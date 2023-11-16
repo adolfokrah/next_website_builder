@@ -1,5 +1,5 @@
 import { ImageT, RenderBlockControllerProps } from '@/lib/types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../../button';
 import { PlusIcon, ReplaceIcon, Trash2Icon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -12,10 +12,6 @@ import { Label } from '../../label';
 const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }: RenderBlockControllerProps) => {
   const [image, setImage] = useState<ImageT | undefined>(defaultValue);
   const [openDialog, setOpenDialog] = useState(false);
-
-  useEffect(() => {
-    handlePropValueChange(image, propIndex, prop);
-  }, [image]);
 
   return (
     <>
@@ -45,7 +41,10 @@ const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }:
                   <Button
                     variant={'outline'}
                     className="rounded-full p-0 h-10 w-10 relative z-10 bg-white"
-                    onClick={() => setImage(undefined)}
+                    onClick={() => {
+                      setImage(undefined);
+                      handlePropValueChange(undefined, propIndex, prop);
+                    }}
                   >
                     <Trash2Icon size={17} />
                   </Button>
@@ -74,7 +73,10 @@ const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }:
               className="mt-2"
               placeholder="alt"
               defaultValue={image?.alt || ''}
-              onChange={(e) => setImage({ ...image, alt: e.target.value })}
+              onChange={(e) => {
+                setImage({ ...image, alt: e.target.value });
+                handlePropValueChange(image, propIndex, prop);
+              }}
             />
 
             <div className="flex gap-2 mt-2">
@@ -85,7 +87,10 @@ const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }:
                   placeholder="alt"
                   type="number"
                   defaultValue={image?.width || ''}
-                  onChange={(e) => setImage({ ...image, width: Number(e.target.value) })}
+                  onChange={(e) => {
+                    setImage({ ...image, width: Number(e.target.value) });
+                    handlePropValueChange(image, propIndex, prop);
+                  }}
                 />
               </div>
               <div>
@@ -95,7 +100,10 @@ const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }:
                   placeholder="alt"
                   type="number"
                   defaultValue={image?.height || ''}
-                  onChange={(e) => setImage({ ...image, height: Number(e.target.value) })}
+                  onChange={(e) => {
+                    setImage({ ...image, height: Number(e.target.value) });
+                    handlePropValueChange(image, propIndex, prop);
+                  }}
                 />
               </div>
             </div>
@@ -103,7 +111,15 @@ const ImageUploader = ({ prop, propIndex, defaultValue, handlePropValueChange }:
         )}
       </div>
 
-      <MediaLibrary open={openDialog} setOpen={setOpenDialog} onChange={setImage} selectedImageUrl={image?.url} />
+      <MediaLibrary
+        open={openDialog}
+        setOpen={setOpenDialog}
+        onChange={(image) => {
+          setImage(image);
+          handlePropValueChange(image, propIndex, prop);
+        }}
+        selectedImageUrl={image?.url}
+      />
     </>
   );
 };

@@ -191,6 +191,9 @@ dependencies:
   zod:
     specifier: ^3.22.4
     version: 3.22.4
+  zundo:
+    specifier: ^2.0.0
+    version: 2.0.0(zustand@4.4.6)
   zustand:
     specifier: ^4.4.6
     version: 4.4.6(@types/react@18.2.36)(react@18.2.0)
@@ -9012,6 +9015,14 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+    dev: false
+
+  /zundo@2.0.0(zustand@4.4.6):
+    resolution: {integrity: sha512-XzKDyunmyxvQHKDjgTmOClOQscJAm5NAa1iEazR0DilvV/uwCjnDwlHJuJ+GmG/oj5RMjzsD0ptghZzjEj1w4g==}
+    peerDependencies:
+      zustand: ^4.3.0
+    dependencies:
+      zustand: 4.4.6(@types/react@18.2.36)(react@18.2.0)
     dev: false
 
   /zustand@4.4.6(@types/react@18.2.36)(react@18.2.0):

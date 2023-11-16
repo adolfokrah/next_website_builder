@@ -2,6 +2,7 @@
 
 import { PageBlock } from '@/lib/types';
 import { useBuilderState } from '@/lib/useBuilderState';
+import { usePageBlocksState } from '@/lib/usePageBlockState';
 import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 
@@ -10,7 +11,14 @@ type BuilderProps = {
 };
 
 const VisioBuilder = ({ slug }: BuilderProps) => {
-  const { viewPort, setPageBlocks, messageToIframe, setMessageToIframe } = useBuilderState();
+  const { viewPort, messageToIframe, setMessageToIframe } = useBuilderState((state) => ({
+    viewPort: state.viewPort,
+    messageToIframe: state.messageToIframe,
+    setMessageToIframe: state.setMessageToIframe,
+  }));
+
+  const setPageBlocks = usePageBlocksState((state) => state.setPageBlocks);
+
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const postMessageToIframe = () => {
@@ -28,6 +36,7 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
       if (event.origin !== process.env.NEXT_PUBLIC_ORIGIN) return;
+
       try {
         let data = JSON.parse(event.data) as PageBlock[];
         setPageBlocks(data);

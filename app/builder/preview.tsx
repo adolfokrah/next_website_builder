@@ -28,7 +28,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { ToasterProps } from '@/lib/types';
 import { useToast } from '@/components/ui/use-toast';
 import { Input } from '@/components/ui/input';
 import { GlobalBlock } from '@prisma/client';
@@ -47,11 +46,63 @@ const BuilderBlocks = ({
   globals: GlobalBlock[] | [];
 }) => {
   const [pageBlocks, setPageBlocks] = useState<PageBlock[]>([]);
+  const [history, setHistory] = useState<PageBlock[][]>([]);
+  const [currentPosition, setCurrentPosition] = useState<number>(0);
   const [build, setBuild] = useState<boolean>();
   const [open, setOpen] = useState(false);
   const [insertBlockAbove, setInsertBlockAbove] = useState<insertBlockAboveT>();
   const { toast } = useToast();
   const [globalBlockInputName, setGlobalBlockInputName] = useState('');
+
+  const canUndo: boolean = currentPosition > 0;
+  const canRedo: boolean = currentPosition < history.length - 1;
+
+  const updateHistory = (newState: PageBlock[]): void => {
+    setHistory((prevHistory) => {
+      const clonedHistory = prevHistory.slice(0, currentPosition + 1);
+      clonedHistory.push(newState);
+      setCurrentPosition(clonedHistory.length - 1);
+
+      return clonedHistory;
+    });
+  };
+
+  const undo = (): void => {
+    if (canUndo) {
+      setCurrentPosition((prevPos) => prevPos - 1);
+      setPageBlocks([...history[currentPosition - 1]]);
+    }
+  };
+
+  const redo = (): void => {
+    if (canRedo) {
+      setCurrentPosition((prevPos) => prevPos + 1);
+      setPageBlocks([...history[currentPosition + 1]]);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const isCmdOrCtrlPressed = (event.metaKey || event.ctrlKey) && !event.altKey;
+
+      if (isCmdOrCtrlPressed) {
+        if (event.key === 'z') {
+          event.preventDefault();
+          undo();
+        } else if (event.key === 'y') {
+          event.preventDefault();
+          redo();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [history, currentPosition]);
+
   const [alertStatus, setAlertStatus] = useState<{
     open: boolean;
     action: 'insertGlobal' | 'removeGlobal';
@@ -63,13 +114,17 @@ const BuilderBlocks = ({
 
   useEffect(() => {
     setPageBlocks((prevState) => {
+      let newBlocks = [];
       if (prevState.length) {
-        return [...blocks].map((block) => ({
+        newBlocks = [...blocks].map((block) => ({
           ...block,
           selected: prevState.find((b) => b.key === block.key)?.selected,
         })) as PageBlock[];
+        updateHistory(newBlocks);
       }
-      return [...blocks] as PageBlock[];
+      newBlocks = [...blocks] as PageBlock[];
+      setHistory([newBlocks]);
+      return [...newBlocks];
     });
   }, [blocks]);
 
@@ -91,12 +146,12 @@ const BuilderBlocks = ({
     return () => {
       window.removeEventListener('message', messageHandler);
     };
-  }, [blocks]);
+  }, [blocks, history, currentPosition]);
 
   useEffect(() => {
     if (pageBlocks) {
       const message = JSON.stringify(pageBlocks);
-      const origin = process.env.NEXT_PUBLIC_ORIGIN || 'http://localhost:3000'
+      const origin = process.env.NEXT_PUBLIC_ORIGIN || 'http://localhost:3000';
       window.parent.postMessage(message, origin);
     }
   }, [pageBlocks]);
@@ -112,6 +167,7 @@ const BuilderBlocks = ({
       const temp = newData[newIndex];
       newData[newIndex] = newData[index];
       newData[index] = temp;
+      updateHistory(newData);
       return [...newData];
     });
   };
@@ -122,6 +178,7 @@ const BuilderBlocks = ({
       const components = [...prevState];
       const componentToDuplicate = components[index];
       components.splice(index + 1, 0, { ...componentToDuplicate, id: uuidv4(), selected: true });
+      updateHistory(components);
       return components;
     });
   };
@@ -129,6 +186,7 @@ const BuilderBlocks = ({
   const handleDeleteSection = (index: number) => {
     setPageBlocks((prevState) => {
       const updatedComponents = prevState.filter((_, i) => i !== index);
+      updateHistory(updatedComponents);
       return updatedComponents;
     });
   };
@@ -177,7 +235,7 @@ const BuilderBlocks = ({
         selectedBlock.inputs = mergedInputs;
         blocks[selectedBlockIndex] = selectedBlock;
       }
-
+      updateHistory(blocks);
       return [...blocks];
     });
   };
@@ -214,6 +272,7 @@ const BuilderBlocks = ({
       const location = position == 'below' ? index + 1 : index;
       components.splice(location, 0, { ...componentToDuplicate, id: uuidv4(), selected: true });
       localStorage.removeItem('copiedBlock');
+      updateHistory(components);
       return components;
     });
   };
@@ -265,7 +324,11 @@ const BuilderBlocks = ({
           setOpen={setOpen}
           addPageBlock={(block) => {
             handleRemoveSelectedBlocks();
-            setPageBlocks((prevState) => [...prevState, block]);
+            setPageBlocks((prevState) => {
+              let data = [...prevState, block];
+              updateHistory(data);
+              return [...data];
+            });
           }}
         />
       </div>
@@ -273,6 +336,15 @@ const BuilderBlocks = ({
   }
   return (
     <div className="mt-[40px] builder">
+      <div>
+        <Button variant={'ghost'} disabled={!canUndo} onClick={undo}>
+          Undo
+        </Button>
+        <Button variant={'ghost'} disabled={!canRedo} onClick={redo}>
+          Redo
+        </Button>
+      </div>
+
       <AlertDialog
         open={alertStatus.open}
         onOpenChange={(open) => setAlertStatus((prevState) => ({ ...prevState, open }))}
@@ -340,12 +412,12 @@ const BuilderBlocks = ({
             if (insertBlockAbove) {
               if (insertBlockAbove?.position === 'top') {
                 newData.splice(insertBlockAbove.index, 0, block);
-                return [...newData];
+              } else {
+                newData.splice(insertBlockAbove.index + 1, 0, block);
               }
-              newData.splice(insertBlockAbove.index + 1, 0, block);
-              return [...newData];
             }
-            return [...prevState];
+            updateHistory(newData);
+            return [...newData];
           });
         }}
       />
@@ -468,12 +540,14 @@ const BuilderBlocks = ({
                           'border-blue-400': block.globalId,
                         })}
                         onClick={() => {
+                          if (selected) return;
                           setPageBlocks((prevBlocks) => {
                             let components = [...prevBlocks].map((c) => ({
                               ...c,
                               selected: false,
                             }));
                             components[index].selected = true;
+                            updateHistory([...components]);
                             return [...components];
                           });
                         }}

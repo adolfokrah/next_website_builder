@@ -14,9 +14,11 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
   const [listItems, setLIstItems] = useState<{ [key: string]: any }[]>(defaultValue || []);
   const [selectedItemIndex, setSelectedItemIndex] = useState<number | undefined>();
 
-  useEffect(() => {
-    handlePropValueChange(listItems, propIndex, prop);
-  }, [listItems]);
+  // useEffect(() => {
+  //   if (listItems.length) {
+  //     handlePropValueChange(listItems, propIndex, prop);
+  //   }
+  // }, [listItems]);
 
   const addNewItem = () => {
     if (prop.schema) {
@@ -42,8 +44,13 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
         const [reorderedItem] = updatedItems.splice(result.source.index, 1);
         updatedItems.splice(result.destination.index, 0, reorderedItem);
       }
+      handlePropValueChange(updatedItems, propIndex, prop);
       return [...updatedItems];
     });
+  };
+
+  const onChange = (items: { [key: string]: any }[]) => {
+    handlePropValueChange(items, propIndex, prop);
   };
 
   const getListDisplayedLabel = (labelString: string, item: { [key: string]: any }): string => {
@@ -90,6 +97,7 @@ const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }
                         setLIstItems((prevState) => {
                           let newLIst = structuredClone(prevState);
                           newLIst[propIndex][schema.name] = newValue;
+                          onChange(newLIst);
                           return [...newLIst];
                         });
                       }}
