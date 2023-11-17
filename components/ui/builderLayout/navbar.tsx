@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { usePageBlocksState } from '@/lib/usePageBlockState';
+import { UserButton } from '@clerk/nextjs';
 
 const NavBar = ({ pageName, slug }: { pageName: string; slug: string }) => {
   const { viewPort, pageId, setViewPort, togglePageSideBar, buildStatus, setBuildStatus } = useBuilderState(
@@ -127,6 +128,7 @@ const NavBar = ({ pageName, slug }: { pageName: string; slug: string }) => {
           </Button>
         </div>
         <div className="flex items-center gap-2">
+          <UserButton afterSignOutUrl="/builder/sign-in" />
           <div>
             <Button variant={'ghost'}>
               <Undo2 size={17} className="text-white" />
