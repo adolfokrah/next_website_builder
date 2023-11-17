@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import registerBlocks from '@/lib/blocks_registery';
@@ -20,6 +21,7 @@ const useBuilder = (blocks: PageBlock[], slug: string) => {
   const { toast } = useToast();
   const [globalBlockInputName, setGlobalBlockInputName] = useState('');
   let targetOrigin = '';
+
   if (typeof window !== 'undefined') {
     targetOrigin = `${window.location.protocol}//${window.location.host}`;
   }

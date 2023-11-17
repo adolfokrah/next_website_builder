@@ -4,7 +4,7 @@ import { PageBlock } from '@/lib/types';
 import { useBuilderState } from '@/lib/useBuilderState';
 import { usePageBlocksState } from '@/lib/usePageBlockState';
 import { cn } from '@/lib/utils';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type BuilderProps = {
   slug: string;

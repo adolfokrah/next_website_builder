@@ -37,16 +37,18 @@ const Page = async (props: PageProps) => {
   }
 
   return (
-    <EdgeStoreProvider>
-      <>
-        <NavBar pageName={page.name} slug={slug} />
-        <div className="flex justify-end">
-          <SideBar currentPage={page} pages={pages} />
-          <VisioBuilder slug={slug} />
-          <ControllersSideBar />
+    <div>
+      <EdgeStoreProvider>
+        <div>
+          <NavBar pageName={page.name} slug={slug} />
+          <div className="flex justify-end">
+            <SideBar currentPage={page} pages={pages} />
+            <VisioBuilder slug={slug} />
+            <ControllersSideBar />
+          </div>
         </div>
-      </>
-    </EdgeStoreProvider>
+      </EdgeStoreProvider>
+    </div>
   );
 };
 
