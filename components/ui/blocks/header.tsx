@@ -152,10 +152,9 @@ export default function Header({ navigation, logo }: { navigation: navigationT[]
             {navigation && (
               <div className="space-y-1 px-2 pb-3 pt-2">
                 {navigation.map((item) => (
-                  <Disclosure.Button
+                  <Link
                     key={item.name}
-                    as="a"
-                    href={item.href?.url}
+                    href={item.href?.url || ''}
                     target={item.href?.target}
                     className={classNames(
                       item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
@@ -164,7 +163,7 @@ export default function Header({ navigation, logo }: { navigation: navigationT[]
                     aria-current={item.current ? 'page' : undefined}
                   >
                     {item.name}
-                  </Disclosure.Button>
+                  </Link>
                 ))}
               </div>
             )}
