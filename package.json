@@ -1,6 +1,6 @@
 {
   "name": "builder-app",
-  "version": "12.25.30",
+  "version": "12.26.30",
   "private": true,
   "scripts": {
     "dev": "next dev",
