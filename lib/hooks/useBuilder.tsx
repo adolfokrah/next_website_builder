@@ -19,6 +19,10 @@ const useBuilder = (blocks: PageBlock[], slug: string) => {
   const [insertBlockAbove, setInsertBlockAbove] = useState<insertBlockAboveT>();
   const { toast } = useToast();
   const [globalBlockInputName, setGlobalBlockInputName] = useState('');
+  let targetOrigin = '';
+  if (typeof window !== 'undefined') {
+    targetOrigin = `${window.location.protocol}//${window.location.host}`;
+  }
 
   const canUndo: boolean = currentPosition > 0;
   const canRedo: boolean = currentPosition < history.length - 1;
@@ -96,7 +100,7 @@ const useBuilder = (blocks: PageBlock[], slug: string) => {
 
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
-      if (event.origin !== process.env.NEXT_PUBLIC_ORIGIN) return;
+      if (event.origin !== targetOrigin) return;
       if (event.data === 'build') {
         setBuild(true);
       } else if (event.data === 'deSelectComponent') {
@@ -112,15 +116,14 @@ const useBuilder = (blocks: PageBlock[], slug: string) => {
     return () => {
       window.removeEventListener('message', messageHandler);
     };
-  }, [blocks, history, currentPosition]);
+  }, [blocks, history, currentPosition, targetOrigin]);
 
   useEffect(() => {
     if (pageBlocks) {
       const message = JSON.stringify(pageBlocks);
-      const origin = process.env.NEXT_PUBLIC_ORIGIN || 'http://localhost:3000';
-      window.parent.postMessage(message, origin);
+      window.parent.postMessage(message, targetOrigin);
     }
-  }, [pageBlocks]);
+  }, [pageBlocks, targetOrigin]);
 
   const handleRemoveSelectedBlocks = () => {
     setPageBlocks((prevState) => [...prevState.map((block) => ({ ...block, selected: false }))]);

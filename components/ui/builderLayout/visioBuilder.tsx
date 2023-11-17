@@ -11,6 +11,10 @@ type BuilderProps = {
 };
 
 const VisioBuilder = ({ slug }: BuilderProps) => {
+  let targetOrigin = '';
+  if (typeof window !== 'undefined') {
+    targetOrigin = `${window.location.protocol}//${window.location.host}`;
+  }
   const { viewPort, messageToIframe, setMessageToIframe } = useBuilderState((state) => ({
     viewPort: state.viewPort,
     messageToIframe: state.messageToIframe,
@@ -24,7 +28,6 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
   const postMessageToIframe = () => {
     if (iframeRef.current) {
       const message = messageToIframe;
-      const targetOrigin = process.env.NEXT_PUBLIC_ORIGIN || 'http://localhost:3000';
       iframeRef.current.contentWindow?.postMessage(message, targetOrigin);
     }
   };
@@ -35,7 +38,7 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
 
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
-      if (event.origin !== process.env.NEXT_PUBLIC_ORIGIN) return;
+      if (event.origin !== targetOrigin) return;
 
       try {
         let data = JSON.parse(event.data) as PageBlock[];
@@ -48,7 +51,7 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
     return () => {
       window.removeEventListener('message', messageHandler);
     };
-  }, []);
+  }, [targetOrigin]);
 
   return (
     <div className="relative bg-slate-50 pt-[65px] right-0 top-0 transition-all duration-300 ease-linear w-full">
