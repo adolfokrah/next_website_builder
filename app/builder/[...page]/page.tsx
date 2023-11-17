@@ -1,10 +1,14 @@
 import NavBar from '@/components/ui/builderLayout/navbar';
-import VisioBuilder from '@/components/ui/builderLayout/visioBuilder';
+// import VisioBuilder from '@/components/ui/builderLayout/visioBuilder';
 import prisma from '@/lib/prisma_init';
 import CreateNewPage from './createNewPage';
 import SideBar from '@/components/ui/builderLayout/sideBar';
 import ControllersSideBar from '@/components/ui/builderLayout/controllersSideBar';
 import { EdgeStoreProvider } from '@/lib/edgestore';
+import dynamic from 'next/dynamic';
+import { Toaster } from '@/components/ui/toaster';
+const VisioBuilder = dynamic(() => import('@/components/ui/builderLayout/visioBuilder'), { ssr: false }); //<- set SSr to false
+
 interface PageProps {
   params: {
     page: string[];
@@ -45,6 +49,7 @@ const Page = async (props: PageProps) => {
             <SideBar currentPage={page} pages={pages} />
             <VisioBuilder slug={slug} />
             <ControllersSideBar />
+            <Toaster />
           </div>
         </div>
       </EdgeStoreProvider>

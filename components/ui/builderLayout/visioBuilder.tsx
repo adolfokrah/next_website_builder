@@ -11,10 +11,8 @@ type BuilderProps = {
 };
 
 const VisioBuilder = ({ slug }: BuilderProps) => {
-  let targetOrigin = '';
-  if (typeof window !== 'undefined') {
-    targetOrigin = `${window.location.protocol}//${window.location.host}`;
-  }
+  const [targetOrigin, setTargetOrigin] = useState('');
+
   const { viewPort, messageToIframe, setMessageToIframe } = useBuilderState((state) => ({
     viewPort: state.viewPort,
     messageToIframe: state.messageToIframe,
@@ -33,7 +31,8 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
   };
 
   useEffect(() => {
-    postMessageToIframe();
+    setTargetOrigin(`${window.location.protocol}//${window.location.host}`);
+    if (targetOrigin.length) postMessageToIframe();
   }, [messageToIframe]);
 
   useEffect(() => {

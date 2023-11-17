@@ -32,7 +32,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import CreatePage from './createPage';
 import { Page, PageStatus } from '@prisma/client';
 
-type SideBarProps = Partial<Page> & {
+export type SideBarProps = Partial<Page> & {
   id: string;
   name: string;
   slug: string;
@@ -148,7 +148,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
             className={cn('bg-brand-green-50 h-[2px] w-1/2 absolute transition-all duration-200 ease-in-out bottom-0', {
               'translate-x-full': currentTab === 'pages',
             })}
-          />
+          ></div>
         </div>
 
         <div className={cn('overflow-hidden h-full')}>
@@ -255,7 +255,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
                       <PlusIcon size={20} />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent align="start">
+                  <PopoverContent align="start" asChild>
                     <h3 className="text-bold mb-3">Add a new page</h3>
                     <CreatePage />
                   </PopoverContent>
@@ -303,7 +303,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
                                 </div>
                               </div>
                             </TooltipTrigger>
-                            <TooltipContent align="start">
+                            <TooltipContent align="start" asChild>
                               <p>{page.name}</p>
                             </TooltipContent>
                           </Tooltip>

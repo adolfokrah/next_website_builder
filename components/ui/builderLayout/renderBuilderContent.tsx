@@ -24,7 +24,7 @@ const RenderBuilderContent = async ({ data }: BuilderPageProps) => {
         {pageBlocks.map((block) => {
           const Tag = block.component;
           const inputs = block.inputs || block.defaultInputs;
-          return <section key={block.id}>{Tag ? <Tag {...inputs} /> : null}</section>;
+          return <section key={uuidv4()}>{Tag ? <Tag {...inputs} /> : null}</section>;
         })}
       </>
     );

@@ -62,7 +62,7 @@
     "install": "^0.13.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.292.0",
-    "next": "14.0.1",
+    "next": "^14.0.3",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-color": "^2.19.3",

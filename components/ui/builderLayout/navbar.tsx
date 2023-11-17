@@ -128,7 +128,7 @@ const NavBar = ({ pageName, slug }: { pageName: string; slug: string }) => {
           </Button>
         </div>
         <div className="flex items-center gap-2">
-          <UserButton afterSignOutUrl="/builder/sign-in" />
+          <UserButton afterSignOutUrl="/" />
           <div>
             <Button variant={'ghost'}>
               <Undo2 size={17} className="text-white" />
