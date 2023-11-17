@@ -8,6 +8,8 @@ import registerBlocks from '@/lib/blocks_registery';
 import { PageBlock } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
+import { v4 as uuidv4 } from 'uuid';
+
 import {
   ContextMenu,
   ContextMenuContent,
@@ -145,7 +147,7 @@ const BuilderBlocks = ({
           let Tag = foundBlock.component;
           let selected = block.selected;
           return (
-            <section key={block.id} className="relative">
+            <section key={uuidv4()} className="relative">
               <TooltipProvider>
                 <ContextMenu>
                   <ContextMenuTrigger asChild disabled={!selected}>
