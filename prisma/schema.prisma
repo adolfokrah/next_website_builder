@@ -44,3 +44,25 @@ model GlobalBlock {
   name          String     @unique
   block         Json
 }
+
+enum Role  {
+    MAIN_ADMIN
+    EDITOR
+}
+
+enum AdminStatus {
+  PENDING
+  ACTIVE
+}
+
+model AdminUser {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?     
+  email         String
+  password      String?
+  avatar        String?
+  invitationDate  DateTime?
+  status          AdminStatus
+  createdAt       DateTime   @default(now())
+  role          Role
+}

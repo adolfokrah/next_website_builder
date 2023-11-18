@@ -1,24 +1,27 @@
 'use client';
-import { ChevronDown, ExternalLink, Loader2, Monitor, Redo, Redo2, Smartphone, Tablet, Undo2 } from 'lucide-react';
+import { ChevronDown, ExternalLink, Loader2, Monitor, Smartphone, Tablet } from 'lucide-react';
 import { Button } from '../button';
 import { useBuilderState } from '@/lib/useBuilderState';
 import { cn } from '@/lib/utils';
 import { savePage } from '@/lib/actions/pageActions';
 import { useToast } from '../use-toast';
 import { useEffect, useState } from 'react';
-import { PageBlock, ToasterProps } from '@/lib/types';
-import { PageStatus } from '@prisma/client';
+import { ToasterProps } from '@/lib/types';
+import { AdminUser, PageStatus } from '@prisma/client';
 import Link from 'next/link';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { usePageBlocksState } from '@/lib/usePageBlockState';
-import { UserButton } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-const NavBar = ({ pageName, slug }: { pageName: string; slug: string }) => {
+const NavBar = ({ pageName, slug, admin }: { pageName: string; slug: string; admin: AdminUser | undefined }) => {
   const { viewPort, pageId, setViewPort, togglePageSideBar, buildStatus, setBuildStatus } = useBuilderState(
     (state) => ({
       viewPort: state.viewPort,
@@ -35,38 +38,10 @@ const NavBar = ({ pageName, slug }: { pageName: string; slug: string }) => {
     pageBlocks: state.pageBlocks,
   }));
 
-  const [history, setHistory] = useState<PageBlock[][]>([]);
-  const [currentPosition, setCurrentPosition] = useState<number>(0);
-  const canUndo: boolean = currentPosition > 0;
-  const canRedo: boolean = currentPosition < history.length - 1;
-
-  const updateHistory = (newState: PageBlock[]): void => {
-    setHistory((prevHistory) => {
-      const clonedHistory = structuredClone(prevHistory).slice(0, currentPosition + 1);
-      clonedHistory.push(newState);
-      setCurrentPosition(clonedHistory.length);
-      setPageBlocks(newState);
-      return clonedHistory;
-    });
-  };
-
-  const undo = (): void => {
-    if (canUndo) {
-      setCurrentPosition(currentPosition - 1);
-      setPageBlocks([...history[currentPosition - 1]]);
-    }
-  };
-
-  const redo = (): void => {
-    if (canRedo) {
-      setCurrentPosition(currentPosition + 1);
-      setPageBlocks([...history[currentPosition + 1]]);
-    }
-  };
-
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [toastProps, setToastProps] = useState<ToasterProps>();
+  const router = useRouter();
 
   useEffect(() => {
     if (toastProps) {
@@ -93,6 +68,18 @@ const NavBar = ({ pageName, slug }: { pageName: string; slug: string }) => {
     }
     setToastProps({ title: 'Success', description: 'Page saved and published', type: 'default' });
   }
+
+  const handleLogout = async () => {
+    const res = await fetch('/api/auth/logout', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'd', password: 'd' }),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      router.replace('/builder/sign-in');
+    }
+  };
 
   return (
     <>
@@ -128,15 +115,22 @@ const NavBar = ({ pageName, slug }: { pageName: string; slug: string }) => {
           </Button>
         </div>
         <div className="flex items-center gap-2">
-          <UserButton afterSignOutUrl="/" />
-          <div>
-            <Button variant={'ghost'}>
-              <Undo2 size={17} className="text-white" />
-            </Button>
-            <Button variant={'ghost'}>
-              <Redo2 size={17} className="text-white" />
-            </Button>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className="cursor-pointer">
+                <AvatarImage src={admin?.avatar || ''} />
+                <AvatarFallback>{admin?.email.substring(0, 2).toUpperCase()}</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {buildStatus == 'saved' ? (
             <Link href={`${slug}`} target="_blank">
               <Button className=" text-white" variant={'ghost'}>

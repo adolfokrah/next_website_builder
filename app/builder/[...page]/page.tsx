@@ -1,5 +1,4 @@
 import NavBar from '@/components/ui/builderLayout/navbar';
-// import VisioBuilder from '@/components/ui/builderLayout/visioBuilder';
 import prisma from '@/lib/prisma_init';
 import CreateNewPage from './createNewPage';
 import SideBar from '@/components/ui/builderLayout/sideBar';
@@ -8,13 +7,18 @@ import { EdgeStoreProvider } from '@/lib/edgestore';
 import dynamic from 'next/dynamic';
 import { Toaster } from '@/components/ui/toaster';
 const VisioBuilder = dynamic(() => import('@/components/ui/builderLayout/visioBuilder'), { ssr: false }); //<- set SSr to false
-
+import { cookies } from 'next/headers';
+import { getJwtSecretKey } from '@/lib/auth';
+import { jwtDecrypt, base64url } from 'jose';
+import { AdminUser } from '@prisma/client';
 interface PageProps {
   params: {
     page: string[];
   };
 }
 const Page = async (props: PageProps) => {
+  const cookieStore = cookies();
+  const token = cookieStore.get('token');
   let slug = `/${props.params.page.join('/')}`;
 
   let page = await prisma.page.findFirst({
@@ -40,20 +44,30 @@ const Page = async (props: PageProps) => {
     return <CreateNewPage slug={slug} />;
   }
 
+  let admin: AdminUser | undefined;
+  if (token) {
+    const { email } = JSON.parse(Buffer.from(token.value.split('.')[1], 'base64').toString());
+
+    let user = await prisma.adminUser.findFirst({
+      where: { email },
+    });
+    if (user) {
+      admin = user;
+    }
+  }
+
   return (
-    <div>
-      <EdgeStoreProvider>
-        <div>
-          <NavBar pageName={page.name} slug={slug} />
-          <div className="flex justify-end">
-            <SideBar currentPage={page} pages={pages} />
-            <VisioBuilder slug={slug} />
-            <ControllersSideBar />
-            <Toaster />
-          </div>
+    <EdgeStoreProvider>
+      <div>
+        <NavBar pageName={page.name} slug={slug} admin={admin} />
+        <div className="flex justify-end">
+          <SideBar currentPage={page} pages={pages} />
+          <VisioBuilder slug={slug} />
+          <ControllersSideBar />
+          <Toaster />
         </div>
-      </EdgeStoreProvider>
-    </div>
+      </div>
+    </EdgeStoreProvider>
   );
 };
 

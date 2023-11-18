@@ -3,8 +3,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { createNewPage } from '@/lib/actions/pageActions';
 import { useToast } from '@/components/ui/use-toast';
-import { useEffect, useState } from 'react';
-import { ToasterProps } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import SubmitButton from '@/components/ui/builderLayout/submitButton';
 
