@@ -1,13 +1,13 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/builderComponents/ui/button';
 import { ChevronDown, Plus, ChevronUp, Trash2, Copy, FileWarning } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import BlocksCommandPallet from '@/components/ui/builderLayout/blocksCommandPallet';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/builderComponents/ui/tooltip';
+import BlocksCommandPallet from '@/builderComponents/ui/builderLayout/blocksCommandPallet';
 import registerBlocks from '@/blocks/blocks_registery';
 import { PageBlock } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/builderComponents/ui/toaster';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -16,10 +16,10 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
   ContextMenuShortcut,
-} from '@/components/ui/context-menu';
+} from '@/builderComponents/ui/context-menu';
 
 import { GlobalBlock } from '@prisma/client';
-import AddRemoveBlockAlert from '@/components/ui/builderLayout/addRemoveBlockAlert';
+import AddRemoveBlockAlert from '@/builderComponents/ui/builderLayout/addRemoveBlockAlert';
 import useBuilder from '@/lib/hooks/useBuilder';
 
 const BuilderBlocks = ({

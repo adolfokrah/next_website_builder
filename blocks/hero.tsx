@@ -1,4 +1,4 @@
-import RenderRichText from '@/components/ui/renderRichText';
+import RenderRichText from '@/builderComponents/ui/renderRichText';
 import { ImageT } from '@/lib/types';
 
 type HeroProps = {

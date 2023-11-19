@@ -2,12 +2,12 @@
 import { RenderBlockControllerProps } from '@/lib/types';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { cn, isValidUrl } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/builderComponents/ui/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/builderComponents/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/builderComponents/ui/popover';
 import { useEffect, useState } from 'react';
 import { useBuilderState } from '@/lib/useBuilderState';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/builderComponents/ui/tooltip';
 import { Checkbox } from '../../checkbox';
 
 const LinkController = ({ prop, propIndex, defaultValue, handlePropValueChange }: RenderBlockControllerProps) => {

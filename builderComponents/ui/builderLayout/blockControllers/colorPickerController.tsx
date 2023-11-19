@@ -2,7 +2,7 @@
 import { RenderBlockControllerProps } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { SketchPicker } from 'react-color';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/builderComponents/ui/popover';
 import { Button } from '../../button';
 import { Square } from 'lucide-react';
 

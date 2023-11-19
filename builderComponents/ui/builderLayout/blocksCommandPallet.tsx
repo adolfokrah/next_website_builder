@@ -7,7 +7,7 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from '@/components/ui/command';
+} from '@/builderComponents/ui/command';
 import registerBlocks from '@/blocks/blocks_registery';
 import { v4 as uuidv4 } from 'uuid';
 import { PageBlock } from '@/lib/types';

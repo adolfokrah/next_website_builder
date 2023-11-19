@@ -1,11 +1,11 @@
-import RenderBuilderContent from '@/components/ui/builderLayout/renderBuilderContent';
+import RenderBuilderContent from '@/builderComponents/ui/builderLayout/renderBuilderContent';
 import { getPageBlocks } from '@/lib/utils';
 import { PageStatus } from '@prisma/client';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { verifyJwtToken } from '@/lib/auth';
-import EditPageButton from '@/components/ui/editPageButton';
+import EditPageButton from '@/builderComponents/ui/editPageButton';
 import prisma from '@/lib/prisma_init';
 interface PageProps {
   params: {

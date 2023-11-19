@@ -1,12 +1,12 @@
 'use client';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/builderComponents/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/builderComponents/ui/dialog';
 import { useDropzone } from 'react-dropzone';
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '../button';
 import { useEdgeStore } from '@/lib/edgestore';
 import { v4 as uuidv4 } from 'uuid';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '@/builderComponents/ui/progress';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { BoxIcon, FilesIcon, Loader2, Trash2Icon } from 'lucide-react';
@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+} from '@/builderComponents/ui/alert-dialog';
 import { deleteFileDetails, getAllFilesDetails, saveFileDetails } from '@/lib/actions/filesActions';
 
 type MediaLibraryProps = {

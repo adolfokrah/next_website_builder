@@ -25,9 +25,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+} from '@/builderComponents/ui/alert-dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '@/builderComponents/ui/popover';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/builderComponents/ui/tooltip';
 
 import CreatePage from './createPage';
 import { Page, PageStatus } from '@prisma/client';
@@ -255,7 +255,7 @@ const SideBar = ({ currentPage, pages }: { currentPage: SideBarProps; pages: Sid
                       <PlusIcon size={20} />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent align="start" asChild>
+                  <PopoverContent align="start">
                     <h3 className="text-bold mb-3">Add a new page</h3>
                     <CreatePage />
                   </PopoverContent>

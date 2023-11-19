@@ -2,7 +2,7 @@ import { ImageT, RenderBlockControllerProps } from '@/lib/types';
 import { useState } from 'react';
 import { Button } from '../../button';
 import { PlusIcon, ReplaceIcon, Trash2Icon } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/builderComponents/ui/tooltip';
 
 import MediaLibrary from '../mediaLibrary';
 import Image from 'next/image';

@@ -8,7 +8,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from '@/builderComponents/ui/alert-dialog';
 import { Dispatch, SetStateAction } from 'react';
 import { Input } from '../input';
 import { Button } from '../button';

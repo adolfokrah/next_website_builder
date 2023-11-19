@@ -3,12 +3,12 @@ import { ChevronLeftIcon, Edit2, PlusIcon, Trash2Icon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from '../../button';
 import Image from 'next/image';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/builderComponents/ui/separator';
 import RenderBlockController from './renderBlocksController';
 import { v4 as uuidv4 } from 'uuid';
 import { cn } from '@/lib/utils';
 import { DragDropContext, Droppable, Draggable, OnDragEndResponder, DropResult } from 'react-beautiful-dnd';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/builderComponents/ui/tooltip';
 
 const ListController = ({ prop, propIndex, defaultValue, handlePropValueChange }: RenderBlockControllerProps) => {
   const [listItems, setLIstItems] = useState<{ [key: string]: any }[]>(defaultValue || []);

@@ -1,10 +1,10 @@
 'use client';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Input } from '@/builderComponents/ui/input';
+import { Label } from '@/builderComponents/ui/label';
 import { createNewPage } from '@/lib/actions/pageActions';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/builderComponents/ui/use-toast';
 import { useRouter } from 'next/navigation';
-import SubmitButton from '@/components/ui/builderLayout/submitButton';
+import SubmitButton from '@/builderComponents/ui/builderLayout/submitButton';
 
 const CreatePage = ({ slug }: { slug?: string }) => {
   const { toast } = useToast();

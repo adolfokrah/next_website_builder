@@ -6,7 +6,7 @@ import { InfoIcon, Loader2, SlidersHorizontal, XIcon } from 'lucide-react';
 import RenderBlockController from './blockControllers/renderBlocksController';
 import registerBlocks from '@/blocks/blocks_registery';
 import { BlockProps, GlobalBlock } from '@/lib/types';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/builderComponents/ui/alert';
 import { useToast } from '../use-toast';
 import { useEffect, useState } from 'react';
 import { ToasterProps } from '@/lib/types';

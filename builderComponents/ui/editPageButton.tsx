@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from './button';
 import { Pencil } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/builderComponents/ui/tooltip';
 
 const EditPageButton = ({ slug }: { slug: string }) => {
   return (

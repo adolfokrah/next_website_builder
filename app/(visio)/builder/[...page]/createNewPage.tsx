@@ -1,5 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import CreatePage from '@/components/ui/builderLayout/createPage';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/builderComponents/ui/card';
+import CreatePage from '@/builderComponents/ui/builderLayout/createPage';
 
 const CreateNewPage = ({ slug }: { slug: string }) => {
   return (
