@@ -1,5 +1,5 @@
+import RenderRichText from '@/components/ui/renderRichText';
 import { ImageT } from '@/lib/types';
-import RenderRichText from '../renderRichText';
 
 type HeroProps = {
   title: string;

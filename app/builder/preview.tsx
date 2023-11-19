@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, Plus, ChevronUp, Trash2, Copy, FileWarning } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import BlocksCommandPallet from '@/components/ui/builderLayout/blocksCommandPallet';
-import registerBlocks from '@/lib/blocks_registery';
+import registerBlocks from '@/blocks/blocks_registery';
 import { PageBlock } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';

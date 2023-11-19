@@ -131,19 +131,12 @@ const NavBar = ({ pageName, slug, admin }: { pageName: string; slug: string; adm
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {buildStatus == 'saved' ? (
-            <Link href={`${slug}`} target="_blank">
-              <Button className=" text-white" variant={'ghost'}>
-                Preview
-                <ExternalLink size={17} className="ml-2" />
-              </Button>
-            </Link>
-          ) : (
-            <Button className=" text-white" variant={'ghost'} disabled={true}>
+          <Link href={`${slug}`} target="_blank">
+            <Button className=" text-white" variant={'ghost'}>
               Preview
               <ExternalLink size={17} className="ml-2" />
             </Button>
-          )}
+          </Link>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

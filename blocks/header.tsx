@@ -19,7 +19,7 @@ type navigationT = {
 
 export default function Header({ navigation, logo, ...restProps }: { navigation: navigationT[]; logo: ImageT }) {
   return (
-    <Disclosure as="nav" className="bg-gray-800 fixed w-full  top-0 z-30" {...restProps}>
+    <Disclosure as="nav" className="bg-gray-800  w-full  top-0 z-30" {...restProps}>
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 z-10">
@@ -38,7 +38,9 @@ export default function Header({ navigation, logo, ...restProps }: { navigation:
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center relative h-8 w-8">
-                  <Image src={logo?.url || ''} fill alt={logo?.alt || ''} />
+                  <Link href="/">
+                    <Image src={logo?.url || ''} fill alt={logo?.alt || ''} />
+                  </Link>
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   {navigation && (

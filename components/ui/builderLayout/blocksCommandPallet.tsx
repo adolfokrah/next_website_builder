@@ -8,7 +8,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/command';
-import registerBlocks from '@/lib/blocks_registery';
+import registerBlocks from '@/blocks/blocks_registery';
 import { v4 as uuidv4 } from 'uuid';
 import { PageBlock } from '@/lib/types';
 import { GlobalBlock } from '@prisma/client';
