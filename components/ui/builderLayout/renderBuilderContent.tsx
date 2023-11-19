@@ -1,4 +1,4 @@
-import registeredBlocks from '@/blocks/blocks_registery';
+import registeredBlocks from '@/components/blocks/blocks_registery';
 import { Page } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 

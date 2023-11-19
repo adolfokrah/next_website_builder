@@ -8,7 +8,7 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarTrigger,
-} from '@/builderComponents/ui/menubar';
+} from '@/components/ui/menubar';
 import {
   AlignCenter,
   AlignJustify,
@@ -30,12 +30,12 @@ import {
   UnderlineIcon,
 } from 'lucide-react';
 import { cn, isValidImageUrl, isValidUrl } from '@/lib/utils';
-import { Popover, PopoverContent, PopoverTrigger } from '@/builderComponents/ui/popover';
-import { Input } from '@/builderComponents/ui/input';
-import { Button } from '@/builderComponents/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { CompactPicker } from 'react-color';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/builderComponents/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const MenuBar = ({ editor }: { editor: Editor }) => {
   const [imageUrl, setImageUrl] = useState<string>('');

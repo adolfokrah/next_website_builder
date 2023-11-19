@@ -1,18 +1,18 @@
 import { Block } from '@/lib/types';
-import Hero from '@/blocks/hero';
+import Hero from '@/components/blocks/hero';
 
 import { FileIcon, HamburgerMenuIcon, ImageIcon, LayersIcon, SunIcon } from '@radix-ui/react-icons';
 import { Box, Grid, RectangleHorizontalIcon, SheetIcon, Table2Icon } from 'lucide-react';
 
-import ContactForm from '@/blocks/contact-form';
-import Metrics from '@/blocks/metics';
-import Header from '@/blocks/header';
-import WorkWithUs from '@/blocks/work-with-us';
-import Collections from '@/blocks/collections';
-import Features from '@/blocks/features';
-import NewsLetter from '@/blocks/newsLetter';
-import Footer from '@/blocks/footer';
-import LoginForm from '@/blocks/login-form';
+import ContactForm from '@/components/blocks/contact-form';
+import Metrics from '@/components/blocks/metics';
+import Header from '@/components/blocks/header';
+import WorkWithUs from '@/components/blocks/work-with-us';
+import Collections from '@/components/blocks/collections';
+import Features from '@/components/blocks/features';
+import NewsLetter from '@/components/blocks/newsLetter';
+import Footer from '@/components/blocks/footer';
+import LoginForm from '@/components/blocks/login-form';
 
 const registerBlocks: Block[] = [
   {

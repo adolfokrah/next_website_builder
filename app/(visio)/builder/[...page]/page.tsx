@@ -1,12 +1,12 @@
-import NavBar from '@/builderComponents/ui/builderLayout/navbar';
+import NavBar from '@/components/ui/builderLayout/navbar';
 import prisma from '@/lib/prisma_init';
 import CreateNewPage from './createNewPage';
-import SideBar from '@/builderComponents/ui/builderLayout/sideBar';
-import ControllersSideBar from '@/builderComponents/ui/builderLayout/controllersSideBar';
+import SideBar from '@/components/ui/builderLayout/sideBar';
+import ControllersSideBar from '@/components/ui/builderLayout/controllersSideBar';
 import { EdgeStoreProvider } from '@/lib/edgestore';
 import dynamic from 'next/dynamic';
-import { Toaster } from '@/builderComponents/ui/toaster';
-const VisioBuilder = dynamic(() => import('@/builderComponents/ui/builderLayout/visioBuilder'), { ssr: false }); //<- set SSr to false
+import { Toaster } from '@/components/ui/toaster';
+const VisioBuilder = dynamic(() => import('@/components/ui/builderLayout/visioBuilder'), { ssr: false }); //<- set SSr to false
 import { cookies } from 'next/headers';
 import { AdminUser } from '@prisma/client';
 interface PageProps {

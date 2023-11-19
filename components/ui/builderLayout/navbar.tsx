@@ -16,10 +16,10 @@ import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from '@/builderComponents/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { usePageBlocksState } from '@/lib/usePageBlockState';
 import { useRouter } from 'next/navigation';
-import { Avatar, AvatarFallback, AvatarImage } from '@/builderComponents/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const NavBar = ({ pageName, slug, admin }: { pageName: string; slug: string; admin: AdminUser | undefined }) => {
   const { viewPort, pageId, setViewPort, togglePageSideBar, buildStatus, setBuildStatus } = useBuilderState(

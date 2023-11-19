@@ -1,9 +1,9 @@
 'use client';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import registerBlocks from '@/blocks/blocks_registery';
+import registerBlocks from '@/components/blocks/blocks_registery';
 import { insertGlobalBlock, removeGlobalBlock } from '@/lib/actions/blockActions';
-import { useToast } from '@/builderComponents/ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { BlockProps, PageBlock } from '../types';
 
 type insertBlockAboveT = {

@@ -25,9 +25,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/builderComponents/ui/alert-dialog';
-import { Popover, PopoverContent, PopoverTrigger } from '@/builderComponents/ui/popover';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/builderComponents/ui/tooltip';
+} from '@/components/ui/alert-dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import CreatePage from './createPage';
 import { Page, PageStatus } from '@prisma/client';

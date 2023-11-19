@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { BuilderStateProps, PageBlock } from './types';
-import registerBlocks from '../blocks/blocks_registery';
+import registerBlocks from '../components/blocks/blocks_registery';
 
 export const usePageBlocksState = create<Pick<BuilderStateProps, 'pageBlocks' | 'setPageBlocks'>>((set) => ({
   pageBlocks: [],
