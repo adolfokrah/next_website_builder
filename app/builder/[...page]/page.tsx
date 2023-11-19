@@ -8,8 +8,6 @@ import dynamic from 'next/dynamic';
 import { Toaster } from '@/components/ui/toaster';
 const VisioBuilder = dynamic(() => import('@/components/ui/builderLayout/visioBuilder'), { ssr: false }); //<- set SSr to false
 import { cookies } from 'next/headers';
-import { getJwtSecretKey } from '@/lib/auth';
-import { jwtDecrypt, base64url } from 'jose';
 import { AdminUser } from '@prisma/client';
 interface PageProps {
   params: {

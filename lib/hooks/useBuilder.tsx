@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import registerBlocks from '@/lib/blocks_registery';
 import { insertGlobalBlock, removeGlobalBlock } from '@/lib/actions/blockActions';
@@ -84,7 +84,23 @@ const useBuilder = (blocks: PageBlock[], slug: string) => {
     action: 'insertGlobal',
   });
 
+  function disableFixedElements() {
+    const fixedElements = document.querySelectorAll<HTMLElement>('*');
+
+    fixedElements.forEach((element) => {
+      console.log(element.tagName);
+      if (element.tagName === 'NAV') {
+        element.classList.add('disabled-fixed-element');
+      }
+      if (element.style.position == 'fixed' || element.style.position == 'sticky') {
+        alert('found');
+        element.classList.add('disabled-fixed-element');
+      }
+    });
+  }
+
   useEffect(() => {
+    disableFixedElements();
     setPageBlocks((prevState) => {
       let newBlocks = [];
       if (prevState.length) {

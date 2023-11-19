@@ -272,7 +272,7 @@ const BuilderBlocks = ({
                           });
                         }}
                       >
-                        <Tag {...inputs} />
+                        <Tag {...inputs} style={{ position: 'relative' }} />
                       </div>
 
                       <div

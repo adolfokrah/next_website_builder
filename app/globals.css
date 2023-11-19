@@ -139,3 +139,7 @@
   outline: none !important;
   height: 100% !important;
 }
+
+.disabled-fixed-element {
+  @apply !relative;
+}

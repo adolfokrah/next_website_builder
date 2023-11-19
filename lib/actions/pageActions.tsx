@@ -6,9 +6,10 @@ import { revalidatePath } from 'next/cache';
 import { GlobalBlock, PageBlock } from '../types';
 
 export const createNewPage = async ({ name, slug }: { name: Page['name']; slug: Page['slug'] }) => {
+  const whiteListSlugs = ['/404', '/builder/sign-in', '/builder/sign-up', '/builder/lost-password'];
   try {
-    if (slug == '/404') {
-      return { error: 'slug 404 is a reserved page' };
+    if (whiteListSlugs.includes(slug)) {
+      return { error: `slug ${slug} is a reserved page` };
     }
     const createdPage = await prisma.page.create({
       data: {

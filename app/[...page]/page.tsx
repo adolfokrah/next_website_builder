@@ -1,19 +1,17 @@
 import RenderBuilderContent from '@/components/ui/builderLayout/renderBuilderContent';
 import { getPageBlocks } from '@/lib/utils';
-import { PageStatus, PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { PageStatus } from '@prisma/client';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { verifyJwtToken } from '@/lib/auth';
+import EditPageButton from '@/components/ui/editPageButton';
+import prisma from '@/lib/prisma_init';
 interface PageProps {
   params: {
     page: string[];
   };
 }
-
-type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   let data = await prisma.page.findFirst({
@@ -37,9 +35,11 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 }
 
 export default async function Page(props: PageProps) {
+  const slug = `/${props.params.page.join('/')}`;
+
   let page = await prisma.page.findFirst({
     where: {
-      slug: `/${props.params.page.join('/')}`,
+      slug: slug,
     },
     select: {
       blocks: true,
@@ -56,9 +56,14 @@ export default async function Page(props: PageProps) {
     page.blocks = (await getPageBlocks(JSON.parse(JSON.stringify(page.blocks)))) || page.blocks;
   }
 
+  const cookieStore = cookies();
+  const { value: token } = cookieStore.get('token') ?? { value: '' };
+  let isValidToken = await verifyJwtToken(token);
+
   return (
     <>
-      <RenderBuilderContent data={page?.blocks || []} />{' '}
+      {isValidToken && <EditPageButton slug={slug} />}
+      <RenderBuilderContent data={page?.blocks || []} />
     </>
   );
 }

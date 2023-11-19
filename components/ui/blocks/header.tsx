@@ -17,9 +17,9 @@ type navigationT = {
   subMenu?: navigationT[];
 };
 
-export default function Header({ navigation, logo }: { navigation: navigationT[]; logo: ImageT }) {
+export default function Header({ navigation, logo, ...restProps }: { navigation: navigationT[]; logo: ImageT }) {
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="bg-gray-800 fixed w-full  top-0 z-30" {...restProps}>
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 z-10">

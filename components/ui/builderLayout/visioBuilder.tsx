@@ -53,7 +53,7 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
   }, [targetOrigin]);
 
   return (
-    <div className="relative bg-slate-50 pt-[65px] right-0 top-0 transition-all duration-300 ease-linear w-full">
+    <div className="relative bg-slate-50 pt-[70px] right-0 top-0 transition-all duration-300 ease-linear w-full">
       <iframe
         ref={iframeRef}
         className={cn('w-[100%] transition-all  bg-white overflow-scroll duration-300 ease-linear  m-auto', {
@@ -61,7 +61,7 @@ const VisioBuilder = ({ slug }: BuilderProps) => {
           'w-[789px]': viewPort === 'Tablet',
         })}
         style={{
-          height: 'calc(100vh - 65px)',
+          height: 'calc(100vh - 70px)',
         }}
         src={`/builder?page=${slug}`}
       />
