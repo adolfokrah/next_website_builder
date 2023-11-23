@@ -2,7 +2,7 @@
 
 import prisma from '../prisma_init';
 import { revalidatePath } from 'next/cache';
-import { GlobalBlock, PageBlock } from '../types';
+import { GlobalBlock, PageBlock } from 'visio-cms';
 import { savePage } from './pageActions';
 import { PageStatus } from '@prisma/client';
 

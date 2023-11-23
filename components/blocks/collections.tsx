@@ -1,4 +1,4 @@
-import { ImageT, LinkT } from '@/lib/types';
+import { ImageT, LinkT } from 'visio-cms';
 import Image from 'next/image';
 
 type CollectionsT = {

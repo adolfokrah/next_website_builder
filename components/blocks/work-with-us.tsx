@@ -1,4 +1,4 @@
-import { ImageT } from '@/lib/types';
+import { ImageT } from 'visio-cms';
 
 const links = [
   { name: 'Open roles', href: '#' },

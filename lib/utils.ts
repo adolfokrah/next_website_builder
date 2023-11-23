@@ -1,13 +1,8 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import prisma from '@/lib/prisma_init';
-import { GlobalBlock, PageBlock } from './types';
+;import prisma from '@/lib/prisma_init';
+import { PageBlock } from 'visio-cms';
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
-export async function getPageBlocks (blocks: GlobalBlock[]):Promise<GlobalBlock[]>{
+export async function getPageBlocks (blocks: PageBlock[]){
   let globals = await prisma.globalBlock.findMany();
 
   //check if page block has an existing globalId
@@ -18,16 +13,16 @@ export async function getPageBlocks (blocks: GlobalBlock[]):Promise<GlobalBlock[
           let globalBlock = globals.find((global) => global.id === pBlock.globalId);
           let gBlock = pBlock;
           if (globalBlock) {
-            gBlock = globalBlock.block as GlobalBlock;
+            gBlock = globalBlock.block as PageBlock;
           }
           return {
             ...gBlock,
-            globalId: globalBlock ? globalBlock.id : null,
+            globalId: globalBlock ? globalBlock.id : "",
           };
         } else {
           return {
             ...pBlock,
-            globalId: null,
+            globalId: "",
           };
         }
       }),
@@ -44,3 +39,15 @@ export  const isValidUrl = (url: string) => {
     const urlRegex = /^(https?|data:image\/[a-z]+;base64,)/i;
     return urlRegex.test(url);
   }
+
+
+  export function generateUniqueNumbers(): string {
+  let numbers: number[] = [];
+  while (numbers.length < 4) {
+    let randomNumber = Math.floor(Math.random() * 10);
+    if (!numbers.includes(randomNumber)) {
+      numbers.push(randomNumber);
+    }
+  }
+  return numbers.join('');
+}

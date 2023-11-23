@@ -3,7 +3,7 @@
 import { Page, PageStatus } from '@prisma/client';
 import prisma from '../prisma_init';
 import { revalidatePath } from 'next/cache';
-import { GlobalBlock, PageBlock } from '../types';
+import { GlobalBlock, PageBlock } from 'visio-cms';
 
 export const createNewPage = async ({ name, slug }: { name: Page['name']; slug: Page['slug'] }) => {
   const whiteListSlugs = ['/404', '/builder/sign-in', '/builder/sign-up', '/builder/lost-password'];
@@ -79,30 +79,29 @@ export const deletePage = async ({ id }: { id: Page['id'] }) => {
 };
 
 export const duplicatePage = async ({ id }: { id: Page['id'] }) => {
-  try {
-    let page = await prisma.page.findFirst({
-      where: { id },
-    });
-    if (page) {
-      let pageNumber = generateUniqueNumbers();
-      const createdPage = await prisma.page.create({
-        data: {
-          name: `${page.name}-${pageNumber}`,
-          slug: `${page.slug.split(' ').join('-')}-${pageNumber}`,
-          metaTitle: page.metaTitle,
-          metaDescription: page.metaDescription,
-          metaKeyWords: page.metaKeyWords,
-          blocks: page.blocks as GlobalBlock[],
-          status: page.status || PageStatus.DRAFT,
-        },
-      });
-
-      prisma.$disconnect();
-      return { data: createdPage, error: null };
-    }
-  } catch (error) {
-    return { error: 'Oops, something happened' };
-  }
+  // try {
+  //   let page = await prisma.page.findFirst({
+  //     where: { id },
+  //   });
+  //   if (page) {
+  //     let pageNumber = generateUniqueNumbers();
+  //     const createdPage = await prisma.page.create({
+  //       data: {
+  //         name: `${page.name}-${pageNumber}`,
+  //         slug: `${page.slug.split(' ').join('-')}-${pageNumber}`,
+  //         metaTitle: page.metaTitle,
+  //         metaDescription: page.metaDescription,
+  //         metaKeyWords: page.metaKeyWords,
+  //         blocks: page.blocks as GlobalBlock[],
+  //         status: page.status || PageStatus.DRAFT,
+  //       },
+  //     });
+  //     prisma.$disconnect();
+  //     return { data: createdPage, error: null };
+  //   }
+  // } catch (error) {
+  //   return { error: 'Oops, something happened' };
+  // }
 };
 
 export const savePage = async ({ id, blocks, status }: { id: Page['id']; blocks: PageBlock[]; status: PageStatus }) => {

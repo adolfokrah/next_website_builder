@@ -1,5 +1,4 @@
-import RenderRichText from '@/components/ui/renderRichText';
-import { ImageT } from '@/lib/types';
+import { type ImageT, RenderRichText } from 'visio-cms';
 
 type HeroProps = {
   title: string;

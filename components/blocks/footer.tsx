@@ -1,4 +1,4 @@
-import { ImageT } from '@/lib/types';
+import { ImageT } from 'visio-cms';
 import Image from 'next/image';
 
 export default function Footer({ image }: { image: ImageT }) {

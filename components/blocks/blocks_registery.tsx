@@ -1,4 +1,4 @@
-import { Block } from '@/lib/types';
+import { Block } from 'visio-cms';
 import Hero from '@/components/blocks/hero';
 
 import { FileIcon, HamburgerMenuIcon, ImageIcon, LayersIcon, SunIcon } from '@radix-ui/react-icons';
@@ -14,13 +14,13 @@ import NewsLetter from '@/components/blocks/newsLetter';
 import Footer from '@/components/blocks/footer';
 import LoginForm from '@/components/blocks/login-form';
 
-const registerBlocks: Block[] = [
+const registeredBlocks: Block[] = [
   {
     component: WorkWithUs,
     title: 'Work with us',
     icon: <ImageIcon />,
     defaultInputs: { children: 'button' },
-    props: [{ name: 'backgroundImage', type: 'image', label: 'Background Image' }],
+    controllers: [{ name: 'backgroundImage', type: 'image', label: 'Background Image' }],
     key: 'workWithUs',
   },
   {
@@ -28,7 +28,7 @@ const registerBlocks: Block[] = [
     title: 'Collections',
     icon: <SunIcon />,
     defaultInputs: { collections: [], title: 'Collections' },
-    props: [
+    controllers: [
       { type: 'text', label: 'Tittle', name: 'title' },
       {
         name: 'collections',
@@ -68,7 +68,7 @@ const registerBlocks: Block[] = [
         url: 'https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg',
       },
     },
-    props: [
+    controllers: [
       { name: 'title', type: 'text', label: 'Title' },
       { name: 'subTitle', type: 'richText', label: 'Sub title' },
       { name: 'color', type: 'colorPicker', label: 'Button Color' },
@@ -86,7 +86,7 @@ const registerBlocks: Block[] = [
       title: 'Contact us',
       subTitle: 'Get in touch with us with just a message',
     },
-    props: [
+    controllers: [
       { name: 'title', type: 'text', label: 'Title' },
       { name: 'subTitle', type: 'text', label: 'Sub title' },
     ],
@@ -103,7 +103,7 @@ const registerBlocks: Block[] = [
         { figure: '46,000', caption: 'New users annually', key: 'caption5' },
       ],
     },
-    props: [
+    controllers: [
       {
         name: 'metrics',
         type: 'list',
@@ -125,7 +125,7 @@ const registerBlocks: Block[] = [
     key: 'navBar',
     icon: <Box />,
     defaultInputs: { navigation: [], logo: {} },
-    props: [
+    controllers: [
       { type: 'image', name: 'logo', label: 'Logo' },
       {
         type: 'list',
@@ -175,7 +175,7 @@ const registerBlocks: Block[] = [
     key: 'footer',
     icon: <RectangleHorizontalIcon />,
     defaultInputs: {},
-    props: [{ type: 'image', label: 'Logo', name: 'image' }],
+    controllers: [{ type: 'image', label: 'Logo', name: 'image' }],
   },
   {
     component: LoginForm,
@@ -186,4 +186,4 @@ const registerBlocks: Block[] = [
   },
 ];
 
-export default registerBlocks;
+export default registeredBlocks;
