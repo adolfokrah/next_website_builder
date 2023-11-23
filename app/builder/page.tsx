@@ -1,7 +1,4 @@
-import prisma from '@/lib/prisma_init';
-
-import BuilderBlocks from './preview';
-import { getPageBlocks } from '@/lib/utils';
+import BuilderBlocks from './builderBlocks';
 
 interface PageProps {
   searchParams: {
@@ -9,30 +6,16 @@ interface PageProps {
   };
 }
 const PreviewPage = async (props: PageProps) => {
-  let page = await prisma.page.findFirst({
-    where: {
-      slug: props.searchParams.page,
-    },
-    select: {
-      blocks: true,
-    },
+  let slug = `${props.searchParams.page}`;
+
+  let res = await fetch(`${process.env.VISIO_END_POINT}/api/pages/${slug}/blocks`, {
+    next: { revalidate: 0 },
+    method: 'GET',
   });
-  let globals = await prisma.globalBlock.findMany();
 
-  //check if page block has an existing globalId
-  if (page?.blocks) {
-    page.blocks =
-      JSON.parse(JSON.stringify(await getPageBlocks(JSON.parse(JSON.stringify(page.blocks))))) ||
-      JSON.parse(JSON.stringify(page?.blocks));
-  }
+  let data = await res.json();
 
-  return (
-    <BuilderBlocks
-      blocks={JSON.parse(JSON.stringify(page?.blocks))}
-      globals={globals || []}
-      slug={props.searchParams.page}
-    />
-  );
+  return <BuilderBlocks blocks={data.page?.blocks} globals={data.globals || []} slug={props.searchParams.page} />;
 };
 
 export default PreviewPage;
