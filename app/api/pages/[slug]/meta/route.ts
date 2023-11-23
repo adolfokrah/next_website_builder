@@ -1,7 +1,5 @@
 import prisma from '@/lib/prisma_init';
-import {  getPageBlocks } from '@/lib/utils';
-import { cookies } from 'next/headers';
-import { verifyJwtToken } from '@/lib/auth';
+
 
 
 export async function GET(request: Request, { params }: { params: { slug: string } }) {
