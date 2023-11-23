@@ -1,12 +1,11 @@
 import prisma from '@/lib/prisma_init';
 import {  getPageBlocks } from '@/lib/utils';
-import { cookies } from 'next/headers';
 import { verifyJwtToken } from '@/lib/auth';
+import { type NextRequest } from 'next/server'
 
-
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
     const {slug} = params
-
+     const token = request.nextUrl.searchParams.get('token')
      let page = await prisma.page.findFirst({
         where: {
         slug: `/${slug}`,
@@ -29,8 +28,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
         JSON.parse(JSON.stringify(page?.blocks));
     }
 
-  const cookieStore = cookies();
-  const { value: token } = cookieStore.get('token') ?? { value: '' };
-  let isValidToken = await verifyJwtToken(token);
-  return Response.json({page, isValidToken, error: null}) 
+  let isValidToken = await verifyJwtToken(token || '');
+
+  return Response.json({page, isValidToken , error: null}) 
 }

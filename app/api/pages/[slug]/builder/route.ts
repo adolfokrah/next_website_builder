@@ -1,10 +1,9 @@
 import prisma from '@/lib/prisma_init';
-import { cookies } from 'next/headers';
+import { type NextRequest } from 'next/server'
 
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { slug: string }, }) {
   const {slug} = params
-  const cookieStore = cookies();
-  const token = cookieStore.get('token');
+  const token = request.nextUrl.searchParams.get('token')
   
   let page = await prisma.page.findFirst({
     where: {
@@ -29,8 +28,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
 
   let admin;
   if (token) {
-    const { email } = JSON.parse(Buffer.from(token.value.split('.')[1], 'base64').toString());
-
+    const { email } = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
     let user = await prisma.adminUser.findFirst({
       where: { email },
     });
@@ -38,6 +36,8 @@ export async function GET(request: Request, { params }: { params: { slug: string
       admin = JSON.parse(JSON.stringify(user));
     }
   }
+
+ 
    return Response.json( { page, admin, pages }) 
   
 }

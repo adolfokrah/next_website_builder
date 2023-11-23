@@ -3,6 +3,7 @@ import { getPageBlocks } from '@/lib/utils';
 
 export async function GET(request: Request, { params }: { params: { slug: string } }) {
   const {slug} = params
+  
     let page = await prisma.page.findFirst({
     where: {
       slug: `/${slug}`,
