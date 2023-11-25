@@ -8,7 +8,7 @@ interface PageProps {
 const Page = async (props: PageProps) => {
   let slug = `/${props.params.page.join('/')}`;
 
-  return <VisioBuilderPage slug={slug} />;
+  return <VisioBuilderPage slug={slug} projectId={process.env.PROJECT_ID || ''} apiKey={process.env.API_KEY || ''} />;
 };
 
 export default Page;

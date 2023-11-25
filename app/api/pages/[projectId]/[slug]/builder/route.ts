@@ -1,13 +1,15 @@
 import prisma from '@/lib/prisma_init';
 import { cookies } from 'next/headers';
-export async function GET(request: Request, { params }: { params: { slug: string }, }) {
-  const {slug} = params
+export async function GET(request: Request, { params }: { params: { slug: string, projectId: string } }) {
+  const { slug, projectId } = params;
+
   const cookieStore = cookies();
   const token = cookieStore.get('token');
-  
+
   let page = await prisma.page.findFirst({
     where: {
       slug: `/${slug}`,
+      projectId
     },
     select: {
       id: true,
@@ -19,12 +21,13 @@ export async function GET(request: Request, { params }: { params: { slug: string
       featuredImage: true,
     },
   });
-  
 
   let pages = await prisma.page.findMany({
     select: { name: true, slug: true, id: true, status: true },
+    where:{
+      projectId
+    }
   });
-
 
   let admin;
   if (token) {
@@ -37,6 +40,5 @@ export async function GET(request: Request, { params }: { params: { slug: string
     }
   }
 
-   return Response.json( { page, admin, pages }) 
-  
+  return Response.json({ page, admin, pages });
 }

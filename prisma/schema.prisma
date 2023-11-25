@@ -17,40 +17,6 @@ enum PageStatus {
 }
 
 
-model Page {
-  id              String     @id @default(auto()) @map("_id") @db.ObjectId
-  name            String     @unique
-  slug            String     @unique
-  blocks          Json[]
-  metaTitle       String? 
-  metaKeyWords    String?
-  metaDescription String?
-  featuredImage   String?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  status          PageStatus @default(DRAFT)  
-}
-
-model File {
-   id            String     @id @default(auto()) @map("_id") @db.ObjectId
-   url           String
-   name          String?
-   width         Int
-   height        Int
-   cloudinaryImageId String?
-   bytes         Int?
-   createdAt     DateTime   @default(now())
-   updatedAt     DateTime   @updatedAt
-}
-
-model GlobalBlock {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId
-  name          String     @unique
-  block         Json
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-}
-
 enum Role  {
     MAIN_ADMIN
     EDITOR
@@ -67,9 +33,79 @@ model AdminUser {
   email         String
   password      String?
   avatar        String?
+  organization         Organization    @relation(fields: [organizationId], references: [id])
+  organizationId       String     @db.ObjectId
   invitationDate  DateTime?
   status          AdminStatus
+  apiKey          String
+  projects        Project[]
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
   role          Role
 }
+
+model Organization{
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  name          String? 
+  users         AdminUser[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Project {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  name          String? 
+  pages         Page[] 
+  globalBlocks  GlobalBlock[] 
+  files         File[]
+  owner         AdminUser    @relation(fields: [ownerId], references: [id])
+  ownerId       String     @db.ObjectId
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt   
+}
+
+
+model Page {
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  name            String     
+  slug            String     
+  blocks          Json[]
+  metaTitle       String? 
+  metaKeyWords    String?
+  metaDescription String?
+  featuredImage   String?
+  project         Project    @relation(fields: [projectId], references: [id])
+  projectId       String     @db.ObjectId
+  status          PageStatus @default(DRAFT)  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+model GlobalBlock {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  name          String     @unique
+  block         Json
+  project         Project    @relation(fields: [projectId], references: [id])
+  projectId       String     @db.ObjectId
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+
+model File {
+   id            String     @id @default(auto()) @map("_id") @db.ObjectId
+   url           String
+   name          String?
+   width         Int
+   height        Int
+   cloudinaryImageId String?
+   bytes         Int?
+   project         Project    @relation(fields: [projectId], references: [id])
+   projectId       String     @db.ObjectId
+   createdAt     DateTime   @default(now())
+   updatedAt     DateTime   @updatedAt
+}
+
+
+
+
+

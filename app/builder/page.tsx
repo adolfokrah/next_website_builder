@@ -8,7 +8,7 @@ interface PageProps {
 const PreviewPage = async (props: PageProps) => {
   let slug = `${props.searchParams.page}`;
 
-  return <BuilderBlocks slug={slug} />;
+  return <BuilderBlocks slug={slug} projectId={process.env.PROJECT_ID || ''} apiKey={process.env.API_KEY || ''} />;
 };
 
 export default PreviewPage;
