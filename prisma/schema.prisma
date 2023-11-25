@@ -37,12 +37,18 @@ model File {
    name          String?
    width         Int
    height        Int
+   cloudinaryImageId String?
+   bytes         Int?
+   createdAt     DateTime   @default(now())
+   updatedAt     DateTime   @updatedAt
 }
 
 model GlobalBlock {
   id            String     @id @default(auto()) @map("_id") @db.ObjectId
   name          String     @unique
   block         Json
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 }
 
 enum Role  {
@@ -64,5 +70,6 @@ model AdminUser {
   invitationDate  DateTime?
   status          AdminStatus
   createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
   role          Role
 }

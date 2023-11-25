@@ -1,16 +1,10 @@
 'use client';
 
 import registeredBlocks from '@/components/blocks/blocks_registery';
-import { Builder, type BuilderProps, NewPageCreation } from 'visio-cms';
+import { Builder, type BuilderProps } from 'visio-cms';
 
-const VisioBuilderPage = ({ page, slug, admin, pages }: Partial<BuilderProps>) => {
-  if (!page) {
-    return <NewPageCreation slug={slug || ''} />;
-  }
-
-  return (
-    <Builder page={page} slug={slug || ''} admin={admin} pages={pages || []} registeredBlocks={registeredBlocks} />
-  );
+const VisioBuilderPage = ({ slug }: Partial<BuilderProps>) => {
+  return <Builder slug={slug || ''} registeredBlocks={registeredBlocks} />;
 };
 
 export default VisioBuilderPage;

@@ -2,26 +2,9 @@
 
 import registeredBlocks from '@/components/blocks/blocks_registery';
 
-import { GlobalBlock } from '@prisma/client';
+import { BuilderSectionsLayout } from 'visio-cms';
 
-import { BuilderSectionsLayout, type PageBlock } from 'visio-cms';
-
-const BuilderBlocks = ({
-  blocks,
-  slug,
-  globals,
-}: {
-  blocks: PageBlock[];
-  slug: string;
-  globals: GlobalBlock[] | [];
-}) => {
-  return (
-    <BuilderSectionsLayout
-      blocks={blocks}
-      slug={slug}
-      globals={JSON.parse(JSON.stringify(globals))}
-      registeredBlocks={registeredBlocks}
-    />
-  );
+const BuilderBlocks = ({ slug }: { slug: string }) => {
+  return <BuilderSectionsLayout slug={slug} registeredBlocks={registeredBlocks} />;
 };
 export default BuilderBlocks;

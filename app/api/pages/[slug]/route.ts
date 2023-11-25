@@ -4,6 +4,7 @@ import { verifyJwtToken } from '@/lib/auth';
 import { type NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
+    
     const {slug} = params
      const token = request.nextUrl.searchParams.get('token')
      let page = await prisma.page.findFirst({

@@ -58,7 +58,7 @@ export async function POST(req: Request) {
 
       
       
-        let datas = await fetch(`${process.env.VISIO_END_POINT}/api/pages`,{
+       await fetch(`${process.env.VISIO_END_POINT}/api/pages`,{
             method:'PUT',
             body: JSON.stringify({
             id: data?.data?.id,
@@ -66,9 +66,7 @@ export async function POST(req: Request) {
             status: data?.data?.status || PageStatus.DRAFT,
         })
       });
-      let d = await datas.json();
-
-      
+     
       return Response.json( { createdBlock }) 
     }
   } catch (error) {
