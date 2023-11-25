@@ -10,20 +10,17 @@ export async function POST(req: Request) {
   let path = url[url.length - 1];
 
   if (path === 'login') {
-    const { email, password } = await req.json();
+    const { email, password, projectId } = await req.json();
 
     if (email && password) {
       const user = await prisma.adminUser.findFirst({
         where: { email, password: Md5.hashStr(password) },
-        select: {
-          name: true,
-          email: true,
-          role: true,
-          avatar: true,
+        include: {
+          projects: true,
         },
       });
 
-      if (!user) {
+      if (!user || !user.projects.length || !user.projects.find((project) => project.id == projectId)) {
         return Response.json({ error: 'Incorrect combination of username and password' });
       }
 
@@ -57,12 +54,4 @@ export async function POST(req: Request) {
     response.cookies.delete('token');
     return response;
   }
-
-  if (path === 'apiKey') {
-    return Response.json({ error: 'apk key route' });
-  }
 }
-
-// await prisma.adminUser.create({
-//   data:{email, password: Md5.hashStr(password), avatar: '', name:'Adolf', role: 'MAIN_ADMIN'}
-// })

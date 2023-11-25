@@ -127,7 +127,7 @@ export async function PUT(req: Request) {
 
     prisma.$disconnect();
 
-    return Response.json({  page, error: null });
+    return Response.json({ page, error: null });
   } catch (error) {
     return Response.json({ error: 'Oops, something happened' });
   }

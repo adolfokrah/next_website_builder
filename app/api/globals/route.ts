@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     let foundPage = await prisma.page.findFirst({
       where: {
         slug,
-        projectId
+        projectId,
       },
       select: {
         blocks: true,
@@ -32,12 +32,14 @@ export async function POST(req: Request) {
     });
 
     if (foundPage) {
-     
-      const page = await prisma.page.update({where: {id: foundPage.id}, data:{
-         blocks: blocks
-      }})
+      const page = await prisma.page.update({
+        where: { id: foundPage.id },
+        data: {
+          blocks: blocks,
+        },
+      });
 
-      let pageBlocks = page?.blocks
+      let pageBlocks = JSON.parse(JSON.stringify(page?.blocks))
         .map((pageBlock: PageBlock) => {
           if (pageBlock) {
             let pBlock = pageBlock as Pick<PageBlock, 'id' | 'key' | 'inputs' | 'globalId'>;
@@ -50,13 +52,16 @@ export async function POST(req: Request) {
         })
         .filter(Boolean) as PageBlock[];
 
-      await prisma.page.update({where: {id: foundPage.id}, data:{
-         blocks: pageBlocks
-      }})
+      await prisma.page.update({
+        where: { id: foundPage.id },
+        data: {
+          blocks: JSON.parse(JSON.stringify(pageBlocks)),
+        },
+      });
       return Response.json({ createdBlock });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return Response.json({ error: 'Oops, something happened, make sure the global name does not exist' });
   }
 }

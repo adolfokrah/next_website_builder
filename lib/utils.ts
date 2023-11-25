@@ -2,8 +2,8 @@ import prisma from '@/lib/prisma_init';
 import { PageBlock } from 'visio-cms';
 import { cookies } from 'next/headers';
 
-export async function getPageBlocks(blocks: PageBlock[], projectId:string) {
-  let globals = await prisma.globalBlock.findMany({where: {projectId}});
+export async function getPageBlocks(blocks: PageBlock[], projectId: string) {
+  let globals = await prisma.globalBlock.findMany({ where: { projectId } });
 
   //check if page block has an existing globalId
   blocks = await Promise.all(

@@ -3,13 +3,13 @@ import { getPageBlocks } from '@/lib/utils';
 import { verifyJwtToken } from '@/lib/auth';
 import { type NextRequest } from 'next/server';
 
-export async function GET(request: NextRequest, { params }: { params: { slug: string, projectId: string } }) {
-  const { slug , projectId} = params;
+export async function GET(request: NextRequest, { params }: { params: { slug: string; projectId: string } }) {
+  const { slug, projectId } = params;
   const token = request.nextUrl.searchParams.get('token');
   let page = await prisma.page.findFirst({
     where: {
       slug: `/${slug}`,
-      projectId
+      projectId,
     },
     select: {
       blocks: true,

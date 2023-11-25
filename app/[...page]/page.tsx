@@ -11,7 +11,7 @@ interface PageProps {
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const slug = `${props.params.page.join('/')}`;
-  let res = await fetch(`${process.env.VISIO_END_POINT}/api/pages/${process.env.PROJECT_ID}/${slug}/meta`, {
+  let res = await fetch(`${process.env.VISIO_END_POINT}/api/pages/${process.env.NEXT_PUBLIC_PROJECT_ID}/${slug}/meta`, {
     next: { revalidate: 0 },
     method: 'GET',
     headers: {
@@ -26,14 +26,16 @@ export default async function Page(props: PageProps) {
   const slug = `${props.params.page.join('/')}`;
   const cookieStore = cookies();
   const token = cookieStore.get('token');
-  const projectId = process.env.PROJECT_ID || '';
-  let res = await fetch(`${process.env.VISIO_END_POINT}/api/pages/${projectId}/${slug}/?token=${token?.value}`, {
-    next: { revalidate: 0 },
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${process.env.API_KEY}`,
+  let res = await fetch(
+    `${process.env.VISIO_END_POINT}/api/pages/${process.env.NEXT_PUBLIC_PROJECT_ID}/${slug}/?token=${token?.value}`,
+    {
+      next: { revalidate: 0 },
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${process.env.API_KEY}`,
+      },
     },
-  });
+  );
 
   const data = await res.json();
 
@@ -42,7 +44,5 @@ export default async function Page(props: PageProps) {
   }
   const pageData = data.page;
 
-  return (
-    <RenderPage data={pageData?.blocks || []} slug={slug} isValidToken={data.isValidToken} projectId={projectId} />
-  );
+  return <RenderPage data={pageData?.blocks || []} slug={slug} isValidToken={data.isValidToken} />;
 }

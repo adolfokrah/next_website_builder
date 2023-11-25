@@ -20,6 +20,6 @@ export async function GET(request: Request, { params }: { params: { slug: string
   return Response.json({
     title: data?.name,
     description: data?.metaDescription,
-    keywords: data?.metaKeyWords
+    keywords: data?.metaKeyWords,
   });
 }

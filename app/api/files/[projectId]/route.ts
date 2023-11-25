@@ -12,5 +12,3 @@ export async function GET(request: Request, { params }: { params: { projectId: s
     return Response.json({ error: 'Oops, something happened' });
   }
 }
-
-

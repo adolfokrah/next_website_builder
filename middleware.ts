@@ -19,15 +19,19 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (nextUrl.pathname.startsWith('/api') && nextUrl.pathname != '/api/users' && !nextUrl.pathname.startsWith('/api/auth')) {
+  if (
+    nextUrl.pathname.startsWith('/api') &&
+    nextUrl.pathname != '/api/users' &&
+    !nextUrl.pathname.startsWith('/api/auth')
+  ) {
     const apiKey = headers.get('authorization')?.split('Bearer ').at(1);
     if (apiKey) {
       const isValidToken = decryptApiKey(apiKey);
       if (!isValidToken) {
-        return NextResponse.json({ error: 'api key is in valid' }, { status: 500 });
+        return NextResponse.json({ error: 'Api key is invalid' }, { status: 500 });
       }
     } else {
-      return NextResponse.json({ error: 'api key is needed' }, { status: 500 });
+      return NextResponse.json({ error: 'Api key is needed' }, { status: 500 });
     }
   }
 }

@@ -4,7 +4,6 @@ import { getPageBlocks } from '@/lib/utils';
 export async function GET(request: Request, { params }: { params: { slug: string; projectId: string } }) {
   const { slug, projectId } = params;
 
-
   let page = await prisma.page.findFirst({
     where: {
       slug: `/${slug}`,
